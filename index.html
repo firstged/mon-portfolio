@@ -11,20 +11,44 @@
 
 <body>
 
-    <nav>
-        <div class="logo">MonPortfolio.</div>
-        <ul class="nav-links">
-            <li><a href="#about">À propos</a></li>
-            <li><a href="#projects">Projets</a></li>
-            <li><a href="#contact">Contact</a></li>
-        </ul>
-    </nav>
+    <div class="nav-wrapper">
+        <nav>
+            <div class="logo">MonPortfolio.</div>
+            <ul class="nav-links">
+                <li><a href="#about">À propos</a></li>
+                <li><a href="#projects">Projets</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </div>
 
     <header id="about" class="hero">
-        <div class="hero-content">
-            <h1>Salut, je suis <span class="highlight">Développeur Web</span></h1>
-            <p>Bienvenue sur mon premier repository. J'apprends, je code et je construis le web de demain.</p>
-            <a href="#projects" class="btn">Voir mes projets</a>
+        <div class="hero-container">
+            <div class="hero-text">
+                <h1>Salut, je suis <span class="highlight">Développeur Web</span></h1>
+                <p>Bienvenue sur mon premier repository. J'apprends, je code et je construis le web de demain avec
+                    passion et rigueur.</p>
+
+                <div class="hero-buttons">
+                    <a href="#projects" class="btn btn-primary">Voir mes projets</a>
+                    <button
+                        onclick="alert('Fonctionnalité Backend à venir ! Pour l\'instant, on ajoute les projets dans le code HTML.')"
+                        class="btn btn-outline">
+                        + Ajouter un projet
+                    </button>
+                </div>
+            </div>
+
+            <div class="hero-image">
+                <svg class="floating-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                    <line x1="12" y1="6" x2="16" y2="6"></line>
+                    <line x1="12" y1="10" x2="16" y2="10"></line>
+                    <line x1="12" y1="14" x2="16" y2="14"></line>
+                </svg>
+            </div>
         </div>
     </header>
 

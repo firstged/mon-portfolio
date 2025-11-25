@@ -1,9 +1,9 @@
 /* Reset et Variables */
 :root {
-    --bg-color: #0f172a;       /* Bleu nuit très sombre */
-    --card-bg: #1e293b;        /* Bleu nuit un peu plus clair */
-    --text-color: #e2e8f0;     /* Blanc cassé pour le texte */
-    --primary-color: #38bdf8;  /* Bleu cyan électrique */
+    --bg-color: #0f172a;
+    --card-bg: #1e293b;
+    --text-color: #e2e8f0;
+    --primary-color: #38bdf8;
     --hover-color: #0ea5e9;
     --font-main: 'Inter', sans-serif;
 }
@@ -19,18 +19,35 @@ body {
     color: var(--text-color);
     font-family: var(--font-main);
     line-height: 1.6;
+    overflow-x: hidden; /* Empêche le scroll horizontal */
 }
 
-/* Navigation */
+/* --- NAVIGATION FLOTTANTE --- */
+.nav-wrapper {
+    position: fixed;
+    top: 20px;
+    width: 100%;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+}
+
 nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1.5rem 5%;
-    background-color: rgba(15, 23, 42, 0.95);
-    position: sticky;
-    top: 0;
-    border-bottom: 1px solid #334155;
+    width: 90%; /* Largeur de la barre */
+    max-width: 1000px; /* Largeur max pour les grands écrans */
+    padding: 1rem 2rem;
+    
+    /* Effet Glassmorphism */
+    background-color: rgba(15, 23, 42, 0.6); /* Transparence */
+    backdrop-filter: blur(15px); /* Le flou puissant */
+    -webkit-backdrop-filter: blur(15px); /* Pour Safari */
+    
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px; /* Bords arrondis */
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
 }
 
 .logo {
@@ -50,48 +67,131 @@ nav {
     color: var(--text-color);
     font-weight: 500;
     transition: 0.3s;
+    font-size: 0.95rem;
 }
 
 .nav-links a:hover {
     color: var(--primary-color);
 }
 
-/* Hero Section */
+/* --- HERO SECTION --- */
 .hero {
-    height: 80vh;
+    min-height: 90vh; /* Prend presque toute la hauteur */
     display: flex;
-    justify-content: center;
     align-items: center;
-    text-align: center;
-    padding: 0 1rem;
+    justify-content: center;
+    padding: 6rem 10% 2rem 10%; /* Padding top élevé à cause de la nav fixe */
+}
+
+.hero-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 1200px;
+    gap: 4rem;
+}
+
+/* Colonne Texte */
+.hero-text {
+    flex: 1;
 }
 
 .hero h1 {
     font-size: 3.5rem;
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
+    line-height: 1.2;
 }
 
 .highlight {
     color: var(--primary-color);
 }
 
+/* Groupe de boutons */
+.hero-buttons {
+    margin-top: 2.5rem;
+    display: flex;
+    gap: 1rem;
+}
+
 .btn {
-    display: inline-block;
-    margin-top: 2rem;
-    padding: 0.8rem 2rem;
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    font-size: 1rem;
+    border: 2px solid transparent;
+}
+
+/* Style bouton plein */
+.btn-primary {
     background-color: var(--primary-color);
     color: #0f172a;
-    text-decoration: none;
-    font-weight: bold;
-    border-radius: 5px;
-    transition: background 0.3s ease;
 }
-
-.btn:hover {
+.btn-primary:hover {
     background-color: var(--hover-color);
+    transform: translateY(-2px);
 }
 
-/* Projects Grid */
+/* Style bouton contour */
+.btn-outline {
+    background-color: transparent;
+    border: 2px solid var(--primary-color);
+    color: var(--primary-color);
+}
+.btn-outline:hover {
+    background-color: rgba(56, 189, 248, 0.1);
+    transform: translateY(-2px);
+}
+
+/* Colonne Image (SVG Animé) */
+.hero-image {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.floating-icon {
+    width: 300px;
+    height: 300px;
+    color: var(--primary-color);
+    /* Animation définie plus bas */
+    animation: float 4s ease-in-out infinite;
+    filter: drop-shadow(0 0 20px rgba(56, 189, 248, 0.3));
+}
+
+/* Animation de flottement */
+@keyframes float {
+    0% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(2deg); }
+    100% { transform: translateY(0px) rotate(0deg); }
+}
+
+/* --- Responsive (Mobile) --- */
+@media (max-width: 768px) {
+    .hero-container {
+        flex-direction: column-reverse; /* Image en haut sur mobile */
+        text-align: center;
+    }
+    
+    .hero-buttons {
+        justify-content: center;
+    }
+    
+    .floating-icon {
+        width: 200px;
+        height: 200px;
+        margin-bottom: 2rem;
+    }
+    
+    nav {
+        display: none; /* Simplification pour ce tuto: on cache la nav sur mobile, à améliorer plus tard */
+    }
+}
+
+/* --- RESTE DU SITE (PROJETS & FOOTER) --- */
 .projects-section {
     padding: 4rem 10%;
 }
@@ -142,7 +242,6 @@ nav {
     font-weight: bold;
 }
 
-/* Footer */
 footer {
     text-align: center;
     padding: 2rem;
