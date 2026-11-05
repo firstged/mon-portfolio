@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="Gfirst">
+  <title>Gfirst — sceau</title>
+  <mask id="creux">
+    <rect x="5" y="5" width="90" height="90" rx="7" fill="#fff"/>
+    <g fill="none" stroke="#000" stroke-linecap="square" stroke-linejoin="round"
+       transform="translate(9 9) scale(0.82)" stroke-width="7">
+      <path d="M82,50 A32,32 0 1 1 74.5,29.4"/>
+      <path d="M78,50 L50,50"/>
+      <path d="M50,32 L50,68"/>
+      <path d="M42,32 L58,32"/>
+      <path d="M42,68 L58,68"/>
+    </g>
+  </mask>
+  <rect x="5" y="5" width="90" height="90" rx="7" fill="currentColor" mask="url(#creux)"/>
+</svg>

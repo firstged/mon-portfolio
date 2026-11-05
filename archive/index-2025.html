@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio | Développeur fullstack</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <div class="nav-wrapper">
+        <nav>
+            <div class="logo">GedPortfolio.</div>
+            <ul class="nav-links">
+                <li><a href="#about">À propos</a></li>
+                <li><a href="#projects">Projets</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <header id="about" class="hero">
+        <div class="hero-container">
+            <div class="hero-text">
+                <h1>Salut, je suis <span class="highlight"> Gfirst [Développeur]</span></h1>
+                <p>Bienvenue sur mon portfolio. J'apprends, je code et je construis les applis de demain avec
+                    passion et rigueur.</p>
+
+                <div class="hero-buttons">
+                    <a href="#projects" class="btn btn-primary">Voir mes projets</a>
+                    <button
+                        onclick="alert('Fonctionnalité Backend à venir ! Pour l\'instant, on ajoute les projets dans le code HTML.')"
+                        class="btn btn-outline">
+                        + Ajouter un projet
+                    </button>
+                </div>
+            </div>
+
+            <div class="hero-image">
+                <svg class="floating-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                    <line x1="12" y1="6" x2="16" y2="6"></line>
+                    <line x1="12" y1="10" x2="16" y2="10"></line>
+                    <line x1="12" y1="14" x2="16" y2="14"></line>
+                </svg>
+            </div>
+        </div>
+    </header>
+
+    <section id="projects" class="projects-section">
+        <h2>Mes Projets</h2>
+        <div class="projects-grid">
+            <div class="project-card">
+                <div class="card-header">
+                    <span>HTML / CSS</span>
+                </div>
+                <h3>Mon Portfolio</h3>
+                <p>Le site sur lequel vous naviguez actuellement. Premier projet simple pour tester mes compétences et
+                    publier sur github.</p>
+                <a href="#" class="link">Voir le code &rarr;</a>
+            </div>
+
+            <div class="project-card">
+                <div class="card-header">
+                    <span>Jeu video</span>
+                </div>
+                <h3>Projet à venir...</h3>
+                <p>Un futur projet incroyable qui sera listé ici très bientôt. Il s'agit d'un jeu de chalenge educatif
+                    et creatif</p>
+                <a href="#" class="link">En attente &rarr;</a>
+            </div>
+
+            <div class="project-card">
+                <div class="card-header">
+                    <span>React / Node</span>
+                </div>
+                <h3>Projet à venir...</h3>
+                <p>Espace réservé pour une future application web complexe.</p>
+                <a href="#" class="link">En attente &rarr;</a>
+            </div>
+        </div>
+    </section>
+
+    <footer id="contact">
+        <p>Développé avec passion par Gfirst.</p>
+        <div class="socials">
+            <a href="#">GitHub</a>
+            <a href="#">LinkedIn</a>
+            <a href="#">Email</a>
+        </div>
+    </footer>
+
+</body>
+
+</html>

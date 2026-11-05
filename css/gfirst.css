@@ -1,0 +1,642 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   GFIRST — portfolio de Gédéon Mouloundi Mayagha
+   Aucune dépendance. Seule chose chargée de l'extérieur : Google Fonts.
+
+   Trois peaux commutables. Le bouton n'est pas un mode sombre : c'est une
+   commande de profondeur de bits. BRUT (1 bit), NET (24 bits) et PAPIER
+   (sérigraphie) sont le même site à trois précisions.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+
+/* ═══ JETONS — PEAU « BRUT » (1 bit) ═══ */
+
+:root {
+    --fond: #0b0b0c;
+    --fond-creux: #141417;
+    --encre: #f4f4ee;
+    --encre-faible: #8d8d86;
+    --accent: #c3f200;
+    --accent-2: #ff2d9b;
+    --sur-accent: #0b0b0c;
+
+    --trait-ep: 2px;
+    --trait: var(--encre);
+    --rayon: 0px;
+
+    --titrage: "Anton", "Arial Narrow", sans-serif;
+    --courante: "JetBrains Mono", ui-monospace, monospace;
+    --titrage-espace: 0.01em;
+    --nom-poids: 400;
+    /* Anton est une gothique condensée, Archivo Black une grasse large : au
+       même corps, le nom est environ un tiers plus long en NET et PAPIER, il
+       débordait et chassait le boîtier hors du cadre. L'échelle rattrape la
+       chasse de la fonte pour que la composition tienne dans les trois peaux. */
+    --nom-echelle: 1;
+
+    /* La trame de points est la même matière que le tramage du visage, pas
+       un bruit décoratif posé par-dessus. */
+    --texture: radial-gradient(rgba(244, 244, 238, .11) 1px, transparent 1.1px);
+    --texture-taille: 3px 3px;
+}
+
+
+/* ═══ JETONS — PEAU « NET » (24 bits) ═══ */
+
+[data-peau="net"] {
+    --fond: #21272a;
+    --fond-creux: #1a1f22;
+    --encre: #dde5e3;
+    --encre-faible: #7d8a88;
+    --accent: #7fd4c6;
+    --accent-2: #d8a657;
+    --sur-accent: #15191b;
+
+    --trait-ep: 1px;
+    --trait: rgba(221, 229, 227, .22);
+    --rayon: 2px;
+
+    --titrage: "Archivo Black", Georgia, sans-serif;
+    --titrage-espace: -0.015em;
+    --nom-echelle: .72;
+
+    --texture: none;
+    --texture-taille: auto;
+}
+
+
+/* ═══ JETONS — PEAU « PAPIER » (sérigraphie) ═══ */
+
+[data-peau="papier"] {
+    --fond: #e8e4d9;
+    --fond-creux: #ddd8cb;
+    --encre: #17160f;
+    --encre-faible: #6b675a;
+    --accent: #17160f;
+    --accent-2: #c4341f;
+    --sur-accent: #e8e4d9;
+
+    --trait-ep: 1px;
+    --trait: #17160f;
+    --rayon: 0px;
+
+    --titrage: "Archivo Black", Georgia, sans-serif;
+    --titrage-espace: -0.025em;
+    --nom-echelle: .72;
+
+    --texture: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+    --texture-taille: 140px 140px;
+}
+
+
+/* ═══ SOCLE ═══ */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    background: var(--fond);
+    color: var(--encre);
+    font-family: var(--courante);
+    font-size: clamp(0.92rem, 0.3vw + 0.86rem, 1rem);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    /* La transition porte sur le fond et l'encre seulement : une transition
+       « all » ferait traîner les transformations 3D du boîtier d'une image
+       sur l'autre et le rendrait mou. */
+    transition: background-color .45s ease, color .45s ease;
+}
+
+:focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 3px;
+}
+
+.saut {
+    position: absolute;
+    left: -9999px;
+}
+
+.saut:focus {
+    left: 1rem;
+    top: 1rem;
+    z-index: 99;
+    background: var(--accent);
+    color: var(--sur-accent);
+    padding: .6rem 1rem;
+    font-weight: 700;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   L'ARRIVÉE
+   Trois bandes : le repère, le plan du nom, le pied. Le boîtier vit DANS la
+   bande du milieu, à côté du nom et tiré sur lui — c'est ce qui le met
+   devant sans couper le cadre en deux.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.arrivee {
+    position: relative;
+    min-height: 100svh;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    gap: clamp(1rem, 3vh, 2.4rem);
+    padding: clamp(1.1rem, 3vw, 2.6rem);
+    overflow: hidden;
+    background-image: var(--texture);
+    background-size: var(--texture-taille);
+}
+
+.lieu {
+    margin: 0;
+    font-size: .72rem;
+    letter-spacing: .24em;
+    text-transform: uppercase;
+    color: var(--encre-faible);
+}
+
+
+/* ═══ LE NOM ═══ */
+
+/* Flex plutôt que position absolue : la largeur du nom dépend de sa plus
+   longue ligne, qu'aucune règle CSS ne connaît à l'avance. En laissant le nom
+   se dimensionner sur son contenu et en tirant le boîtier par une marge
+   négative, le chevauchement est garanti à toutes les largeurs — là où un
+   `right:` laissait un trou dès que le corps du nom atteignait son plafond. */
+.plan {
+    grid-row: 2;
+    align-self: center;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    /* Pas de conteneur centré : le nom s'aligne sur la même marge gauche que
+       le lieu et le propos. Centré, il démarrait 291 px plus à droite que
+       tout le reste et plus rien ne tombait sur le même axe. */
+}
+
+.nom {
+    flex: 0 1 auto;
+    margin: 0;
+    font-family: var(--titrage);
+    font-weight: var(--nom-poids);
+    font-size: calc(clamp(3.1rem, 15.5vw, 17rem) * var(--nom-echelle));
+    line-height: .82;
+    letter-spacing: var(--titrage-espace);
+    text-transform: uppercase;
+    /* Le nom est le fond de la scène, le boîtier passe devant. */
+    position: relative;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.nom .ligne {
+    display: block;
+}
+
+/* La deuxième ligne recule : c'est elle que le boîtier recouvre, et un nom
+   qui s'efface derrière la machine dit mieux le propos qu'un nom crié. */
+.nom .ligne:nth-child(2) {
+    color: var(--encre-faible);
+    padding-left: .09em;
+}
+
+.nom .ligne:nth-child(3) {
+    padding-left: .18em;
+}
+
+
+/* ═══ LE BOÎTIER ═══ */
+
+/* Le boîtier garde les cotes fixes éprouvées au labo et c'est `.echelle` qui
+   le redimensionne. Raison : `translateZ` n'accepte pas de pourcentage, donc
+   les quatre faces de tranche ont besoin d'une demi-largeur en pixels. Un
+   boîtier fluide obligerait à recalculer ces translations en JavaScript à
+   chaque redimensionnement — pour exactement le même rendu qu'un scale. */
+.scene {
+    --k: 1.2;
+    position: relative;
+    z-index: 2;
+    flex: none;
+    /* C'est cette marge qui fait mordre le boîtier dans le nom. */
+    margin-left: -7rem;
+    width: calc(200px * var(--k));
+    /* La hauteur réserve la place de l'ombre SOUS la boîte. Sans ce rab,
+       l'anneau se retrouvait tracé par-dessus la façade. */
+    height: calc(260px * var(--k) + 44px);
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    perspective: 900px;
+}
+
+.echelle {
+    transform-style: preserve-3d;
+    transform: scale(var(--k));
+}
+
+.boitier {
+    --w: 200px;
+    --h: 260px;
+    --d: 46px;
+    position: relative;
+    width: var(--w);
+    height: var(--h);
+    transform-style: preserve-3d;
+    /* Jamais d'opacity sur ce nœud : une opacité posée sur un parent en
+       preserve-3d aplatit la scène et le dos du boîtier cesse d'exister. */
+    will-change: transform;
+}
+
+.face {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    background: var(--fond-creux);
+    border: var(--trait-ep) solid var(--encre);
+}
+
+.f-avant,
+.f-arriere {
+    width: var(--w);
+    height: var(--h);
+}
+
+.f-avant {
+    transform: translate(-50%, -50%) translateZ(calc(var(--d) / 2));
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 13px;
+}
+
+.f-arriere {
+    transform: translate(-50%, -50%) rotateY(180deg) translateZ(calc(var(--d) / 2));
+}
+
+.f-droite,
+.f-gauche {
+    width: var(--d);
+    height: var(--h);
+}
+
+.f-droite {
+    transform: translate(-50%, -50%) rotateY(90deg) translateZ(calc(var(--w) / 2));
+}
+
+.f-gauche {
+    transform: translate(-50%, -50%) rotateY(-90deg) translateZ(calc(var(--w) / 2));
+}
+
+.f-haut,
+.f-bas {
+    width: var(--w);
+    height: var(--d);
+}
+
+.f-haut {
+    transform: translate(-50%, -50%) rotateX(90deg) translateZ(calc(var(--h) / 2));
+}
+
+.f-bas {
+    transform: translate(-50%, -50%) rotateX(-90deg) translateZ(calc(var(--h) / 2));
+}
+
+.ecran {
+    border: var(--trait-ep) solid var(--encre);
+    background: #000;
+    line-height: 0;
+}
+
+#visage {
+    display: block;
+    width: 100%;
+    height: auto;
+    image-rendering: pixelated;
+}
+
+.bezel {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+/* Tout ce qui vit DANS le boîtier est coté en pixels fixes : le `scale` de
+   `.echelle` s'en charge. Un clamp en vw ici se cumulerait au scale et la
+   façade se déformerait au redimensionnement. */
+.plaque-marque {
+    font-family: var(--titrage);
+    font-size: 15px;
+    letter-spacing: .04em;
+    color: var(--accent);
+}
+
+.dpad {
+    position: relative;
+    width: 22px;
+    height: 22px;
+    flex: none;
+}
+
+.dpad::before,
+.dpad::after {
+    content: "";
+    position: absolute;
+    background: var(--encre);
+}
+
+.dpad::before {
+    left: 0;
+    top: 7px;
+    width: 22px;
+    height: 8px;
+}
+
+.dpad::after {
+    left: 7px;
+    top: 0;
+    width: 8px;
+    height: 22px;
+}
+
+.touches {
+    display: flex;
+    gap: 5px;
+    flex: none;
+}
+
+.touches i {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--accent-2);
+}
+
+.grille {
+    position: absolute;
+    inset: 22% 26%;
+    background: repeating-linear-gradient(to bottom, var(--encre) 0 2px, transparent 2px 8px);
+}
+
+.port {
+    position: absolute;
+    left: 50%;
+    top: 24%;
+    width: 16px;
+    height: 5px;
+    transform: translateX(-50%);
+    background: var(--encre);
+}
+
+/* Une ombre portée noire disparaît sur le fond quasi noir de la peau BRUT :
+   un anneau fin marque le sol dans les trois peaux sans rien supposer. */
+.ombre {
+    position: absolute;
+    left: 50%;
+    bottom: 4px;
+    width: 76%;
+    height: 24px;
+    transform: translateX(-50%);
+    border: var(--trait-ep) solid var(--trait);
+    border-radius: 50%;
+    opacity: .28;
+}
+
+
+/* ═══ LE PIED DE L'ARRIVÉE ═══ */
+
+.propos {
+    grid-row: 3;
+    margin: 0;
+    max-width: 52ch;
+    font-size: clamp(.95rem, 1.5vw, 1.12rem);
+    line-height: 1.5;
+    color: var(--encre-faible);
+    position: relative;
+    z-index: 3;
+}
+
+.propos strong {
+    color: var(--encre);
+    font-weight: 700;
+}
+
+
+/* ═══ LA PLAQUE — commandes de profondeur et de langue ═══ */
+
+.plaque {
+    position: absolute;
+    z-index: 4;
+    top: clamp(1.1rem, 3vw, 2.6rem);
+    right: clamp(1.1rem, 3vw, 2.6rem);
+    display: flex;
+    flex-direction: column;
+    gap: .55rem;
+    align-items: flex-end;
+}
+
+.reglage {
+    display: flex;
+    align-items: center;
+    gap: .3rem;
+}
+
+.intitule {
+    font-size: .6rem;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--encre-faible);
+    margin-right: .25rem;
+}
+
+.reglage button {
+    font-family: var(--courante);
+    font-size: .68rem;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    padding: .34rem .6rem;
+    border: var(--trait-ep) solid var(--trait);
+    border-radius: var(--rayon);
+    background: transparent;
+    color: var(--encre-faible);
+    cursor: pointer;
+    transition: color .2s, border-color .2s, background-color .2s;
+}
+
+.reglage button:hover {
+    color: var(--encre);
+    border-color: var(--encre);
+}
+
+.reglage button[aria-pressed="true"] {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--sur-accent);
+}
+
+
+/* ═══ LA DESCENTE ═══ */
+
+.descente {
+    position: absolute;
+    z-index: 4;
+    right: clamp(1.1rem, 3vw, 2.6rem);
+    bottom: clamp(1.1rem, 3vw, 2.6rem);
+    display: flex;
+    align-items: center;
+    gap: .7rem;
+    color: var(--encre-faible);
+    text-decoration: none;
+    font-size: .68rem;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+}
+
+.descente:hover {
+    color: var(--encre);
+}
+
+.rail {
+    display: block;
+    position: relative;
+    width: 1px;
+    height: 54px;
+    background: var(--trait);
+    opacity: .5;
+}
+
+.rail i {
+    position: absolute;
+    left: -2px;
+    width: 5px;
+    height: 5px;
+    background: var(--accent);
+    animation: descend 2.4s cubic-bezier(.6, 0, .4, 1) infinite;
+}
+
+@keyframes descend {
+    0% { top: 0; opacity: 0; }
+    22% { opacity: 1; }
+    78% { opacity: 1; }
+    100% { top: 49px; opacity: 0; }
+}
+
+
+/* ═══ CHANTIER — repère provisoire ═══ */
+
+.chantier {
+    min-height: 60svh;
+    display: grid;
+    place-items: center;
+    padding: 2rem;
+    text-align: center;
+    color: var(--encre-faible);
+    border-top: var(--trait-ep) solid var(--trait);
+    background-image: var(--texture);
+    background-size: var(--texture-taille);
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   REPLIS
+   ═══════════════════════════════════════════════════════════════════════ */
+
+@media (max-width: 1200px) {
+    .scene {
+        --k: 1;
+        margin-left: -5rem;
+    }
+}
+
+/* Sous 860 px le boîtier cesse de chevaucher le nom : superposés, ils
+   deviennent tous deux illisibles. Il passe sous le nom, à sa taille. */
+@media (max-width: 860px) {
+    .arrivee {
+        grid-template-rows: auto auto auto;
+        gap: clamp(1.4rem, 4vh, 2.2rem);
+    }
+
+    .plan {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: clamp(1rem, 3vh, 1.8rem);
+    }
+
+    .nom {
+        font-size: calc(clamp(2.7rem, 15vw, 5rem) * var(--nom-echelle));
+    }
+
+    .scene {
+        --k: .82;
+        margin-left: 0;
+        align-self: center;
+    }
+
+    .plaque {
+        position: static;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: flex-start;
+        gap: .5rem 1.1rem;
+        order: 9;
+    }
+
+    .descente {
+        position: static;
+        order: 10;
+        justify-content: flex-start;
+    }
+
+    .rail {
+        width: 44px;
+        height: 1px;
+    }
+
+    .rail i {
+        left: 0;
+        top: -2px;
+        animation-name: avance;
+    }
+
+    @keyframes avance {
+        0% { left: 0; opacity: 0; }
+        22% { opacity: 1; }
+        78% { opacity: 1; }
+        100% { left: 39px; opacity: 0; }
+    }
+
+    .propos {
+        max-width: none;
+    }
+}
+
+@media (max-width: 420px) {
+    .scene {
+        --k: .68;
+    }
+}
+
+/* Le mouvement n'est jamais le porteur de l'information : tout coupé, le
+   boîtier reste un boîtier et le nom reste lisible. */
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: .001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .001ms !important;
+    }
+}

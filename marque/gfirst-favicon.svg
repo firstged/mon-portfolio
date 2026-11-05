@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="Gfirst">
+  <title>Gfirst &#8212; coupe 16 a 40 px</title>
+  <mask id="creux">
+    <rect x="5" y="5" width="90" height="90" rx="7" fill="#fff"/>
+    <g fill="none" stroke="#000" stroke-linecap="square" stroke-linejoin="round"
+       transform="translate(5 5) scale(0.90)" stroke-width="15">
+      <path d="M82,50 A32,32 0 1 1 74.5,29.4"/>
+      <path d="M78,50 L50,50"/>
+      <path d="M50,30 L50,70"/>
+    </g>
+  </mask>
+  <rect x="5" y="5" width="90" height="90" rx="7" fill="currentColor" mask="url(#creux)"/>
+</svg>

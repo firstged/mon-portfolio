@@ -1,0 +1,37 @@
+# ═══════════════════════════════════════════════════════════════════════
+# Ce dépôt est PUBLIC et sert GitHub Pages. Tout ce qui est versionné ici
+# est lisible par n'importe qui, définitivement — l'historique Git garde
+# un fichier même après suppression.
+#
+# Les dossiers ci-dessous restent donc locaux.
+# ═══════════════════════════════════════════════════════════════════════
+
+# Le briefing. Contient la section « Points sensibles — à ne PAS publier » :
+# candidatures non retenues, statut juridique de Devs-Solutions, détails
+# internes SUNU, informations sur les clients. Rien de tout cela ne doit
+# sortir.
+CLAUDE.md
+
+# Les fiches projets portent leurs réserves de publication en clair
+# (« ne pas nommer le commanditaire », « ne pas mentionner… »). Publier la
+# consigne de ce qu'on cache est pire que ne rien cacher.
+contenu/
+
+# Images de référence : captures DedSec / Watch Dogs, BMO, Iron Man. Ce
+# sont des œuvres de tiers, et les republier contredirait frontalement
+# l'argument du site. Plus le portrait, qui n'a pas à traîner en brut.
+ref/
+
+# Banc d'essai : explorations écartées, versions mortes, travail en cours.
+labo/
+
+# Marchandisage : fichiers d'impression en attente, et les tracés tirés
+# d'une fonte Windows dont la licence reste à vérifier pour un usage
+# commercial.
+textile/
+
+# Divers
+.artifact/
+.DS_Store
+Thumbs.db
+*.log

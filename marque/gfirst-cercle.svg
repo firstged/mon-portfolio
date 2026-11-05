@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="Gfirst">
+  <title>Gfirst — chiffre de Gédéon I&#8407;</title>
+  <g fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="round">
+    <circle cx="50" cy="50" r="45" stroke-width="2.94"/>
+    <g transform="translate(9 9) scale(0.82)" stroke-width="7">
+      <path d="M82,50 A32,32 0 1 1 74.5,29.4"/>
+      <path d="M78,50 L50,50"/>
+      <path d="M50,32 L50,68"/>
+      <path d="M42,32 L58,32"/>
+      <path d="M42,68 L58,68"/>
+    </g>
+  </g>
+</svg>

@@ -1,100 +1,154 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" data-peau="brut">
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfolio | Développeur fullstack</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Gédéon Mouloundi Mayagha — IA et données, Libreville</title>
+    <meta name="description"
+        content="Je construis des outils de données qui tiennent sur une connexion fragile et qui servent vraiment quelqu'un. Souveraineté numérique du Gabon, IA et Big Data. Libreville.">
+    <meta name="theme-color" content="#0b0b0c">
+    <link rel="icon" href="marque/gfirst-favicon.svg" type="image/svg+xml">
+
+    <!-- ═══ RÉFÉRENCEMENT ═══
+         L'adresse canonique est celle de GitHub Pages tant qu'aucun nom de
+         domaine n'est arrêté. À changer en même temps que le domaine, sinon
+         les moteurs continuent d'indexer l'ancienne. -->
+    <link rel="canonical" href="https://firstged.github.io/mon-portfolio/">
+    <meta name="author" content="Gédéon Mouloundi Mayagha">
+
+    <meta property="og:type" content="profile">
+    <meta property="og:locale" content="fr_FR">
+    <meta property="og:url" content="https://firstged.github.io/mon-portfolio/">
+    <meta property="og:site_name" content="Gfirst">
+    <meta property="og:title" content="Gédéon Mouloundi Mayagha — IA et données, Libreville">
+    <meta property="og:description"
+        content="Je construis des outils de données qui tiennent sur une connexion fragile et qui servent vraiment quelqu'un.">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <!-- Données structurées : c'est ce qui permet à un moteur de rattacher
+         le site à une personne plutôt qu'à une page parmi d'autres. -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Gédéon Mouloundi Mayagha",
+      "alternateName": "Gfirst",
+      "url": "https://firstged.github.io/mon-portfolio/",
+      "image": "https://firstged.github.io/mon-portfolio/marque/gfirst-sceau.svg",
+      "jobTitle": "Développeur et ingénieur IA & Big Data",
+      "description": "Je construis des outils de données qui tiennent sur une connexion fragile et qui servent vraiment quelqu'un.",
+      "address": { "@type": "PostalAddress", "addressLocality": "Libreville", "addressCountry": "GA" },
+      "knowsLanguage": ["fr", "en", "ja"],
+      "knowsAbout": ["Machine learning", "Big Data", "Python", "Traitement intelligent de documents", "Souveraineté numérique"],
+      "sameAs": ["https://github.com/firstged"]
+    }
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo+Black&family=JetBrains+Mono:wght@400;700&display=swap">
+    <link rel="stylesheet" href="css/gfirst.css">
 </head>
 
 <body>
+    <a class="saut" href="#etabli">Aller directement aux projets</a>
 
-    <div class="nav-wrapper">
-        <nav>
-            <div class="logo">GedPortfolio.</div>
-            <ul class="nav-links">
-                <li><a href="#about">À propos</a></li>
-                <li><a href="#projects">Projets</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-        </nav>
-    </div>
+    <!-- ═══════════════════════════════════════════════════════════════════
+         L'ARRIVÉE — le boîtier
+         Pas de hero coupé en deux : le nom occupe tout le cadre et le
+         boîtier passe DEVANT lui. Un seul espace, deux plans.
+         ═══════════════════════════════════════════════════════════════════ -->
+    <header class="arrivee" id="arrivee">
 
-    <header id="about" class="hero">
-        <div class="hero-container">
-            <div class="hero-text">
-                <h1>Salut, je suis <span class="highlight"> Gfirst [Développeur]</span></h1>
-                <p>Bienvenue sur mon portfolio. J'apprends, je code et je construis les applis de demain avec
-                    passion et rigueur.</p>
+        <p class="lieu" data-en="Libreville, Gabon" data-ja="リーブルビル、ガボン">Libreville, Gabon</p>
 
-                <div class="hero-buttons">
-                    <a href="#projects" class="btn btn-primary">Voir mes projets</a>
-                    <button
-                        onclick="alert('Fonctionnalité Backend à venir ! Pour l\'instant, on ajoute les projets dans le code HTML.')"
-                        class="btn btn-outline">
-                        + Ajouter un projet
-                    </button>
+        <!-- Le nom et le boîtier partagent un même conteneur borné : c'est
+             lui qui les tient l'un à l'autre. Positionner le boîtier contre
+             le bord de la fenêtre le détacherait du nom dès que l'écran
+             s'élargit, et le cadre se couperait en deux. -->
+        <div class="plan">
+            <h1 class="nom" aria-label="Gédéon Mouloundi Mayagha">
+                <span class="ligne">Gédéon</span>
+                <span class="ligne">Mouloundi</span>
+                <span class="ligne">Mayagha</span>
+            </h1>
+
+            <div class="scene" id="scene">
+            <div class="echelle">
+                <div class="boitier" id="boitier">
+                    <div class="face f-avant">
+                        <div class="ecran">
+                            <canvas id="visage" width="160" height="112" aria-hidden="true"></canvas>
+                        </div>
+                        <div class="bezel">
+                            <span class="plaque-marque">Gfirst</span>
+                            <span class="dpad" aria-hidden="true"></span>
+                            <span class="touches" aria-hidden="true"><i></i><i></i></span>
+                        </div>
+                    </div>
+                    <div class="face f-arriere"><span class="grille" aria-hidden="true"></span></div>
+                    <div class="face f-gauche"></div>
+                    <div class="face f-droite"><span class="port" aria-hidden="true"></span></div>
+                    <div class="face f-haut"></div>
+                    <div class="face f-bas"></div>
                 </div>
             </div>
-
-            <div class="hero-image">
-                <svg class="floating-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
-                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
-                    <line x1="12" y1="6" x2="16" y2="6"></line>
-                    <line x1="12" y1="10" x2="16" y2="10"></line>
-                    <line x1="12" y1="14" x2="16" y2="14"></line>
-                </svg>
+                <span class="ombre" aria-hidden="true"></span>
             </div>
         </div>
+
+        <!-- Deux temps : le présent gagne le droit d'annoncer l'avenir. Un
+             junior qui n'annonce que son ambition paraît n'avoir rien fait ;
+             qui n'énumère que son fait paraît n'aller nulle part. Et les deux
+             publics se répartissent dessus — un employeur lit la première
+             ligne, un laboratoire lit la seconde. -->
+        <p class="propos"
+            data-en="I build data tools that hold up on a fragile connection and actually serve someone. What I'm after: that Gabon keeps control of its own data, and takes part in what gets invented elsewhere."
+            data-ja="不安定な回線でも動き、誰かの役に立つデータの道具をつくっています。目指すのは、ガボンが自国のデータを自ら握り、世界の技術の歩みに加わることです。">
+            <strong>Je construis des outils de données qui tiennent sur une connexion
+                fragile et qui servent vraiment quelqu'un.</strong>
+            Ce que je vise : que le Gabon garde la main sur ses données, et prenne part
+            à ce qui s'invente ailleurs.
+        </p>
+
+        <!-- ═══ LA PLAQUE — les commandes de la machine ═══
+             Elles ne sont pas dans une barre de navigation : ce sont les
+             réglages du boîtier, posés sur sa plaque signalétique. Fixes et
+             cliquables, contrairement à des boutons collés sur une face qui
+             tourne. -->
+        <div class="plaque">
+            <div class="reglage" role="group" aria-label="Profondeur de bits">
+                <span class="intitule">Profondeur</span>
+                <button type="button" data-peau="brut" aria-pressed="true">Brut</button>
+                <button type="button" data-peau="net" aria-pressed="false">Net</button>
+                <button type="button" data-peau="papier" aria-pressed="false">Papier</button>
+            </div>
+            <div class="reglage" role="group" aria-label="Langue">
+                <span class="intitule">Langue</span>
+                <button type="button" data-langue="fr" aria-pressed="true" lang="fr">FR</button>
+                <button type="button" data-langue="en" aria-pressed="false" lang="en">EN</button>
+                <button type="button" data-langue="ja" aria-pressed="false" lang="ja">日本語</button>
+            </div>
+        </div>
+
+        <a class="descente" href="#etabli">
+            <span data-en="The workbench" data-ja="作業台へ">L'établi</span>
+            <span class="rail" aria-hidden="true"><i></i></span>
+        </a>
+
     </header>
 
-    <section id="projects" class="projects-section">
-        <h2>Mes Projets</h2>
-        <div class="projects-grid">
-            <div class="project-card">
-                <div class="card-header">
-                    <span>HTML / CSS</span>
-                </div>
-                <h3>Mon Portfolio</h3>
-                <p>Le site sur lequel vous naviguez actuellement. Premier projet simple pour tester mes compétences et
-                    publier sur github.</p>
-                <a href="#" class="link">Voir le code &rarr;</a>
-            </div>
+    <!-- Repère provisoire : l'établi et ses sept objets viennent ensuite. -->
+    <main id="etabli" class="chantier">
+        <p data-en="The workbench is being built. Next: ArchiVite, opened on the table."
+            data-ja="作業台は制作中です。次はアルシヴィット。">
+            L'établi est en cours de montage. Ensuite : ArchiVite, ouverte sur la table.
+        </p>
+    </main>
 
-            <div class="project-card">
-                <div class="card-header">
-                    <span>Jeu video</span>
-                </div>
-                <h3>Projet à venir...</h3>
-                <p>Un futur projet incroyable qui sera listé ici très bientôt. Il s'agit d'un jeu de chalenge educatif
-                    et creatif</p>
-                <a href="#" class="link">En attente &rarr;</a>
-            </div>
-
-            <div class="project-card">
-                <div class="card-header">
-                    <span>React / Node</span>
-                </div>
-                <h3>Projet à venir...</h3>
-                <p>Espace réservé pour une future application web complexe.</p>
-                <a href="#" class="link">En attente &rarr;</a>
-            </div>
-        </div>
-    </section>
-
-    <footer id="contact">
-        <p>Développé avec passion par Gfirst.</p>
-        <div class="socials">
-            <a href="#">GitHub</a>
-            <a href="#">LinkedIn</a>
-            <a href="#">Email</a>
-        </div>
-    </footer>
-
+    <script src="js/gfirst.js"></script>
 </body>
 
 </html>
