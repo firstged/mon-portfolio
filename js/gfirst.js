@@ -335,6 +335,38 @@
     });
 
 
+    /* ═══════════════════════════════════════════════════════════════════
+       ÉVEIL AU DÉFILEMENT
+       Les blocs s'allument au passage. La classe est posée depuis le script
+       plutôt qu'écrite dans le HTML : ainsi le document reste correct si ce
+       fichier ne se charge pas, et il n'y a qu'un endroit à changer.
+       ═══════════════════════════════════════════════════════════════════ */
+
+    function eveiller() {
+        /* Mouvement réduit ou navigateur sans observateur : on ne masque
+           rien du tout. Un contenu invisible qui ne se révèle jamais serait
+           bien pire qu'une absence d'animation. */
+        if (reduit || !("IntersectionObserver" in window)) { return; }
+
+        var blocs = $$(".piece > *");
+        if (!blocs.length) { return; }
+
+        blocs.forEach(function (b) { b.classList.add("eveil"); });
+
+        var guetteur = new IntersectionObserver(function (entrees) {
+            entrees.forEach(function (e) {
+                if (!e.isIntersecting) { return; }
+                e.target.classList.add("vu");
+                guetteur.unobserve(e.target);
+            });
+        }, { rootMargin: "0px 0px -12% 0px", threshold: 0.08 });
+
+        blocs.forEach(function (b) { guetteur.observe(b); });
+    }
+
+    eveiller();
+
+
     /* ═══ DÉMARRAGE ═══ */
 
     if (reduit) {

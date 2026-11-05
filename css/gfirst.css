@@ -33,6 +33,12 @@
        chasse de la fonte pour que la composition tienne dans les trois peaux. */
     --nom-echelle: 1;
 
+    /* Un acte dessiné doit se lire comme du papier dans les trois peaux : en
+       BRUT et NET le papier est clair sur fond sombre, en PAPIER le fond est
+       déjà crème et il faut donc un papier plus clair que lui. */
+    --papier-objet: #f4f4ee;
+    --trace-objet: #0b0b0c;
+
     /* La trame de points est la même matière que le tramage du visage, pas
        un bruit décoratif posé par-dessus. */
     --texture: radial-gradient(rgba(244, 244, 238, .11) 1px, transparent 1.1px);
@@ -59,6 +65,9 @@
     --titrage-espace: -0.015em;
     --nom-echelle: .72;
 
+    --papier-objet: #dde5e3;
+    --trace-objet: #21272a;
+
     --texture: none;
     --texture-taille: auto;
 }
@@ -82,6 +91,9 @@
     --titrage: "Archivo Black", Georgia, sans-serif;
     --titrage-espace: -0.025em;
     --nom-echelle: .72;
+
+    --papier-objet: #fbf9f2;
+    --trace-objet: #17160f;
 
     --texture: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
     --texture-taille: 140px 140px;
@@ -530,18 +542,399 @@ body {
 }
 
 
+/* ═══════════════════════════════════════════════════════════════════════
+   PIÈCE OUVERTE — ARCHIVITE
+   Aucune bordure entre l'arrivée et la pièce : on tourne autour d'une
+   table, on ne franchit pas une frontière. La trame est seulement plus
+   serrée ici, ce qui marque l'endroit sans le découper.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.piece {
+    padding: clamp(3.5rem, 11vh, 8rem) clamp(1.1rem, 3vw, 2.6rem) clamp(2.5rem, 7vh, 5rem);
+    background-image: var(--texture);
+    background-size: var(--texture-taille);
+    display: flex;
+    flex-direction: column;
+    gap: clamp(2.2rem, 6vh, 4.2rem);
+}
+
+.piece-tete {
+    display: flex;
+    flex-direction: column;
+    gap: .35rem;
+}
+
+.rang {
+    margin: 0;
+    font-size: .66rem;
+    letter-spacing: .24em;
+    text-transform: uppercase;
+    color: var(--accent);
+}
+
+.piece h2 {
+    margin: 0;
+    font-family: var(--titrage);
+    font-weight: var(--nom-poids);
+    font-size: calc(clamp(2.6rem, 8vw, 6.5rem) * var(--nom-echelle));
+    line-height: .9;
+    letter-spacing: var(--titrage-espace);
+    text-transform: uppercase;
+}
+
+.devise {
+    margin: 0;
+    font-size: clamp(.95rem, 1.5vw, 1.1rem);
+    color: var(--encre-faible);
+}
+
+/* L'attaque entre en décalage : c'est l'alternance d'alignement d'un bloc
+   à l'autre qui casse le gabarit, pas un trait de couleur posé à gauche. */
+.attaque {
+    margin: 0;
+    max-width: 24ch;
+    align-self: flex-end;
+    text-align: right;
+    font-family: var(--titrage);
+    font-weight: var(--nom-poids);
+    font-size: clamp(1.4rem, 3.4vw, 2.6rem);
+    line-height: 1.12;
+    letter-spacing: var(--titrage-espace);
+    color: var(--encre-faible);
+}
+
+.attaque strong {
+    display: block;
+    margin-top: .3em;
+    color: var(--encre);
+    font-weight: inherit;
+}
+
+.expose {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: clamp(1.2rem, 3vw, 3.4rem);
+    /* Deux colonnes d'environ 45 signes : au-delà l'œil perd la ligne, en
+       deçà le bloc paraît égaré dans la page. */
+    max-width: 96ch;
+}
+
+.expose p {
+    margin: 0;
+}
+
+.expose strong,
+.banc-propos strong,
+.corpus strong {
+    color: var(--encre);
+    font-weight: 700;
+}
+
+
+/* ═══ LE BUDGET DE JETONS ═══ */
+
+.budget {
+    margin: 0;
+}
+
+.hachures {
+    position: absolute;
+    width: 0;
+    height: 0;
+}
+
+.cadres {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+    gap: clamp(1.2rem, 3vw, 2.6rem);
+}
+
+.cadre svg {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.pellicule {
+    fill: var(--fond-creux);
+    stroke: var(--trait);
+    stroke-width: 2;
+}
+
+/* Les hachures prennent `currentColor` : la surface perdue se recolore donc
+   d'une peau à l'autre sans second jeu de règles. */
+.gachis {
+    color: var(--encre-faible);
+    opacity: .5;
+}
+
+.acte {
+    fill: var(--papier-objet);
+}
+
+.ligne,
+.ligne-forte {
+    fill: var(--trace-objet);
+}
+
+.ligne {
+    opacity: .4;
+}
+
+.lecture {
+    display: flex;
+    align-items: baseline;
+    gap: .6rem;
+    margin: .9rem 0 .3rem;
+}
+
+.lecture b {
+    font-family: var(--titrage);
+    font-weight: var(--nom-poids);
+    font-size: clamp(2rem, 4.5vw, 3.2rem);
+    line-height: 1;
+    letter-spacing: var(--titrage-espace);
+    color: var(--encre-faible);
+    font-variant-numeric: tabular-nums;
+}
+
+.cadre.retenu .lecture b {
+    color: var(--accent);
+}
+
+.lecture span {
+    font-size: .74rem;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--encre-faible);
+}
+
+.sous {
+    margin: 0;
+    max-width: 38ch;
+    font-size: .88rem;
+    color: var(--encre-faible);
+}
+
+.budget figcaption {
+    margin-top: clamp(1.2rem, 3vh, 2rem);
+    max-width: 62ch;
+    font-size: .92rem;
+    color: var(--encre-faible);
+    border-top: 1px solid var(--trait);
+    padding-top: 1rem;
+}
+
+
+/* ═══ LE BANC ═══ */
+
+.banc {
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+}
+
+.banc h3,
+.corpus h3 {
+    margin: 0;
+    font-family: var(--titrage);
+    font-weight: var(--nom-poids);
+    font-size: clamp(1.25rem, 2.6vw, 2rem);
+    line-height: 1.05;
+    letter-spacing: var(--titrage-espace);
+    text-transform: uppercase;
+}
+
+.banc-propos {
+    margin: 0;
+    max-width: 62ch;
+    color: var(--encre-faible);
+}
+
+.cadre-table {
+    overflow-x: auto;
+    border: var(--trait-ep) solid var(--trait);
+}
+
+.piece table {
+    border-collapse: collapse;
+    width: 100%;
+    min-width: 620px;
+}
+
+.piece caption {
+    text-align: left;
+    padding: .75rem .9rem;
+    font-size: .7rem;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--encre-faible);
+    border-bottom: 1px solid var(--trait);
+}
+
+.piece th,
+.piece td {
+    text-align: left;
+    padding: .7rem .9rem;
+    font-size: .88rem;
+    font-weight: 400;
+    border-bottom: 1px solid var(--trait);
+    vertical-align: baseline;
+}
+
+.piece thead th {
+    font-size: .64rem;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--encre-faible);
+    font-weight: 700;
+}
+
+.piece tbody tr:last-child th,
+.piece tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.piece td b,
+.piece .unite {
+    font-variant-numeric: tabular-nums;
+}
+
+.piece .unite {
+    color: var(--encre-faible);
+    font-weight: 400;
+}
+
+/* La colonne qui décide est tenue visuellement au-dessus des autres : c'est
+   le propos de la section, et la lire en dernier serait le contredire. */
+.decisive {
+    background: var(--fond-creux);
+    border-left: var(--trait-ep) solid var(--trait);
+    border-right: var(--trait-ep) solid var(--trait);
+}
+
+.piece thead th.decisive {
+    color: var(--accent);
+}
+
+td.decisive b {
+    color: var(--accent);
+    font-size: 1.05rem;
+}
+
+.piece .note {
+    display: inline-block;
+    font-size: .68rem;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--encre-faible);
+}
+
+tr.choisi th[scope="row"] {
+    color: var(--encre);
+    font-weight: 700;
+}
+
+.fanion {
+    display: inline-block;
+    margin-left: .5rem;
+    padding: .1rem .4rem;
+    font-size: .6rem;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    background: var(--accent);
+    color: var(--sur-accent);
+    font-weight: 700;
+}
+
+.verdict {
+    margin: 0;
+    max-width: 62ch;
+}
+
+
+/* ═══ LE CORPUS — registre plus calme, aligné à droite ═══ */
+
+.corpus {
+    align-self: flex-end;
+    max-width: 58ch;
+    display: flex;
+    flex-direction: column;
+    gap: .9rem;
+    padding-top: clamp(1rem, 3vh, 2rem);
+    border-top: var(--trait-ep) solid var(--trait);
+}
+
+.corpus p {
+    margin: 0;
+    color: var(--encre-faible);
+}
+
+.protocole {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: .8rem;
+}
+
+.protocole li {
+    font-size: .9rem;
+    color: var(--encre-faible);
+    padding-left: 1.1rem;
+    position: relative;
+}
+
+.protocole li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: .62em;
+    width: .45rem;
+    height: .45rem;
+    background: var(--accent);
+}
+
+.protocole b {
+    color: var(--encre);
+}
+
+.attirail {
+    margin: 0;
+    font-size: .76rem;
+    letter-spacing: .06em;
+    color: var(--encre-faible);
+}
+
+
 /* ═══ CHANTIER — repère provisoire ═══ */
 
 .chantier {
-    min-height: 60svh;
-    display: grid;
-    place-items: center;
-    padding: 2rem;
+    margin: 0;
+    padding: clamp(3rem, 9vh, 6rem) clamp(1.1rem, 3vw, 2.6rem);
     text-align: center;
     color: var(--encre-faible);
-    border-top: var(--trait-ep) solid var(--trait);
+    font-size: .8rem;
+    letter-spacing: .14em;
+    text-transform: uppercase;
     background-image: var(--texture);
     background-size: var(--texture-taille);
+}
+
+
+/* ═══ ÉVEIL AU DÉFILEMENT ═══
+   Les blocs s'allument au passage plutôt que d'apparaître d'un coup. La
+   classe n'est posée que si l'IntersectionObserver existe ET que le
+   mouvement n'est pas réduit : sans JavaScript, tout est déjà visible. */
+.js .eveil {
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity .7s ease, transform .7s cubic-bezier(.2, .7, .3, 1);
+}
+
+.js .eveil.vu {
+    opacity: 1;
+    transform: none;
 }
 
 

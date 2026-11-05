@@ -50,6 +50,11 @@
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo+Black&family=JetBrains+Mono:wght@400;700&display=swap">
     <link rel="stylesheet" href="css/gfirst.css">
+
+    <!-- Posée ici et pas en fin de page : la règle d'éveil ne doit exister
+         qu'avec JavaScript, et l'ajouter plus tard ferait clignoter les blocs
+         (visibles, puis masqués, puis révélés). -->
+    <script>document.documentElement.classList.add("js");</script>
 </head>
 
 <body>
@@ -140,12 +145,227 @@
 
     </header>
 
-    <!-- Repère provisoire : l'établi et ses sept objets viennent ensuite. -->
-    <main id="etabli" class="chantier">
-        <p data-en="The workbench is being built. Next: ArchiVite, opened on the table."
-            data-ja="作業台は制作中です。次はアルシヴィット。">
-            L'établi est en cours de montage. Ensuite : ArchiVite, ouverte sur la table.
-        </p>
+    <main id="etabli">
+
+        <!-- ═══════════════════════════════════════════════════════════════
+             PIÈCE OUVERTE — ARCHIVITE
+             Pas de label / titre / paragraphe à droite : la section entre
+             par sa mesure, parce que c'est elle qui vaut. Le reste se range
+             autour.
+             ═══════════════════════════════════════════════════════════════ -->
+        <section class="piece" id="archivite" aria-labelledby="t-archivite">
+
+            <header class="piece-tete">
+                <p class="rang" data-en="Opened on the bench" data-ja="作業台の上">Pièce ouverte</p>
+                <h2 id="t-archivite">ArchiVite</h2>
+                <p class="devise" data-en="Your archives, archi-fast." data-ja="あなたの記録を、すばやく。">
+                    Vos archives, archi&nbsp;vite.</p>
+            </header>
+
+            <blockquote class="attaque"
+                data-en="I compared four vision models on the same certificate. The gain did not come from the model — it came from a crop."
+                data-ja="同じ証書で四つの視覚モデルを比較しました。差を生んだのはモデルではなく、トリミングでした。">
+                J'ai comparé quatre modèles de vision sur le même acte.
+                <strong>Le gain n'est pas venu du modèle — il est venu d'un recadrage.</strong>
+            </blockquote>
+
+            <div class="expose">
+                <p data-en="In a town hall, a birth certificate is copied by hand into a register, then found by leafing through it. ArchiVite photographs it with a phone, extracts the fields, has a clerk check them in seconds, and files it."
+                    data-ja="役所では出生証書を台帳に手で書き写し、めくって探します。アルシヴィットは携帯で撮り、項目を抽出し、職員が数秒で確認して保管します。">
+                    Dans une mairie, un acte de naissance se recopie à la main dans un registre,
+                    puis se retrouve en feuilletant. ArchiVite le photographie au téléphone, en
+                    extrait les champs, les fait vérifier par un agent en quelques secondes et
+                    l'archive. <strong>La photo d'origine est toujours conservée</strong> : une
+                    donnée saisie ne remplace jamais la pièce.
+                </p>
+                <p data-en="The phone installs nothing — it scans a QR code shown on the workstation and opens a light page. Photos come back in real time, compressed on the phone, retried when the network drops. Which it does."
+                    data-ja="携帯には何も入れません。画面のQRコードを読むだけで軽いページが開きます。写真は圧縮され即座に届き、回線が切れれば自動で再送します。">
+                    Le téléphone n'installe rien — il scanne un QR affiché sur le poste et ouvre
+                    une page légère. Les photos remontent en temps réel, compressées côté
+                    téléphone, avec réessai quand le réseau lâche. Ce qui arrive.
+                </p>
+            </div>
+
+            <!-- ═══ LE BUDGET DE JETONS ═══
+                 Le cœur de la fiche. Deux cadres identiques, un seul acte :
+                 c'est la surface perdue qui se voit, pas un graphique posé
+                 à côté du propos. -->
+            <figure class="budget">
+                <svg class="hachures" aria-hidden="true" width="0" height="0">
+                    <defs>
+                        <pattern id="perdu" width="7" height="7" patternUnits="userSpaceOnUse"
+                            patternTransform="rotate(45)">
+                            <line x1="0" y1="0" x2="0" y2="7" stroke="currentColor" stroke-width="1.4" />
+                        </pattern>
+                    </defs>
+                </svg>
+
+                <div class="cadres">
+                    <div class="cadre">
+                        <svg viewBox="0 0 210 150" role="img"
+                            aria-label="Photo où l'acte occupe un quart du cadre, le reste est perdu">
+                            <rect x="1" y="1" width="208" height="148" class="pellicule" />
+                            <rect x="1" y="1" width="208" height="148" fill="url(#perdu)" class="gachis" />
+                            <g transform="translate(66 42) rotate(-5)">
+                                <rect width="78" height="66" class="acte" />
+                                <rect x="8" y="8" width="38" height="5" class="ligne-forte" />
+                                <rect x="8" y="22" width="62" height="3" class="ligne" />
+                                <rect x="8" y="31" width="62" height="3" class="ligne" />
+                                <rect x="8" y="40" width="44" height="3" class="ligne" />
+                                <rect x="8" y="49" width="54" height="3" class="ligne" />
+                            </g>
+                        </svg>
+                        <p class="lecture"><b>4,7</b><span>champs justes sur 11</span></p>
+                        <p class="sous" data-en="The certificate fills a quarter of the frame. Three quarters of the budget go into the office wall."
+                            data-ja="証書は画面の四分の一。予算の四分の三は壁に消えます。">
+                            L'acte occupe un quart du cadre. Les trois quarts du budget partent
+                            dans le mur du bureau.</p>
+                    </div>
+
+                    <div class="cadre retenu">
+                        <svg viewBox="0 0 210 150" role="img"
+                            aria-label="Même photo recadrée sur l'acte, qui remplit le cadre">
+                            <rect x="1" y="1" width="208" height="148" class="pellicule" />
+                            <g transform="translate(16 8)">
+                                <rect width="178" height="134" class="acte" />
+                                <rect x="18" y="16" width="86" height="11" class="ligne-forte" />
+                                <rect x="18" y="47" width="142" height="7" class="ligne" />
+                                <rect x="18" y="66" width="142" height="7" class="ligne" />
+                                <rect x="18" y="85" width="100" height="7" class="ligne" />
+                                <rect x="18" y="104" width="124" height="7" class="ligne" />
+                            </g>
+                        </svg>
+                        <p class="lecture"><b>6,7</b><span>champs justes sur 11</span></p>
+                        <p class="sous" data-en="Same photo, same model. Only the framing changed."
+                            data-ja="同じ写真、同じモデル。変えたのは枠だけです。">
+                            Même photo, même modèle. Seul le cadrage a changé.</p>
+                    </div>
+                </div>
+
+                <figcaption
+                    data-en="Vision APIs reduce any image to a fixed token budget. Preprocessing is worth more than two generations of model — and when the detection hesitates, it gives up and returns the original: a silently cropped document would be worse than no cropping at all."
+                    data-ja="視覚APIはどんな画像も一定のトークン予算に落とし込みます。前処理はモデル二世代分より効きます。検出が迷えば元の写真に戻します。黙って欠けた文書は、トリミングしないより悪いからです。">
+                    Les API de vision ramènent toute image à un budget de jetons fixe. Le
+                    prétraitement vaut donc plus que deux générations de modèle — et quand la
+                    détection hésite, elle abandonne et renvoie l'original : un document amputé
+                    en silence serait pire que pas de recadrage du tout.
+                </figcaption>
+            </figure>
+
+            <!-- ═══ LE BANC ═══
+                 La colonne qui décide n'est pas l'exactitude : c'est elle
+                 qu'on met en avant, pas celle qu'on lit d'habitude. -->
+            <div class="banc">
+                <h3 data-en="The deciding figure is not accuracy" data-ja="決め手は正確さではありません">
+                    Le chiffre qui décide n'est pas l'exactitude</h3>
+                <p class="banc-propos"
+                    data-en="It is the number of fields that are wrong and announced as certain — those that pass without review and enter the town's archives as they are. A field 90 % right costs one re-read; a wrong field nobody re-reads costs a false civil record."
+                    data-ja="誤っているのに「確か」と示される項目の数です。確認を素通りし、そのまま役所の記録になります。">
+                    C'est le nombre de champs <strong>faux et annoncés comme sûrs</strong> — ceux
+                    qui passent sans relecture et entrent tels quels dans les archives de la
+                    commune. Un champ exact à 90 % coûte une relecture ; un champ faux que
+                    personne ne relit coûte un acte d'état civil erroné.
+                </p>
+
+                <div class="cadre-table">
+                    <table>
+                        <caption data-en="Same certificate, same ground truth, three runs per configuration — 2 Nov 2026"
+                            data-ja="同一の証書と正解データ、各設定三回ずつ — 2026年11月2日">
+                            Même acte manuscrit, même vérité terrain, trois essais par
+                            configuration — 2 novembre 2026
+                        </caption>
+                        <thead>
+                            <tr>
+                                <th scope="col">Modèle</th>
+                                <th scope="col">Exacts<span class="unite">/11</span></th>
+                                <th scope="col" class="decisive">Erreurs silencieuses</th>
+                                <th scope="col">Délai</th>
+                                <th scope="col">Coût</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="choisi">
+                                <th scope="row">gemini-3.5-flash-lite <span class="fanion">retenu</span></th>
+                                <td><b>6,7</b></td>
+                                <td class="decisive"><b>0 à 0,7</b></td>
+                                <td>7 s</td>
+                                <td>gratuit</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">gemini-3.6-flash</th>
+                                <td><b>6,0</b></td>
+                                <td class="decisive"><b>1 à 5</b> <span class="note">instable</span></td>
+                                <td>15 s</td>
+                                <td>gratuit</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">gemini-3.8-flash</th>
+                                <td>lecture supérieure</td>
+                                <td class="decisive">—</td>
+                                <td><b>&gt; 120 s</b> <span class="note">hors délai</span></td>
+                                <td>gratuit</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">claude-opus-5</th>
+                                <td><b>7,0</b></td>
+                                <td class="decisive"><b>0</b></td>
+                                <td>20 s</td>
+                                <td>~0,06 $/doc</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <p class="verdict"
+                    data-en="So I kept the free model rather than the most accurate one. And without the automatic crop, that same model falls back to 4.7."
+                    data-ja="だから最も正確なモデルではなく、無料のものを選びました。">
+                    C'est pour ça que j'ai retenu le modèle gratuit et non le plus précis.
+                    Et sans le recadrage automatique, ce même modèle retombe à 4,7.
+                </p>
+            </div>
+
+            <!-- ═══ LE CORPUS ═══
+                 Registre plus calme : c'est une décision de méthode, pas un
+                 résultat. Changer de rythme ici est aussi ce qui empêche la
+                 section d'avoir quatre fois le même bloc. -->
+            <aside class="corpus">
+                <h3 data-en="I did not measure on real registers, and that was deliberate"
+                    data-ja="本物の台帳では測っていません。意図的です。">
+                    Je n'ai pas mesuré sur de vrais registres, et c'est volontaire</h3>
+                <p data-en="A real certificate carries a person's civil status — you do not send that to an online model, least of all on a free tier that trains on it. So I wrote a generator of fictional certificates to be filled in by hand, whose ground truth is generated before it is written."
+                    data-ja="本物の証書には実在の人の身分が載ります。無料枠で学習に使われるモデルには送れません。そこで手書き用の架空の証書を生成する道具を書きました。">
+                    Un acte réel porte l'état civil d'une personne — on ne l'envoie pas à un
+                    modèle en ligne, encore moins sur un palier gratuit qui s'en sert pour
+                    entraîner. J'ai donc écrit un générateur d'actes fictifs à remplir à la main,
+                    dont la vérité terrain est <strong>engendrée avant d'être écrite</strong>.
+                </p>
+                <ul class="protocole">
+                    <li data-en="Several scribes. Ten certificates in eight hands beat fifty in one — handwriting is the variable being measured."
+                        data-ja="複数の筆者。八人で十枚のほうが、一人で五十枚より役に立ちます。">
+                        <b>Plusieurs scripteurs.</b> Dix actes de huit mains valent mieux que
+                        cinquante d'une seule — l'écriture est la variable qu'on mesure.</li>
+                    <li data-en="Write fast, without care. A clerk fills hundreds a day. Neat handwriting measures a case that does not exist."
+                        data-ja="速く、雑に書く。丁寧な字は存在しない事例を測ることになります。">
+                        <b>Écrire vite, sans soigner.</b> Un officier d'état civil en remplit des
+                        centaines par jour. Une belle écriture appliquée mesure un cas qui
+                        n'existe pas dans les registres.</li>
+                    <li data-en="Age part of the batch. Fresh paper is not a 1997 register: no faded ink, no stamp over the text, no show-through."
+                        data-ja="一部を古びさせる。新しい紙は一九九七年の台帳ではありません。">
+                        <b>Vieillir une partie du lot.</b> Du papier neuf n'est pas un registre de
+                        1997 : ni encre passée, ni tampon chevauchant le texte, ni transparence du
+                        verso.</li>
+                </ul>
+            </aside>
+
+            <p class="attirail">FastAPI · React · PostgreSQL ou SQLite · deux fournisseurs de
+                vision interchangeables · banc de calibrage maison</p>
+
+        </section>
+
+        <!-- Les six autres objets de l'établi viennent ensuite. -->
+        <p class="chantier" data-en="The rest of the bench is being assembled."
+            data-ja="作業台の続きは制作中です。">La suite de l'établi est en cours de montage.</p>
+
     </main>
 
     <script src="js/gfirst.js"></script>
