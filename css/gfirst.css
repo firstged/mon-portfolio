@@ -12,36 +12,33 @@
 
 :root {
     --fond: #0b0b0c;
-    --fond-creux: #141417;
+    --fond-creux: #131317;
     --encre: #f4f4ee;
     --encre-faible: #8d8d86;
-    --accent: #c3f200;
-    --accent-2: #ff2d9b;
-    --sur-accent: #0b0b0c;
 
-    --trait-ep: 2px;
-    --trait: var(--encre);
+    /* La charte du poinçon n'a pas de couleur d'accent : encre, papier, fond
+       sombre, et c'est tout. Un vert couru sur les boutons, les puces et les
+       chiffres est ce qui rendait le site bruyant. Il reste disponible comme
+       SIGNAL — une occurrence par écran au maximum. L'emphase ordinaire se
+       fait au contraste, pas à la teinte. */
+    --accent: #f4f4ee;
+    --sur-accent: #0b0b0c;
+    --signal: #c3f200;
+
+    --trait-ep: 1px;
+    --trait: rgba(244, 244, 238, .22);
+    --trait-franc: #f4f4ee;
     --rayon: 0px;
 
     --titrage: "Anton", "Arial Narrow", sans-serif;
     --courante: "JetBrains Mono", ui-monospace, monospace;
     --titrage-espace: 0.01em;
-    --nom-poids: 400;
-    /* Anton est une gothique condensée, Archivo Black une grasse large : au
-       même corps, le nom est environ un tiers plus long en NET et PAPIER, il
-       débordait et chassait le boîtier hors du cadre. L'échelle rattrape la
-       chasse de la fonte pour que la composition tienne dans les trois peaux. */
     --nom-echelle: 1;
 
-    /* Un acte dessiné doit se lire comme du papier dans les trois peaux : en
-       BRUT et NET le papier est clair sur fond sombre, en PAPIER le fond est
-       déjà crème et il faut donc un papier plus clair que lui. */
     --papier-objet: #f4f4ee;
     --trace-objet: #0b0b0c;
 
-    /* La trame de points est la même matière que le tramage du visage, pas
-       un bruit décoratif posé par-dessus. */
-    --texture: radial-gradient(rgba(244, 244, 238, .11) 1px, transparent 1.1px);
+    --texture: radial-gradient(rgba(244, 244, 238, .05) 1px, transparent 1.1px);
     --texture-taille: 3px 3px;
 }
 
@@ -50,15 +47,16 @@
 
 [data-peau="net"] {
     --fond: #21272a;
-    --fond-creux: #1a1f22;
+    --fond-creux: #1b2124;
     --encre: #dde5e3;
     --encre-faible: #7d8a88;
-    --accent: #7fd4c6;
-    --accent-2: #d8a657;
-    --sur-accent: #15191b;
 
-    --trait-ep: 1px;
-    --trait: rgba(221, 229, 227, .22);
+    --accent: #dde5e3;
+    --sur-accent: #15191b;
+    --signal: #7fd4c6;
+
+    --trait: rgba(221, 229, 227, .18);
+    --trait-franc: #dde5e3;
     --rayon: 2px;
 
     --titrage: "Archivo Black", Georgia, sans-serif;
@@ -77,15 +75,16 @@
 
 [data-peau="papier"] {
     --fond: #e8e4d9;
-    --fond-creux: #ddd8cb;
+    --fond-creux: #ded9cc;
     --encre: #17160f;
     --encre-faible: #6b675a;
-    --accent: #17160f;
-    --accent-2: #c4341f;
-    --sur-accent: #e8e4d9;
 
-    --trait-ep: 1px;
-    --trait: #17160f;
+    --accent: #17160f;
+    --sur-accent: #e8e4d9;
+    --signal: #c4341f;
+
+    --trait: rgba(23, 22, 15, .22);
+    --trait-franc: #17160f;
     --rayon: 0px;
 
     --titrage: "Archivo Black", Georgia, sans-serif;
@@ -95,7 +94,7 @@
     --papier-objet: #fbf9f2;
     --trace-objet: #17160f;
 
-    --texture: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+    --texture: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E");
     --texture-taille: 140px 140px;
 }
 
@@ -112,23 +111,43 @@ html {
     scroll-behavior: smooth;
 }
 
+/* Pas une seule bordure entre les sections : le fond lui-même dérive sur
+   toute la hauteur du document. C'est le dégradé qui dit qu'on avance, et
+   il n'y a donc aucune couture à franchir. */
 body {
     margin: 0;
-    background: var(--fond);
+    background-color: var(--fond);
+    background-image:
+        var(--texture),
+        linear-gradient(180deg,
+            var(--fond) 0%,
+            var(--fond-creux) 34%,
+            var(--fond) 62%,
+            var(--fond-creux) 100%);
+    background-size: var(--texture-taille), 100% 100%;
     color: var(--encre);
     font-family: var(--courante);
     font-size: clamp(0.92rem, 0.3vw + 0.86rem, 1rem);
-    line-height: 1.6;
+    line-height: 1.65;
     -webkit-font-smoothing: antialiased;
-    /* La transition porte sur le fond et l'encre seulement : une transition
-       « all » ferait traîner les transformations 3D du boîtier d'une image
-       sur l'autre et le rendrait mou. */
-    transition: background-color .45s ease, color .45s ease;
+    transition: background-color .5s ease, color .5s ease;
 }
 
 :focus-visible {
-    outline: 3px solid var(--accent);
+    outline: 2px solid var(--signal);
     outline-offset: 3px;
+}
+
+a {
+    color: var(--encre);
+    text-decoration-thickness: 1px;
+    text-underline-offset: .25em;
+    text-decoration-color: var(--trait);
+    transition: text-decoration-color .25s ease;
+}
+
+a:hover {
+    text-decoration-color: currentColor;
 }
 
 .saut {
@@ -140,18 +159,25 @@ body {
     left: 1rem;
     top: 1rem;
     z-index: 99;
-    background: var(--accent);
-    color: var(--sur-accent);
+    background: var(--encre);
+    color: var(--fond);
     padding: .6rem 1rem;
-    font-weight: 700;
+}
+
+/* Le changement de langue ne doit pas claquer : le texte s'efface, se
+   remplace hors de vue, puis revient. Deux dixièmes suffisent — au-delà on
+   attend, en deçà on voit la substitution se faire. */
+.js [data-en] {
+    transition: opacity .2s ease;
+}
+
+.js [data-en].mue {
+    opacity: 0;
 }
 
 
 /* ═══════════════════════════════════════════════════════════════════════
-   L'ARRIVÉE
-   Trois bandes : le repère, le plan du nom, le pied. Le boîtier vit DANS la
-   bande du milieu, à côté du nom et tiré sur lui — c'est ce qui le met
-   devant sans couper le cadre en deux.
+   L'ARRIVÉE — le nom, et la marque frappée. Rien d'autre.
    ═══════════════════════════════════════════════════════════════════════ */
 
 .arrivee {
@@ -159,281 +185,103 @@ body {
     min-height: 100svh;
     display: grid;
     grid-template-rows: auto 1fr auto;
-    gap: clamp(1rem, 3vh, 2.4rem);
+    gap: clamp(1.4rem, 4vh, 3rem);
     padding: clamp(1.1rem, 3vw, 2.6rem);
-    overflow: hidden;
-    background-image: var(--texture);
-    background-size: var(--texture-taille);
 }
 
 .lieu {
     margin: 0;
-    font-size: .72rem;
-    letter-spacing: .24em;
+    font-size: .68rem;
+    letter-spacing: .26em;
     text-transform: uppercase;
     color: var(--encre-faible);
 }
 
-
-/* ═══ LE NOM ═══ */
-
-/* Flex plutôt que position absolue : la largeur du nom dépend de sa plus
-   longue ligne, qu'aucune règle CSS ne connaît à l'avance. En laissant le nom
-   se dimensionner sur son contenu et en tirant le boîtier par une marge
-   négative, le chevauchement est garanti à toutes les largeurs — là où un
-   `right:` laissait un trou dès que le corps du nom atteignait son plafond. */
 .plan {
     grid-row: 2;
     align-self: center;
     display: flex;
-    align-items: center;
-    width: 100%;
-    /* Pas de conteneur centré : le nom s'aligne sur la même marge gauche que
-       le lieu et le propos. Centré, il démarrait 291 px plus à droite que
-       tout le reste et plus rien ne tombait sur le même axe. */
+    align-items: flex-end;
+    gap: clamp(.6rem, 1.6vw, 1.4rem);
+    flex-wrap: wrap;
 }
 
 .nom {
     flex: 0 1 auto;
     margin: 0;
     font-family: var(--titrage);
-    font-weight: var(--nom-poids);
-    font-size: calc(clamp(3.1rem, 15.5vw, 17rem) * var(--nom-echelle));
-    line-height: .82;
+    font-weight: 400;
+    font-size: calc(clamp(2.9rem, 14vw, 15rem) * var(--nom-echelle));
+    line-height: .84;
     letter-spacing: var(--titrage-espace);
     text-transform: uppercase;
-    /* Le nom est le fond de la scène, le boîtier passe devant. */
-    position: relative;
-    z-index: 1;
-    pointer-events: none;
 }
 
 .nom .ligne {
     display: block;
 }
 
-/* La deuxième ligne recule : c'est elle que le boîtier recouvre, et un nom
-   qui s'efface derrière la machine dit mieux le propos qu'un nom crié. */
 .nom .ligne:nth-child(2) {
     color: var(--encre-faible);
-    padding-left: .09em;
-}
-
-.nom .ligne:nth-child(3) {
-    padding-left: .18em;
 }
 
 
-/* ═══ LE BOÎTIER ═══ */
+/* ═══ LE POINÇON ═══
+   Un poinçon est ce que le maître frappe dans ce qu'il fabrique : il est
+   donc posé au pied du nom, légèrement de travers, comme une marque
+   appuyée à la main — pas centré, pas droit, pas en médaillon. */
 
-/* Le boîtier garde les cotes fixes éprouvées au labo et c'est `.echelle` qui
-   le redimensionne. Raison : `translateZ` n'accepte pas de pourcentage, donc
-   les quatre faces de tranche ont besoin d'une demi-largeur en pixels. Un
-   boîtier fluide obligerait à recalculer ces translations en JavaScript à
-   chaque redimensionnement — pour exactement le même rendu qu'un scale. */
-.scene {
-    --k: 1.2;
-    position: relative;
-    z-index: 2;
+.poincon {
     flex: none;
-    /* C'est cette marge qui fait mordre le boîtier dans le nom. */
-    margin-left: -7rem;
-    width: calc(200px * var(--k));
-    /* La hauteur réserve la place de l'ombre SOUS la boîte. Sans ce rab,
-       l'anneau se retrouvait tracé par-dessus la façade. */
-    height: calc(260px * var(--k) + 44px);
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    perspective: 900px;
-}
-
-.echelle {
-    transform-style: preserve-3d;
-    transform: scale(var(--k));
-}
-
-.boitier {
-    --w: 200px;
-    --h: 260px;
-    --d: 46px;
-    position: relative;
-    width: var(--w);
-    height: var(--h);
-    transform-style: preserve-3d;
-    /* Jamais d'opacity sur ce nœud : une opacité posée sur un parent en
-       preserve-3d aplatit la scène et le dos du boîtier cesse d'exister. */
-    will-change: transform;
-}
-
-.face {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    background: var(--fond-creux);
-    border: var(--trait-ep) solid var(--encre);
-}
-
-.f-avant,
-.f-arriere {
-    width: var(--w);
-    height: var(--h);
-}
-
-.f-avant {
-    transform: translate(-50%, -50%) translateZ(calc(var(--d) / 2));
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    padding: 13px;
-}
-
-.f-arriere {
-    transform: translate(-50%, -50%) rotateY(180deg) translateZ(calc(var(--d) / 2));
-}
-
-.f-droite,
-.f-gauche {
-    width: var(--d);
-    height: var(--h);
-}
-
-.f-droite {
-    transform: translate(-50%, -50%) rotateY(90deg) translateZ(calc(var(--w) / 2));
-}
-
-.f-gauche {
-    transform: translate(-50%, -50%) rotateY(-90deg) translateZ(calc(var(--w) / 2));
-}
-
-.f-haut,
-.f-bas {
-    width: var(--w);
-    height: var(--d);
-}
-
-.f-haut {
-    transform: translate(-50%, -50%) rotateX(90deg) translateZ(calc(var(--h) / 2));
-}
-
-.f-bas {
-    transform: translate(-50%, -50%) rotateX(-90deg) translateZ(calc(var(--h) / 2));
-}
-
-.ecran {
-    border: var(--trait-ep) solid var(--encre);
-    background: #000;
-    line-height: 0;
-}
-
-#visage {
-    display: block;
-    width: 100%;
+    width: clamp(92px, 11vw, 160px);
     height: auto;
-    image-rendering: pixelated;
+    color: var(--encre);
+    transform: rotate(-3deg);
+    margin-bottom: .3em;
 }
 
-.bezel {
-    display: flex;
-    flex: 1;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
+.poincon .enceinte {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.94;
 }
 
-/* Tout ce qui vit DANS le boîtier est coté en pixels fixes : le `scale` de
-   `.echelle` s'en charge. Un clamp en vw ici se cumulerait au scale et la
-   façade se déformerait au redimensionnement. */
-.plaque-marque {
-    font-family: var(--titrage);
-    font-size: 15px;
-    letter-spacing: .04em;
-    color: var(--accent);
+.poincon .lettres {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 7;
+    stroke-linecap: square;
+    stroke-linejoin: round;
 }
 
-.dpad {
-    position: relative;
-    width: 22px;
-    height: 22px;
-    flex: none;
+.js .poincon {
+    animation: frappe .62s cubic-bezier(.16, .9, .3, 1) both;
 }
 
-.dpad::before,
-.dpad::after {
-    content: "";
-    position: absolute;
-    background: var(--encre);
+/* Une frappe, pas une apparition : la marque arrive trop grande et s'écrase
+   sur sa position, comme un tampon qu'on appuie. */
+@keyframes frappe {
+    from {
+        opacity: 0;
+        transform: rotate(-9deg) scale(1.4);
+    }
+
+    55% {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 1;
+        transform: rotate(-3deg) scale(1);
+    }
 }
-
-.dpad::before {
-    left: 0;
-    top: 7px;
-    width: 22px;
-    height: 8px;
-}
-
-.dpad::after {
-    left: 7px;
-    top: 0;
-    width: 8px;
-    height: 22px;
-}
-
-.touches {
-    display: flex;
-    gap: 5px;
-    flex: none;
-}
-
-.touches i {
-    width: 9px;
-    height: 9px;
-    border-radius: 50%;
-    background: var(--accent-2);
-}
-
-.grille {
-    position: absolute;
-    inset: 22% 26%;
-    background: repeating-linear-gradient(to bottom, var(--encre) 0 2px, transparent 2px 8px);
-}
-
-.port {
-    position: absolute;
-    left: 50%;
-    top: 24%;
-    width: 16px;
-    height: 5px;
-    transform: translateX(-50%);
-    background: var(--encre);
-}
-
-/* Une ombre portée noire disparaît sur le fond quasi noir de la peau BRUT :
-   un anneau fin marque le sol dans les trois peaux sans rien supposer. */
-.ombre {
-    position: absolute;
-    left: 50%;
-    bottom: 4px;
-    width: 76%;
-    height: 24px;
-    transform: translateX(-50%);
-    border: var(--trait-ep) solid var(--trait);
-    border-radius: 50%;
-    opacity: .28;
-}
-
-
-/* ═══ LE PIED DE L'ARRIVÉE ═══ */
 
 .propos {
     grid-row: 3;
     margin: 0;
-    max-width: 52ch;
-    font-size: clamp(.95rem, 1.5vw, 1.12rem);
-    line-height: 1.5;
+    max-width: 54ch;
+    font-size: clamp(.95rem, 1.4vw, 1.1rem);
     color: var(--encre-faible);
-    position: relative;
-    z-index: 3;
 }
 
 .propos strong {
@@ -442,7 +290,7 @@ body {
 }
 
 
-/* ═══ LA PLAQUE — commandes de profondeur et de langue ═══ */
+/* ═══ LA PLAQUE ═══ */
 
 .plaque {
     position: absolute;
@@ -451,47 +299,48 @@ body {
     right: clamp(1.1rem, 3vw, 2.6rem);
     display: flex;
     flex-direction: column;
-    gap: .55rem;
+    gap: .5rem;
     align-items: flex-end;
 }
 
 .reglage {
     display: flex;
     align-items: center;
-    gap: .3rem;
+    gap: .25rem;
 }
 
 .intitule {
-    font-size: .6rem;
-    letter-spacing: .18em;
+    font-size: .58rem;
+    letter-spacing: .2em;
     text-transform: uppercase;
     color: var(--encre-faible);
-    margin-right: .25rem;
+    margin-right: .3rem;
 }
 
 .reglage button {
     font-family: var(--courante);
-    font-size: .68rem;
+    font-size: .66rem;
     letter-spacing: .1em;
     text-transform: uppercase;
-    padding: .34rem .6rem;
+    padding: .32rem .6rem;
     border: var(--trait-ep) solid var(--trait);
     border-radius: var(--rayon);
     background: transparent;
     color: var(--encre-faible);
     cursor: pointer;
-    transition: color .2s, border-color .2s, background-color .2s;
+    transition: color .25s, border-color .25s, background-color .25s;
 }
 
 .reglage button:hover {
     color: var(--encre);
-    border-color: var(--encre);
+    border-color: var(--trait-franc);
 }
 
+/* Le réglage actif est frappé, pas colorié : encre pleine, fond réservé. */
 .reglage button[aria-pressed="true"] {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: var(--sur-accent);
+    background: var(--encre);
+    border-color: var(--encre);
+    color: var(--fond);
 }
 
 
@@ -507,8 +356,8 @@ body {
     gap: .7rem;
     color: var(--encre-faible);
     text-decoration: none;
-    font-size: .68rem;
-    letter-spacing: .18em;
+    font-size: .66rem;
+    letter-spacing: .2em;
     text-transform: uppercase;
 }
 
@@ -522,110 +371,223 @@ body {
     width: 1px;
     height: 54px;
     background: var(--trait);
-    opacity: .5;
 }
 
 .rail i {
     position: absolute;
-    left: -2px;
-    width: 5px;
-    height: 5px;
-    background: var(--accent);
-    animation: descend 2.4s cubic-bezier(.6, 0, .4, 1) infinite;
+    left: -1px;
+    width: 3px;
+    height: 3px;
+    background: var(--encre);
+    animation: descend 2.6s cubic-bezier(.6, 0, .4, 1) infinite;
 }
 
 @keyframes descend {
     0% { top: 0; opacity: 0; }
-    22% { opacity: 1; }
-    78% { opacity: 1; }
-    100% { top: 49px; opacity: 0; }
+    25% { opacity: 1; }
+    75% { opacity: 1; }
+    100% { top: 51px; opacity: 0; }
 }
 
 
 /* ═══════════════════════════════════════════════════════════════════════
-   PIÈCE OUVERTE — ARCHIVITE
-   Aucune bordure entre l'arrivée et la pièce : on tourne autour d'une
-   table, on ne franchit pas une frontière. La trame est seulement plus
-   serrée ici, ce qui marque l'endroit sans le découper.
+   LES BLOCS
    ═══════════════════════════════════════════════════════════════════════ */
 
-.piece {
-    padding: clamp(3.5rem, 11vh, 8rem) clamp(1.1rem, 3vw, 2.6rem) clamp(2.5rem, 7vh, 5rem);
-    background-image: var(--texture);
-    background-size: var(--texture-taille);
+.bloc {
+    padding: clamp(4rem, 14vh, 10rem) clamp(1.1rem, 3vw, 2.6rem);
+}
+
+.bloc-tete {
     display: flex;
     flex-direction: column;
-    gap: clamp(2.2rem, 6vh, 4.2rem);
+    gap: .5rem;
+    margin-bottom: clamp(2rem, 6vh, 4rem);
 }
 
-.piece-tete {
-    display: flex;
-    flex-direction: column;
-    gap: .35rem;
-}
-
-.rang {
-    margin: 0;
-    font-size: .66rem;
-    letter-spacing: .24em;
-    text-transform: uppercase;
-    color: var(--accent);
-}
-
-.piece h2 {
+.bloc h2 {
     margin: 0;
     font-family: var(--titrage);
-    font-weight: var(--nom-poids);
-    font-size: calc(clamp(2.6rem, 8vw, 6.5rem) * var(--nom-echelle));
-    line-height: .9;
+    font-weight: 400;
+    font-size: calc(clamp(2rem, 6vw, 4.5rem) * var(--nom-echelle));
+    line-height: .92;
     letter-spacing: var(--titrage-espace);
     text-transform: uppercase;
 }
 
-.devise {
+.bloc-chapo {
     margin: 0;
-    font-size: clamp(.95rem, 1.5vw, 1.1rem);
+    max-width: 52ch;
     color: var(--encre-faible);
 }
 
-/* L'attaque entre en décalage : c'est l'alternance d'alignement d'un bloc
-   à l'autre qui casse le gabarit, pas un trait de couleur posé à gauche. */
-.attaque {
+
+/* ═══ LES VIGNETTES ═══
+   Ce qu'un visiteur voit en arrivant : le projet, pour qui, un lien. Le
+   détail d'ingénierie se déplie pour qui le demande — on ne l'impose pas
+   à quelqu'un qui vient d'arriver. */
+
+.vignettes {
+    list-style: none;
     margin: 0;
-    max-width: 24ch;
-    align-self: flex-end;
-    text-align: right;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(305px, 1fr));
+    gap: clamp(1.6rem, 4vw, 3.2rem) clamp(1.6rem, 4vw, 3.4rem);
+}
+
+.vignette {
+    display: flex;
+    flex-direction: column;
+    gap: .55rem;
+    padding-top: 1.1rem;
+    border-top: var(--trait-ep) solid var(--trait);
+}
+
+/* La pièce la plus forte occupe deux colonnes quand il y a la place : une
+   grille où tout pèse pareil ne hiérarchise rien. */
+.vignette.vedette {
+    grid-column: span 2;
+}
+
+.genre {
+    margin: 0;
+    font-size: .6rem;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--encre-faible);
+}
+
+.vignette h3 {
+    margin: 0;
     font-family: var(--titrage);
-    font-weight: var(--nom-poids);
-    font-size: clamp(1.4rem, 3.4vw, 2.6rem);
-    line-height: 1.12;
+    font-weight: 400;
+    font-size: calc(clamp(1.5rem, 3vw, 2.4rem) * var(--nom-echelle));
+    line-height: 1;
+    letter-spacing: var(--titrage-espace);
+    text-transform: uppercase;
+}
+
+.resume {
+    margin: 0;
+    max-width: 54ch;
+    color: var(--encre-faible);
+}
+
+.resume strong {
+    color: var(--encre);
+    font-weight: 700;
+}
+
+.outils {
+    margin: 0;
+    font-size: .74rem;
+    color: var(--encre-faible);
+    opacity: .8;
+}
+
+.liens {
+    margin: .2rem 0 0;
+    font-size: .8rem;
+    letter-spacing: .04em;
+}
+
+
+
+/* ═══ LA FICHE QUI SE DÉPLIE ═══ */
+
+.fiche {
+    margin-top: .5rem;
+    border-top: var(--trait-ep) solid var(--trait);
+    padding-top: .9rem;
+}
+
+.fiche summary {
+    cursor: pointer;
+    list-style: none;
+    display: inline-flex;
+    align-items: center;
+    gap: .55rem;
+    font-size: .68rem;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--encre-faible);
+    transition: color .25s ease;
+}
+
+.fiche summary::-webkit-details-marker {
+    display: none;
+}
+
+.fiche summary::after {
+    content: "";
+    width: .45rem;
+    height: .45rem;
+    border-right: 1px solid currentColor;
+    border-bottom: 1px solid currentColor;
+    transform: rotate(45deg) translate(-2px, -2px);
+    transition: transform .3s ease;
+}
+
+.fiche[open] summary::after {
+    transform: rotate(-135deg) translate(-2px, -2px);
+}
+
+.fiche summary:hover {
+    color: var(--encre);
+}
+
+.fiche-corps {
+    display: flex;
+    flex-direction: column;
+    gap: 1.6rem;
+    padding-top: 1.6rem;
+    max-width: 92ch;
+}
+
+/* `<details>` ne s'anime pas tout seul : on anime son contenu, pas
+   l'élément, sinon le dépliage saute. */
+.fiche[open] .fiche-corps {
+    animation: deplie .45s ease both;
+}
+
+@keyframes deplie {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: none; }
+}
+
+.fiche-attaque {
+    margin: 0;
+    max-width: 44ch;
+    font-family: var(--titrage);
+    font-weight: 400;
+    font-size: clamp(1.15rem, 2.2vw, 1.7rem);
+    line-height: 1.15;
     letter-spacing: var(--titrage-espace);
     color: var(--encre-faible);
 }
 
-.attaque strong {
-    display: block;
-    margin-top: .3em;
+.fiche-attaque strong {
     color: var(--encre);
     font-weight: inherit;
 }
 
-.expose {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: clamp(1.2rem, 3vw, 3.4rem);
-    /* Deux colonnes d'environ 45 signes : au-delà l'œil perd la ligne, en
-       deçà le bloc paraît égaré dans la page. */
-    max-width: 96ch;
+.fiche-corps h4 {
+    margin: 0 0 .5rem;
+    font-family: var(--titrage);
+    font-weight: 400;
+    font-size: clamp(1rem, 1.8vw, 1.3rem);
+    letter-spacing: var(--titrage-espace);
+    text-transform: uppercase;
 }
 
-.expose p {
+.fiche-corps p {
     margin: 0;
+    max-width: 62ch;
+    color: var(--encre-faible);
 }
 
-.expose strong,
-.banc-propos strong,
-.corpus strong {
+.fiche-corps strong {
     color: var(--encre);
     font-weight: 700;
 }
@@ -645,8 +607,8 @@ body {
 
 .cadres {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
-    gap: clamp(1.2rem, 3vw, 2.6rem);
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: clamp(1rem, 2.5vw, 2rem);
 }
 
 .cadre svg {
@@ -661,11 +623,11 @@ body {
     stroke-width: 2;
 }
 
-/* Les hachures prennent `currentColor` : la surface perdue se recolore donc
-   d'une peau à l'autre sans second jeu de règles. */
+/* Les hachures prennent `currentColor` : la surface perdue se recolore d'une
+   peau à l'autre sans second jeu de règles. */
 .gachis {
     color: var(--encre-faible);
-    opacity: .5;
+    opacity: .45;
 }
 
 .acte {
@@ -678,153 +640,117 @@ body {
 }
 
 .ligne {
-    opacity: .4;
+    opacity: .38;
 }
 
 .lecture {
     display: flex;
     align-items: baseline;
-    gap: .6rem;
-    margin: .9rem 0 .3rem;
+    gap: .5rem;
+    margin: .7rem 0 0;
 }
 
 .lecture b {
     font-family: var(--titrage);
-    font-weight: var(--nom-poids);
-    font-size: clamp(2rem, 4.5vw, 3.2rem);
+    font-weight: 400;
+    font-size: clamp(1.6rem, 3.2vw, 2.4rem);
     line-height: 1;
-    letter-spacing: var(--titrage-espace);
     color: var(--encre-faible);
     font-variant-numeric: tabular-nums;
 }
 
+/* Le signal ne sert qu'ici dans toute la page : le chiffre que le recadrage
+   fait gagner. Une seule occurrence, donc elle se voit. */
 .cadre.retenu .lecture b {
-    color: var(--accent);
+    color: var(--signal);
 }
 
 .lecture span {
-    font-size: .74rem;
-    letter-spacing: .1em;
+    font-size: .68rem;
+    letter-spacing: .12em;
     text-transform: uppercase;
-    color: var(--encre-faible);
-}
-
-.sous {
-    margin: 0;
-    max-width: 38ch;
-    font-size: .88rem;
     color: var(--encre-faible);
 }
 
 .budget figcaption {
-    margin-top: clamp(1.2rem, 3vh, 2rem);
+    margin-top: 1.1rem;
     max-width: 62ch;
-    font-size: .92rem;
-    color: var(--encre-faible);
-    border-top: 1px solid var(--trait);
-    padding-top: 1rem;
-}
-
-
-/* ═══ LE BANC ═══ */
-
-.banc {
-    display: flex;
-    flex-direction: column;
-    gap: 1.1rem;
-}
-
-.banc h3,
-.corpus h3 {
-    margin: 0;
-    font-family: var(--titrage);
-    font-weight: var(--nom-poids);
-    font-size: clamp(1.25rem, 2.6vw, 2rem);
-    line-height: 1.05;
-    letter-spacing: var(--titrage-espace);
-    text-transform: uppercase;
-}
-
-.banc-propos {
-    margin: 0;
-    max-width: 62ch;
+    font-size: .88rem;
     color: var(--encre-faible);
 }
+
+
+/* ═══ LE TABLEAU ═══ */
 
 .cadre-table {
     overflow-x: auto;
-    border: var(--trait-ep) solid var(--trait);
+    border-top: var(--trait-ep) solid var(--trait-franc);
+    border-bottom: var(--trait-ep) solid var(--trait);
 }
 
-.piece table {
+.fiche-corps table {
     border-collapse: collapse;
     width: 100%;
-    min-width: 620px;
+    min-width: 600px;
 }
 
-.piece caption {
+.fiche-corps caption {
     text-align: left;
-    padding: .75rem .9rem;
-    font-size: .7rem;
+    padding: .7rem 0;
+    font-size: .68rem;
     letter-spacing: .1em;
     text-transform: uppercase;
     color: var(--encre-faible);
-    border-bottom: 1px solid var(--trait);
 }
 
-.piece th,
-.piece td {
+.fiche-corps th,
+.fiche-corps td {
     text-align: left;
-    padding: .7rem .9rem;
-    font-size: .88rem;
+    padding: .65rem .85rem .65rem 0;
+    font-size: .86rem;
     font-weight: 400;
-    border-bottom: 1px solid var(--trait);
+    border-bottom: var(--trait-ep) solid var(--trait);
     vertical-align: baseline;
 }
 
-.piece thead th {
-    font-size: .64rem;
+.fiche-corps thead th {
+    font-size: .6rem;
     letter-spacing: .12em;
     text-transform: uppercase;
     color: var(--encre-faible);
     font-weight: 700;
 }
 
-.piece tbody tr:last-child th,
-.piece tbody tr:last-child td {
+.fiche-corps tbody tr:last-child th,
+.fiche-corps tbody tr:last-child td {
     border-bottom: 0;
 }
 
-.piece td b,
-.piece .unite {
+.fiche-corps td b,
+.unite {
     font-variant-numeric: tabular-nums;
 }
 
-.piece .unite {
+.unite {
     color: var(--encre-faible);
     font-weight: 400;
 }
 
-/* La colonne qui décide est tenue visuellement au-dessus des autres : c'est
-   le propos de la section, et la lire en dernier serait le contredire. */
+/* La colonne qui décide est tenue au-dessus des autres au fond creusé et au
+   poids, sans teinte : le propos de la fiche est qu'on la lise d'abord. */
 .decisive {
     background: var(--fond-creux);
-    border-left: var(--trait-ep) solid var(--trait);
-    border-right: var(--trait-ep) solid var(--trait);
-}
-
-.piece thead th.decisive {
-    color: var(--accent);
+    padding-left: .85rem;
 }
 
 td.decisive b {
-    color: var(--accent);
-    font-size: 1.05rem;
+    color: var(--encre);
+    font-size: 1rem;
 }
 
-.piece .note {
+.note {
     display: inline-block;
-    font-size: .68rem;
+    font-size: .64rem;
     letter-spacing: .08em;
     text-transform: uppercase;
     color: var(--encre-faible);
@@ -837,73 +763,14 @@ tr.choisi th[scope="row"] {
 
 .fanion {
     display: inline-block;
-    margin-left: .5rem;
-    padding: .1rem .4rem;
-    font-size: .6rem;
-    letter-spacing: .12em;
+    margin-left: .45rem;
+    padding: .08rem .35rem;
+    font-size: .56rem;
+    letter-spacing: .14em;
     text-transform: uppercase;
-    background: var(--accent);
-    color: var(--sur-accent);
+    background: var(--encre);
+    color: var(--fond);
     font-weight: 700;
-}
-
-.verdict {
-    margin: 0;
-    max-width: 62ch;
-}
-
-
-/* ═══ LE CORPUS — registre plus calme, aligné à droite ═══ */
-
-.corpus {
-    align-self: flex-end;
-    max-width: 58ch;
-    display: flex;
-    flex-direction: column;
-    gap: .9rem;
-    padding-top: clamp(1rem, 3vh, 2rem);
-    border-top: var(--trait-ep) solid var(--trait);
-}
-
-.corpus p {
-    margin: 0;
-    color: var(--encre-faible);
-}
-
-.protocole {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    display: grid;
-    gap: .8rem;
-}
-
-.protocole li {
-    font-size: .9rem;
-    color: var(--encre-faible);
-    padding-left: 1.1rem;
-    position: relative;
-}
-
-.protocole li::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: .62em;
-    width: .45rem;
-    height: .45rem;
-    background: var(--accent);
-}
-
-.protocole b {
-    color: var(--encre);
-}
-
-.attirail {
-    margin: 0;
-    font-size: .76rem;
-    letter-spacing: .06em;
-    color: var(--encre-faible);
 }
 
 
@@ -911,30 +778,11 @@ tr.choisi th[scope="row"] {
 
 .chantier {
     margin: 0;
-    padding: clamp(3rem, 9vh, 6rem) clamp(1.1rem, 3vw, 2.6rem);
-    text-align: center;
+    padding: clamp(3rem, 10vh, 7rem) clamp(1.1rem, 3vw, 2.6rem) clamp(5rem, 14vh, 9rem);
     color: var(--encre-faible);
-    font-size: .8rem;
-    letter-spacing: .14em;
+    font-size: .72rem;
+    letter-spacing: .18em;
     text-transform: uppercase;
-    background-image: var(--texture);
-    background-size: var(--texture-taille);
-}
-
-
-/* ═══ ÉVEIL AU DÉFILEMENT ═══
-   Les blocs s'allument au passage plutôt que d'apparaître d'un coup. La
-   classe n'est posée que si l'IntersectionObserver existe ET que le
-   mouvement n'est pas réduit : sans JavaScript, tout est déjà visible. */
-.js .eveil {
-    opacity: 0;
-    transform: translateY(14px);
-    transition: opacity .7s ease, transform .7s cubic-bezier(.2, .7, .3, 1);
-}
-
-.js .eveil.vu {
-    opacity: 1;
-    transform: none;
 }
 
 
@@ -942,35 +790,16 @@ tr.choisi th[scope="row"] {
    REPLIS
    ═══════════════════════════════════════════════════════════════════════ */
 
-@media (max-width: 1200px) {
-    .scene {
-        --k: 1;
-        margin-left: -5rem;
-    }
-}
-
-/* Sous 860 px le boîtier cesse de chevaucher le nom : superposés, ils
-   deviennent tous deux illisibles. Il passe sous le nom, à sa taille. */
-@media (max-width: 860px) {
-    .arrivee {
-        grid-template-rows: auto auto auto;
-        gap: clamp(1.4rem, 4vh, 2.2rem);
-    }
-
+@media (max-width: 760px) {
     .plan {
-        flex-direction: column;
         align-items: flex-start;
-        gap: clamp(1rem, 3vh, 1.8rem);
+        flex-direction: column;
+        gap: 1.4rem;
     }
 
-    .nom {
-        font-size: calc(clamp(2.7rem, 15vw, 5rem) * var(--nom-echelle));
-    }
-
-    .scene {
-        --k: .82;
-        margin-left: 0;
-        align-self: center;
+    .poincon {
+        margin-bottom: 0;
+        align-self: flex-end;
     }
 
     .plaque {
@@ -986,7 +815,6 @@ tr.choisi th[scope="row"] {
     .descente {
         position: static;
         order: 10;
-        justify-content: flex-start;
     }
 
     .rail {
@@ -996,30 +824,40 @@ tr.choisi th[scope="row"] {
 
     .rail i {
         left: 0;
-        top: -2px;
+        top: -1px;
         animation-name: avance;
     }
 
     @keyframes avance {
         0% { left: 0; opacity: 0; }
-        22% { opacity: 1; }
-        78% { opacity: 1; }
-        100% { left: 39px; opacity: 0; }
+        25% { opacity: 1; }
+        75% { opacity: 1; }
+        100% { left: 41px; opacity: 0; }
     }
 
-    .propos {
-        max-width: none;
-    }
-}
-
-@media (max-width: 420px) {
-    .scene {
-        --k: .68;
+    .vignette.vedette {
+        grid-column: span 1;
     }
 }
 
-/* Le mouvement n'est jamais le porteur de l'information : tout coupé, le
-   boîtier reste un boîtier et le nom reste lisible. */
+
+/* ═══ ÉVEIL AU DÉFILEMENT ═══
+   La classe n'est posée que si l'observateur existe ET que le mouvement
+   n'est pas réduit : sans JavaScript, tout est déjà visible. */
+
+.js .eveil {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity .8s ease, transform .8s cubic-bezier(.2, .7, .3, 1);
+}
+
+.js .eveil.vu {
+    opacity: 1;
+    transform: none;
+}
+
+/* Le mouvement n'est jamais porteur d'information : tout coupé, la page
+   reste entière et lisible. */
 @media (prefers-reduced-motion: reduce) {
     html {
         scroll-behavior: auto;
