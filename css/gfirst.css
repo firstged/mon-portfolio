@@ -16,14 +16,17 @@
     --encre: #f4f4ee;
     --encre-faible: #8d8d86;
 
-    /* La charte du poinçon n'a pas de couleur d'accent : encre, papier, fond
-       sombre, et c'est tout. Un vert couru sur les boutons, les puces et les
-       chiffres est ce qui rendait le site bruyant. Il reste disponible comme
-       SIGNAL — une occurrence par écran au maximum. L'emphase ordinaire se
-       fait au contraste, pas à la teinte. */
+    /* Correction du 8 novembre : j'avais retiré toute couleur en croyant
+       calmer le site. La charte du poinçon porte bien du vert #c3f200 ET du
+       rose #ff2d9b sur fond noir — relevé dans son propre code. Ce qui ne va
+       pas n'est pas la présence de la couleur, c'est qu'elle soit POSÉE À
+       PLAT. Ici elle est VIVE : elle n'apparaît que là où le curseur passe,
+       sous l'effet de zapping. */
     --accent: #f4f4ee;
     --sur-accent: #0b0b0c;
-    --signal: #c3f200;
+    --vert: #c3f200;
+    --rose: #ff2d9b;
+    --signal: var(--vert);
 
     --trait-ep: 1px;
     --trait: rgba(244, 244, 238, .22);
@@ -43,37 +46,9 @@
 }
 
 
-/* ═══ JETONS — PEAU « NET » (24 bits) ═══ */
-
-[data-peau="net"] {
-    --fond: #21272a;
-    --fond-creux: #1b2124;
-    --encre: #dde5e3;
-    --encre-faible: #7d8a88;
-
-    --accent: #dde5e3;
-    --sur-accent: #15191b;
-    --signal: #7fd4c6;
-
-    --trait: rgba(221, 229, 227, .18);
-    --trait-franc: #dde5e3;
-    --rayon: 2px;
-
-    --titrage: "Archivo Black", Georgia, sans-serif;
-    --titrage-espace: -0.015em;
-    --nom-echelle: .72;
-
-    --papier-objet: #dde5e3;
-    --trace-objet: #21272a;
-
-    --texture: none;
-    --texture-taille: auto;
-}
-
-
 /* ═══ JETONS — PEAU « PAPIER » (sérigraphie) ═══ */
 
-[data-peau="papier"] {
+[data-peau="cool"] {
     --fond: #e8e4d9;
     --fond-creux: #ded9cc;
     --encre: #17160f;
@@ -81,7 +56,9 @@
 
     --accent: #17160f;
     --sur-accent: #e8e4d9;
-    --signal: #c4341f;
+    --vert: #5f7d00;
+    --rose: #c4341f;
+    --signal: var(--rose);
 
     --trait: rgba(23, 22, 15, .22);
     --trait-franc: #17160f;
@@ -177,7 +154,10 @@ a:hover {
 
 
 /* ═══════════════════════════════════════════════════════════════════════
-   L'ARRIVÉE — le nom, et la marque frappée. Rien d'autre.
+   L'ARRIVÉE
+   Le portrait tient la moitié droite et déborde du cadre ; le texte vit
+   dans un carton posé dessus. Ce n'est pas un hero coupé en deux : les deux
+   plans se chevauchent, et le carton mord sur la peinture.
    ═══════════════════════════════════════════════════════════════════════ */
 
 .arrivee {
@@ -185,34 +165,108 @@ a:hover {
     min-height: 100svh;
     display: grid;
     grid-template-rows: auto 1fr auto;
-    gap: clamp(1.4rem, 4vh, 3rem);
     padding: clamp(1.1rem, 3vw, 2.6rem);
+    overflow: hidden;
 }
 
 .lieu {
     margin: 0;
+    position: relative;
+    z-index: 3;
     font-size: .68rem;
     letter-spacing: .26em;
     text-transform: uppercase;
     color: var(--encre-faible);
 }
 
-.plan {
+
+/* ═══ LE PORTRAIT ═══ */
+
+.portrait {
+    position: absolute;
+    z-index: 1;
+    right: -4%;
+    bottom: -6%;
+    width: clamp(330px, 66vw, 1250px);
+    aspect-ratio: 1;
+    /* La peinture est carrée et son fond est abstrait : on la fond dans le
+       fond du site par le bas et la gauche plutôt que de poser un carré net
+       au milieu de la page. */
+    -webkit-mask-image: radial-gradient(72% 82% at 62% 42%, #000 38%, transparent 82%);
+    mask-image: radial-gradient(72% 82% at 62% 42%, #000 38%, transparent 82%);
+}
+
+.portrait img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Les yeux suivent le curseur sans qu'on repeigne l'œil.
+   Première tentative : recouvrir l'amande entière d'un blanc d'œil et
+   redessiner une pupille. Résultat à grande taille : des yeux de dessin
+   animé collés sur une peinture. Abandonné.
+   Ici on ne couvre QUE l'iris peint, avec un disque au bord fondu posé
+   exactement dessus (coordonnées relevées dans le fichier : (182,152) et
+   (234,151) sur 400 px). Le blanc, la paupière et l'ombre peints restent
+   intacts, et le déplacement est court — un iris qui sortirait de son
+   orbite trahirait le procédé. */
+.oeil {
+    position: absolute;
+    width: 3.6%;
+    height: 3.6%;
+    pointer-events: none;
+    background:
+        radial-gradient(circle at 38% 32%, rgba(255, 255, 255, .5) 0 9%, transparent 10%),
+        radial-gradient(circle at 50% 50%,
+            #15100c 0 34%,
+            #3d2718 52%,
+            rgba(61, 39, 24, .55) 72%,
+            transparent 88%);
+    transform: translate(calc(-50% + var(--rx, 0px)), calc(-50% + var(--ry, 0px)));
+    transition: transform .2s cubic-bezier(.3, .8, .4, 1);
+}
+
+.oeil[data-oeil="g"] {
+    left: 45.5%;
+    top: 38%;
+}
+
+.oeil[data-oeil="d"] {
+    left: 58.5%;
+    top: 37.8%;
+}
+
+
+/* ═══ LE CARTON ═══ */
+
+.carton {
     grid-row: 2;
+    position: relative;
+    z-index: 2;
     align-self: center;
+    justify-self: start;
+    /* Il mord sur la peinture : sans ce chevauchement, les deux plans se
+       regardent de loin et le cadre se coupe en deux. */
+    width: min(54rem, 68vw);
     display: flex;
-    align-items: flex-end;
-    gap: clamp(.6rem, 1.6vw, 1.4rem);
-    flex-wrap: wrap;
+    flex-direction: column;
+    gap: 1.3rem;
+    padding: clamp(1.3rem, 3vw, 2.4rem);
+    border: var(--trait-ep) solid var(--trait-franc);
+    /* Le carton est posé SUR la peinture : il lui faut son propre fond, mais
+       translucide, pour qu'on sente ce qu'il y a dessous. */
+    background: color-mix(in srgb, var(--fond) 88%, transparent);
+    backdrop-filter: blur(3px);
 }
 
 .nom {
-    flex: 0 1 auto;
     margin: 0;
     font-family: var(--titrage);
     font-weight: 400;
-    font-size: calc(clamp(2.9rem, 14vw, 15rem) * var(--nom-echelle));
-    line-height: .84;
+    font-size: calc(clamp(2.4rem, 7.5vw, 6.4rem) * var(--nom-echelle));
+    line-height: .86;
     letter-spacing: var(--titrage-espace);
     text-transform: uppercase;
 }
@@ -221,23 +275,56 @@ a:hover {
     display: block;
 }
 
-.nom .ligne:nth-child(2) {
+/* ═══ LE ZAPPING ═══
+   Chaque lettre des titres est enveloppée par le script. Au passage du
+   curseur, celles qui sont dans le rayon changent de fonte ET de couleur
+   pendant quelques images : la typographie se met à grésiller au lieu de
+   rester un aplat. C'est là, et seulement là, que le vert et le rose
+   apparaissent — une couleur posée à plat est morte, une couleur qui ne
+   surgit qu'au passage est vivante. */
+
+.nom .c,
+.zappable .c {
+    display: inline-block;
+    transition: color .09s steps(2), transform .09s steps(2);
+}
+
+.c.zap {
+    font-family: var(--courante);
+    color: var(--vert);
+    transform: translateY(-.045em) skewX(-9deg);
+}
+
+.c.zap-2 {
+    font-family: var(--courante);
+    color: var(--rose);
+    transform: translateY(.045em) skewX(7deg);
+}
+
+.propos {
+    margin: 0;
+    max-width: 48ch;
+    font-size: clamp(.92rem, 1.2vw, 1.05rem);
     color: var(--encre-faible);
+}
+
+.propos strong {
+    color: var(--encre);
+    font-weight: 700;
 }
 
 
 /* ═══ LE POINÇON ═══
    Un poinçon est ce que le maître frappe dans ce qu'il fabrique : il est
-   donc posé au pied du nom, légèrement de travers, comme une marque
-   appuyée à la main — pas centré, pas droit, pas en médaillon. */
+   donc frappé dans le coin du carton, de travers, pas centré en médaillon. */
 
 .poincon {
-    flex: none;
-    width: clamp(92px, 11vw, 160px);
+    align-self: flex-end;
+    width: clamp(54px, 5vw, 76px);
     height: auto;
     color: var(--encre);
-    transform: rotate(-3deg);
-    margin-bottom: .3em;
+    transform: rotate(-4deg);
+    margin: -.4rem -.4rem -.2rem 0;
 }
 
 .poincon .enceinte {
@@ -255,38 +342,15 @@ a:hover {
 }
 
 .js .poincon {
-    animation: frappe .62s cubic-bezier(.16, .9, .3, 1) both;
+    animation: frappe .62s cubic-bezier(.16, .9, .3, 1) both .35s;
 }
 
 /* Une frappe, pas une apparition : la marque arrive trop grande et s'écrase
    sur sa position, comme un tampon qu'on appuie. */
 @keyframes frappe {
-    from {
-        opacity: 0;
-        transform: rotate(-9deg) scale(1.4);
-    }
-
-    55% {
-        opacity: 1;
-    }
-
-    to {
-        opacity: 1;
-        transform: rotate(-3deg) scale(1);
-    }
-}
-
-.propos {
-    grid-row: 3;
-    margin: 0;
-    max-width: 54ch;
-    font-size: clamp(.95rem, 1.4vw, 1.1rem);
-    color: var(--encre-faible);
-}
-
-.propos strong {
-    color: var(--encre);
-    font-weight: 700;
+    from { opacity: 0; transform: rotate(-11deg) scale(1.5); }
+    55% { opacity: 1; }
+    to { opacity: 1; transform: rotate(-4deg) scale(1); }
 }
 
 
@@ -301,6 +365,9 @@ a:hover {
     flex-direction: column;
     gap: .5rem;
     align-items: flex-end;
+    padding: .55rem .7rem;
+    background: color-mix(in srgb, var(--fond) 82%, transparent);
+    backdrop-filter: blur(4px);
 }
 
 .reglage {
@@ -359,6 +426,9 @@ a:hover {
     font-size: .66rem;
     letter-spacing: .2em;
     text-transform: uppercase;
+    padding: .5rem .7rem;
+    background: color-mix(in srgb, var(--fond) 82%, transparent);
+    backdrop-filter: blur(4px);
 }
 
 .descente:hover {

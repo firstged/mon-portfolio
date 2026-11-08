@@ -61,12 +61,31 @@
 
         <p class="lieu" data-en="Libreville, Gabon" data-ja="リーブルビル、ガボン">Libreville, Gabon</p>
 
-        <div class="plan">
-            <h1 class="nom" aria-label="Gédéon Mouloundi Mayagha">
+        <!-- Le portrait occupe la moitié droite et déborde du cadre : c'est le
+             sujet, pas une illustration d'accompagnement. Les yeux sont deux
+             éléments posés par-dessus la peinture, qui suivent le curseur. -->
+        <div class="portrait" id="portrait">
+            <img src="img/gedeon.jpg" alt="Gédéon Mouloundi Mayagha, portrait peint devant un ordinateur"
+                width="400" height="400" fetchpriority="high">
+            <span class="oeil" data-oeil="g" aria-hidden="true"></span>
+            <span class="oeil" data-oeil="d" aria-hidden="true"></span>
+        </div>
+
+        <div class="carton">
+            <h1 class="nom" data-zap aria-label="Gédéon Mouloundi Mayagha">
                 <span class="ligne">Gédéon</span>
                 <span class="ligne">Mouloundi</span>
                 <span class="ligne">Mayagha</span>
             </h1>
+
+            <p class="propos"
+                data-en="I build data tools that hold up on a fragile connection and actually serve someone. What I'm after: that Gabon keeps control of its own data, and takes part in what gets invented elsewhere."
+                data-ja="不安定な回線でも動き、誰かの役に立つデータの道具をつくっています。目指すのは、ガボンが自国のデータを自ら握り、世界の技術の歩みに加わることです。">
+                <strong>Je construis des outils de données qui tiennent sur une connexion
+                    fragile et qui servent vraiment quelqu'un.</strong>
+                Ce que je vise : que le Gabon garde la main sur ses données, et prenne part
+                à ce qui s'invente ailleurs.
+            </p>
 
             <svg class="poincon" viewBox="0 0 100 100" role="img" aria-label="Gfirst, marque de Gédéon">
                 <circle cx="50" cy="50" r="45" class="enceinte" />
@@ -80,21 +99,14 @@
             </svg>
         </div>
 
-        <p class="propos"
-            data-en="I build data tools that hold up on a fragile connection and actually serve someone. What I'm after: that Gabon keeps control of its own data, and takes part in what gets invented elsewhere."
-            data-ja="不安定な回線でも動き、誰かの役に立つデータの道具をつくっています。目指すのは、ガボンが自国のデータを自ら握り、世界の技術の歩みに加わることです。">
-            <strong>Je construis des outils de données qui tiennent sur une connexion
-                fragile et qui servent vraiment quelqu'un.</strong>
-            Ce que je vise : que le Gabon garde la main sur ses données, et prenne part
-            à ce qui s'invente ailleurs.
-        </p>
-
         <div class="plaque">
-            <div class="reglage" role="group" aria-label="Profondeur de bits">
-                <span class="intitule">Profondeur</span>
+            <!-- Deux peaux, plus trois : NET ne disait rien que les deux autres
+                 ne disent mieux. BRUT est le site sous tension, COOL est le
+                 même site posé. -->
+            <div class="reglage" role="group" aria-label="Peau du site">
+                <span class="intitule">Peau</span>
                 <button type="button" data-peau="brut" aria-pressed="true">Brut</button>
-                <button type="button" data-peau="net" aria-pressed="false">Net</button>
-                <button type="button" data-peau="papier" aria-pressed="false">Papier</button>
+                <button type="button" data-peau="cool" aria-pressed="false">Cool</button>
             </div>
             <div class="reglage" role="group" aria-label="Langue">
                 <span class="intitule">Langue</span>
