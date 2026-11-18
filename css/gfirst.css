@@ -504,23 +504,37 @@ main {
 .poste-hote { display: none; }
 
 .js .poste-hote {
+    display: grid;
+    grid-template-columns: minmax(0, 1.08fr) minmax(0, 1fr);
+    gap: clamp(1.6rem, 4vw, 3.6rem);
+    align-items: start;
+}
+
+/* La grille des vignettes reste dans le HTML — c'est la source du poste,
+   et c'est ce que voient un moteur de recherche et un navigateur sans
+   JavaScript. Elle n'est masquée que lorsque le poste existe pour la
+   remplacer. */
+.js.poste-vivant .vignettes { display: none; }
+
+.poste-appareil {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1.1rem;
-    margin-bottom: clamp(2.6rem, 8vh, 5rem);
-    /* La perspective est sur l'hôte et non sur le corps : posée sur
+    gap: 1.3rem;
+    position: sticky;
+    top: clamp(1rem, 6vh, 3rem);
+    /* La perspective est sur le parent et non sur le corps : posée sur
        l'élément qui tourne, elle tournerait avec lui et le volume
        s'écraserait. */
-    perspective: 1100px;
+    perspective: 1500px;
 }
 
 .poste-corps {
-    /* Dimensionné sur la fenêtre : à 320 px fixes l'appareil paraissait
-       perdu au milieu d'une grille de quatre colonnes. */
-    --w: clamp(272px, 27vw, 396px);
-    --h: calc(var(--w) * .66);
-    --d: 38px;
+    /* L'appareil EST la section projets : il n'y a plus de grille sous
+       lui, donc il prend la place. */
+    --w: clamp(280px, 40vw, 620px);
+    --h: calc(var(--w) * .64);
+    --d: calc(var(--w) * .11);
     position: relative;
     width: var(--w);
     height: var(--h);
@@ -546,8 +560,8 @@ main {
     transform: translate(-50%, -50%) translateZ(calc(var(--d) / 2));
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    padding: 11px;
+    gap: calc(var(--w) * .025);
+    padding: calc(var(--w) * .034);
 }
 
 .pf-arriere {
@@ -593,6 +607,18 @@ main {
 
 :root[data-peau="cool"] .pf-ecran { background: #14160f; }
 
+/* Quatre pièces n'ont pas de capture — SUNU n'en aura jamais. Un écran
+   vide est un trou ; un écran ALLUMÉ sans image est un fait. La trame de
+   phosphore dit que l'appareil fonctionne et qu'il n'y a rien à montrer,
+   ce qui est exactement vrai de ces quatre-là. */
+.pf-ecran--vide {
+    background-image:
+        repeating-linear-gradient(0deg,
+            rgb(var(--phosphore) / .07) 0 1px, transparent 1px 3px),
+        repeating-linear-gradient(90deg,
+            rgb(var(--phosphore) / .045) 0 1px, transparent 1px 3px);
+}
+
 .pf-ecran img {
     display: block;
     width: 100%;
@@ -636,7 +662,7 @@ main {
 
 .pf-titre .pf-nom {
     font-family: var(--titrage);
-    font-size: 1.5rem;
+    font-size: calc(var(--w) * .085);
     line-height: .96;
     text-transform: uppercase;
     letter-spacing: var(--titrage-espace);
@@ -660,7 +686,7 @@ main {
     display: flex;
     align-items: center;
     gap: .5rem;
-    height: 22px;
+    height: calc(var(--w) * .062);
     flex: none;
     color: var(--encre-faible);
     font-size: .56rem;
@@ -669,8 +695,8 @@ main {
 }
 
 .pf-plaque .poincon-plaque {
-    width: 15px;
-    height: 15px;
+    width: calc(var(--w) * .045);
+    height: calc(var(--w) * .045);
     flex: none;
     color: var(--encre);
 }
@@ -713,11 +739,17 @@ main {
     font-size: .68rem !important;
 }
 
-@media (max-width: 760px) {
-    .poste-corps {
-        --w: 272px;
-        --h: 180px;
+@media (max-width: 860px) {
+    /* L'appareil passe au-dessus de sa fiche : côte à côte dans une
+       colonne de 384 px, ni l'un ni l'autre n'aurait de place. */
+    .js .poste-hote {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 1.6rem;
     }
+
+    .poste-appareil { position: static; }
+
+    .poste-corps { --w: min(300px, 76vw); }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -725,6 +757,85 @@ main {
        doigt et ne zappe plus tout seul. */
     .poste-corps { transition: none; }
     .pf-neige { display: none; }
+}
+
+
+/* ═══ LA FICHE DU POSTE ════════════════════════════════════════════════
+   Le texte ne va pas DANS l'appareil : un boîtier qui contiendrait six
+   paragraphes devrait grandir à chaque pièce, et le volume cesserait
+   d'être un objet. L'appareil affiche, la fiche dit — comme une étiquette
+   posée à côté de l'instrument sur l'établi.                            */
+
+.poste-fiche {
+    display: flex;
+    flex-direction: column;
+    gap: .55rem;
+    padding-top: .4rem;
+    transition: opacity .18s linear;
+}
+
+.poste-fiche .genre { font-size: .64rem; }
+
+.poste-fiche h3 {
+    margin: 0;
+    font-family: var(--titrage);
+    font-size: clamp(1.8rem, 4.4vw, 3.2rem);
+    line-height: .96;
+    letter-spacing: var(--titrage-espace);
+    text-transform: uppercase;
+}
+
+.poste-fiche .resume {
+    max-width: 52ch;
+    font-size: clamp(.92rem, 1.2vw, 1.02rem);
+}
+
+.poste-fiche .fiche { margin-top: .9rem; }
+
+
+/* ═══ LE BANDEAU DE CANAUX ═════════════════════════════════════════════
+   Dix boutons numérotés : c'est à la fois le cadran et la seule façon
+   d'atteindre directement une pièce. Sans lui, voir la dixième demanderait
+   neuf changements de canal.                                            */
+
+.poste-bandeau {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: .2rem;
+}
+
+.poste-canal {
+    appearance: none;
+    background: none;
+    border: 0;
+    padding: .5rem .42rem;
+    margin: 0;
+    font: inherit;
+    font-size: .68rem;
+    letter-spacing: .06em;
+    color: var(--encre-faible);
+    cursor: pointer;
+    position: relative;
+    min-height: 44px;
+    font-variant-numeric: tabular-nums;
+    transition: color .18s ease;
+}
+
+.poste-canal:hover { color: var(--encre); }
+
+.poste-canal[aria-pressed="true"] { color: var(--encre); }
+
+/* Le canal en cours se lit à une encoche, jamais à une couleur :
+   l'emphase se fait au contraste. */
+.poste-canal[aria-pressed="true"]::after {
+    content: "";
+    position: absolute;
+    left: .42rem;
+    right: .42rem;
+    bottom: .62rem;
+    height: 2px;
+    background: currentColor;
 }
 
 

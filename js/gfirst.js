@@ -555,15 +555,18 @@
 
 
     /* ═══════════════════════════════════════════════════════════════════
-       LE POSTE D'ESSAI — les pièces, zappables
+       LE POSTE D'ESSAI — la section projets tout entière
 
        L'idée vient de la console mise en référence. Son DESSIN ne peut pas
        servir — c'est BMO, propriété Cartoon Network — mais l'idée d'un
        appareil dont on zappe l'écran n'appartient à personne.
 
-       Le poste est bâti À PARTIR des vignettes : aucun contenu n'est écrit
-       deux fois, et sans ce fichier il n'existe pas. La grille reste le
-       contenu, le poste n'est qu'un instrument posé dessus.
+       Le poste ne surmonte plus la grille : il la remplace. Les dix
+       vignettes restent dans le HTML — c'est la source, et c'est ce que
+       voit un moteur de recherche ou un navigateur sans JavaScript — mais
+       elles sont masquées dès que ce fichier tourne, et leur contenu est
+       DÉPLACÉ dans le poste, pas copié. Aucun nœud n'existe en double,
+       donc aucun identifiant en double dans les SVG des fiches.
        ═══════════════════════════════════════════════════════════════════ */
 
     (function () {
@@ -578,71 +581,103 @@
                 genre: ($(".genre", v) || {}).textContent || "",
                 image: img ? img.getAttribute("src") : null,
                 nuit: cadre ? cadre.hasAttribute("data-nuit") : false,
-                cible: v
+                source: v
             };
         });
         if (!pieces.length) { return; }
 
+        var bandeau = pieces.map(function (p, i) {
+            return '<button type="button" class="poste-canal" data-i="' + i + '">'
+                 + (i + 1 < 10 ? "0" : "") + (i + 1) + '</button>';
+        }).join("");
+
         hote.innerHTML =
-            '<div class="poste-corps">' +
-              '<div class="pf pf-arriere"></div>' +
-              '<div class="pf pf-droite"></div>' +
-              '<div class="pf pf-gauche"></div>' +
-              '<div class="pf pf-haut"></div>' +
-              '<div class="pf pf-bas"></div>' +
-              '<div class="pf pf-avant">' +
-                '<div class="pf-ecran">' +
-                  '<img alt="">' +
-                  '<div class="pf-titre"><span class="pf-genre"></span><span class="pf-nom"></span></div>' +
-                  '<canvas class="pf-neige"></canvas>' +
-                '</div>' +
-                '<div class="pf-plaque">' +
-                  '<svg class="poincon-plaque" viewBox="0 0 100 100" aria-hidden="true">' +
-                    '<g fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="square" ' +
-                       'stroke-linejoin="round" transform="translate(9 9) scale(0.82)">' +
-                      '<use href="#gf-lettres" />' +
-                    '</g>' +
-                  '</svg>' +
-                  '<span>Poste d’essai</span>' +
-                  '<span class="pf-canal"></span>' +
+            '<div class="poste-appareil">' +
+              '<div class="poste-corps">' +
+                '<div class="pf pf-arriere"></div>' +
+                '<div class="pf pf-droite"></div>' +
+                '<div class="pf pf-gauche"></div>' +
+                '<div class="pf pf-haut"></div>' +
+                '<div class="pf pf-bas"></div>' +
+                '<div class="pf pf-avant">' +
+                  '<div class="pf-ecran">' +
+                    '<img alt="">' +
+                    '<div class="pf-titre"><span class="pf-genre"></span><span class="pf-nom"></span></div>' +
+                    '<canvas class="pf-neige"></canvas>' +
+                  '</div>' +
+                  '<div class="pf-plaque">' +
+                    '<svg class="poincon-plaque" viewBox="0 0 100 100" aria-hidden="true">' +
+                      '<g fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="square" ' +
+                         'stroke-linejoin="round" transform="translate(9 9) scale(0.82)">' +
+                        '<use href="#gf-lettres" />' +
+                      '</g>' +
+                    '</svg>' +
+                    '<span>Poste d’essai</span>' +
+                    '<span class="pf-canal"></span>' +
+                  '</div>' +
                 '</div>' +
               '</div>' +
+              '<div class="poste-commandes">' +
+                '<button type="button" class="poste-prec" aria-label="Pièce précédente">◀</button>' +
+                '<div class="poste-bandeau" role="group" aria-label="Choisir la pièce">' + bandeau + '</div>' +
+                '<button type="button" class="poste-suiv" aria-label="Pièce suivante">▶</button>' +
+              '</div>' +
             '</div>' +
-            '<div class="poste-commandes">' +
-              '<button type="button" class="poste-prec" aria-label="Pièce précédente">◀</button>' +
-              '<button type="button" class="poste-ouvrir">Ouvrir la pièce</button>' +
-              '<button type="button" class="poste-suiv" aria-label="Pièce suivante">▶</button>' +
-            '</div>';
+            '<div class="poste-fiche" aria-live="polite"></div>';
 
         var corps = $(".poste-corps", hote);
-        var ecranImg = $(".pf-ecran img", hote);
-        var titre = $(".pf-titre", hote);
+        var ecran = $(".pf-ecran", hote);
+        var ecranImg = $("img", ecran);
         var elGenre = $(".pf-genre", hote);
         var elNom = $(".pf-nom", hote);
         var elCanal = $(".pf-canal", hote);
         var neige = $(".pf-neige", hote);
+        var fiche = $(".poste-fiche", hote);
+        var canaux = $$(".poste-canal", hote);
         var nctx = neige.getContext("2d");
 
-        var canal = 0, mainMise = false;
+        var canal = -1, mainMise = false;
 
-        function afficher(i) {
+        /* Le contenu est DÉPLACÉ, jamais copié : la pièce qu'on quitte
+           reprend ses nœuds, la pièce affichée prend les siens. Un clone
+           dupliquerait les identifiants des SVG de fiches, et `url(#...)`
+           irait chercher le mauvais. */
+        function poser(i) {
+            if (canal >= 0 && pieces[canal]) {
+                var ancienne = pieces[canal].source;
+                while (fiche.firstChild) { ancienne.appendChild(fiche.firstChild); }
+            }
             var p = pieces[i];
+            $$(":scope > *", p.source).forEach(function (n) {
+                if (n.classList.contains("ecran")) { return; }
+                fiche.appendChild(n);
+            });
+
             if (p.image) {
                 ecranImg.src = p.image;
                 ecranImg.style.display = "block";
                 /* Une capture déjà sombre n'est pas retournée : sur l'écran
                    noir du poste elle deviendrait le pavé blanc qu'on évite
-                   déjà dans la grille. */
+                   déjà ailleurs. */
                 ecranImg.style.filter = p.nuit ? "none" : "invert(1)";
-                elNom.style.fontSize = ".8rem";
+                /* Le nom est sous l'écran, dans la fiche : l'écrire aussi
+                   par-dessus la capture le dirait deux fois. */
+                elGenre.textContent = "";
+                elNom.textContent = "";
+                ecran.classList.remove("pf-ecran--vide");
             } else {
+                /* Les quatre pièces qu'on ouvre n'ont pas de capture :
+                   l'écran affiche alors leur nom, comme un appareil qui
+                   n'a rien à montrer mais sait ce qu'il tient. */
                 ecranImg.removeAttribute("src");
                 ecranImg.style.display = "none";
-                elNom.style.fontSize = "";
+                elGenre.textContent = p.genre;
+                elNom.textContent = p.nom;
+                ecran.classList.add("pf-ecran--vide");
             }
-            elGenre.textContent = p.genre;
-            elNom.textContent = p.nom;
             elCanal.textContent = (i + 1) + " / " + pieces.length;
+            canaux.forEach(function (b, k) { b.setAttribute("aria-pressed", String(k === i)); });
+            canal = i;
         }
 
         function dimensionnerNeige() {
@@ -656,6 +691,12 @@
            pixel près — à l'écran la différence ne se voit pas, et le coût
            est divisé par trente-six. */
         var teintePhosphore = "155,255,60";
+        function relireTeinte() {
+            var v = getComputedStyle(racine).getPropertyValue("--phosphore").trim().split(/[\s,]+/);
+            if (v.length === 3) { teintePhosphore = v.join(","); }
+        }
+        relireTeinte();
+
         function grainer(force) {
             var L = neige.width, H = neige.height, c = 6, i, j;
             nctx.clearRect(0, 0, L, H);
@@ -667,48 +708,45 @@
             }
         }
 
-        function relireTeinte() {
-            var v = getComputedStyle(racine).getPropertyValue("--phosphore").trim().split(/[\s,]+/);
-            if (v.length === 3) { teintePhosphore = v.join(","); }
-        }
-        relireTeinte();
-
         function zapper(vers) {
-            canal = (vers + pieces.length) % pieces.length;
-            if (doux) { afficher(canal); return; }
+            var i = (vers + pieces.length) % pieces.length;
+            if (i === canal) { return; }
+            if (doux) { poser(i); return; }
             relireTeinte();
             dimensionnerNeige();
             var debut = performance.now(), bascule = false;
             neige.style.opacity = "1";
+            fiche.style.opacity = "0";
             requestAnimationFrame(function image(t) {
-                var a = (t - debut) / 260;
-                if (a >= .42 && !bascule) { bascule = true; afficher(canal); }
+                var a = (t - debut) / 280;
+                if (a >= .40 && !bascule) { bascule = true; poser(i); fiche.style.opacity = "1"; }
                 if (a >= 1) { neige.style.opacity = "0"; return; }
-                grainer(a < .42 ? .55 : .55 * (1 - (a - .42) / .58));
+                grainer(a < .40 ? .55 : .55 * (1 - (a - .40) / .60));
                 requestAnimationFrame(image);
             });
         }
 
-        afficher(0);
+        poser(0);
+        racine.classList.add("poste-vivant");
 
         $(".poste-suiv", hote).addEventListener("click", function () { mainMise = true; zapper(canal + 1); });
         $(".poste-prec", hote).addEventListener("click", function () { mainMise = true; zapper(canal - 1); });
-        $(".poste-ouvrir", hote).addEventListener("click", function () {
-            mainMise = true;
-            pieces[canal].cible.scrollIntoView({ behavior: doux ? "auto" : "smooth", block: "center" });
+        canaux.forEach(function (b) {
+            b.addEventListener("click", function () { mainMise = true; zapper(+b.dataset.i); });
         });
 
         /* Le volume suit le doigt : c'est la profondeur qui manquait, et
            elle vient d'un objet qu'on manipule, pas d'un effet posé
            derrière du texte. */
         if (!doux) {
-            var rx = 6, ry = -14, cx = 6, cy = -14;
-            hote.addEventListener("pointermove", function (e) {
-                var r = hote.getBoundingClientRect();
-                cy = clamp(((e.clientX - r.left) / r.width - .5) * 34, -17, 17);
-                cx = clamp(-((e.clientY - r.top) / r.height - .5) * 22, -11, 11);
+            var zone = $(".poste-appareil", hote);
+            var rx = 5, ry = -11, cx = 5, cy = -11;
+            zone.addEventListener("pointermove", function (e) {
+                var r = zone.getBoundingClientRect();
+                cy = clamp(((e.clientX - r.left) / r.width - .5) * 26, -13, 13);
+                cx = clamp(-((e.clientY - r.top) / r.height - .5) * 16, -8, 8);
             });
-            hote.addEventListener("pointerleave", function () { cx = 6; cy = -14; });
+            zone.addEventListener("pointerleave", function () { cx = 5; cy = -11; });
             requestAnimationFrame(function suivre() {
                 rx += (cx - rx) * .09;
                 ry += (cy - ry) * .09;
@@ -719,15 +757,17 @@
 
             /* Il zappe tout seul tant que personne n'a pris la main, et
                seulement quand il est à l'écran : un appareil qui tourne
-               dans un onglet qu'on ne regarde pas ne sert à rien. */
+               dans un onglet qu'on ne regarde pas ne sert à rien. Il
+               s'arrête définitivement au premier geste — on ne change pas
+               la page sous les yeux de quelqu'un qui lit. */
             var enVue = false;
             if ("IntersectionObserver" in window) {
                 new IntersectionObserver(function (e) { enVue = e[0].isIntersecting; },
-                    { threshold: .3 }).observe(hote);
+                    { threshold: .35 }).observe(hote);
             }
             setInterval(function () {
                 if (enVue && !mainMise && !document.hidden) { zapper(canal + 1); }
-            }, 5200);
+            }, 6000);
         }
     })();
 
