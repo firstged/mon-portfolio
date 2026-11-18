@@ -1014,6 +1014,201 @@ tr.choisi th[scope="row"] {
 
 
 /* ═══════════════════════════════════════════════════════════════════════
+   QUI JE SUIS — une lettre, pas une fiche
+
+   Tout ce qui précède est fragmenté : des vignettes, des blocs, des
+   mesures. Ici un seul pavé de prose, au corps d'un livre. C'est le
+   changement de rythme qui marque l'endroit, et non un filet ou un fond.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.lettre {
+    display: grid;
+    grid-template-columns: minmax(0, 14ch) minmax(0, 62ch);
+    gap: clamp(1rem, 4vw, 4rem);
+    justify-content: start;
+}
+
+/* En-tête de lettre : la mention tient dans la marge, à hauteur de la
+   première ligne. Ce n'est pas un titre de section posé au-dessus. */
+.bloc h2.lettre-tete {
+    margin: 0;
+    font-variation-settings: "wdth" 70, "wght" 800;
+    font-size: .74rem;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--encre-faible);
+    text-align: right;
+    padding-top: .55em;
+}
+
+.lettre-corps {
+    display: flex;
+    flex-direction: column;
+    gap: 1.3em;
+}
+
+.lettre-corps p {
+    margin: 0;
+    font-size: clamp(1.02rem, 1.7vw, 1.26rem);
+    line-height: 1.62;
+    color: var(--encre-faible);
+    text-wrap: pretty;
+}
+
+.lettre-corps strong {
+    font-variation-settings: "wdth" 100, "wght" 700;
+    color: var(--encre);
+    font-weight: normal;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   CE QUE J'AIME — la règle de sélection est la forme
+
+   À gauche le goût, à droite ce qu'il a fabriqué. La colonne de droite est
+   deux fois plus grosse que celle de gauche : ce qui compte n'est pas le
+   goût, c'est sa conséquence.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.bloc h2.gouts-tete {
+    margin: 0;
+    font-variation-settings: "wdth" 112, "wght" 900;
+    font-size: clamp(2rem, 6vw, 4.5rem);
+    line-height: .92;
+    letter-spacing: var(--titrage-espace);
+}
+
+.gouts-regle {
+    margin: .7rem 0 clamp(2.4rem, 7vh, 4.5rem);
+    max-width: 46ch;
+    font-variation-settings: "wdth" 88, "wght" 500;
+    font-size: clamp(1rem, 1.8vw, 1.25rem);
+    color: var(--encre-faible);
+}
+
+.paires {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(2rem, 6vh, 3.4rem);
+}
+
+.paire {
+    display: grid;
+    grid-template-columns: minmax(0, 26ch) minmax(0, 54ch);
+    gap: clamp(.6rem, 3vw, 3rem);
+    align-items: baseline;
+    padding-top: 1.1rem;
+    border-top: var(--trait-ep) solid var(--trait);
+}
+
+.paire dt {
+    font-variation-settings: "wdth" 86, "wght" 600;
+    font-size: clamp(.95rem, 1.5vw, 1.1rem);
+    line-height: 1.3;
+    color: var(--encre-faible);
+    text-wrap: pretty;
+}
+
+.paire dd {
+    margin: 0;
+    font-size: clamp(1rem, 1.6vw, 1.18rem);
+    line-height: 1.52;
+    color: var(--encre-faible);
+    text-wrap: pretty;
+}
+
+.paire dd strong {
+    font-variation-settings: "wdth" 100, "wght" 800;
+    color: var(--encre);
+    font-weight: normal;
+}
+
+/* La seule chose en italique de toute la page, et elle sert à l'aveu : ce
+   projet-là n'existe pas encore. */
+.paire dd em {
+    font-style: italic;
+    color: var(--encre);
+}
+
+.gouts-reste {
+    margin: clamp(2rem, 6vh, 3.4rem) 0 0;
+    max-width: 46ch;
+    font-variation-settings: "wdth" 76, "wght" 500;
+    font-size: .88rem;
+    line-height: 1.5;
+    color: var(--encre-faible);
+    opacity: .85;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   LE CONTACT — le seul but du site
+
+   Tout ce qui précède est en colonnes ; ici la page redevient une ligne.
+   L'adresse est le plus gros caractère de la page après le nom lui-même :
+   c'est l'action qu'on attend du visiteur.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.contact {
+    display: grid;
+    gap: clamp(1.6rem, 5vh, 3rem);
+    padding-bottom: clamp(5rem, 16vh, 11rem);
+}
+
+.bloc h2.contact-tete {
+    margin: 0;
+    max-width: 24ch;
+    font-variation-settings: "wdth" 104, "wght" 800;
+    font-size: clamp(1.6rem, 5vw, 3.4rem);
+    line-height: 1.04;
+    letter-spacing: var(--titrage-espace);
+    text-wrap: balance;
+}
+
+.contact-adresse {
+    margin: 0;
+}
+
+.contact-adresse a {
+    /* Dimensionnée sur la largeur du texte lui-même : l'adresse doit
+       toucher les deux marges sans jamais les dépasser. 22 caractères à
+       0,55 de chasse moyenne — mesuré sur Archivo, pas estimé. */
+    font-size: clamp(1.3rem, 8.2vw, 6rem);
+    font-variation-settings: "wdth" 88, "wght" 700;
+    line-height: 1;
+    letter-spacing: -.03em;
+    text-decoration: none;
+    border-bottom: 2px solid var(--trait);
+    display: inline-block;
+    padding-bottom: .06em;
+    transition: border-color .25s ease, color .25s ease;
+    word-break: break-word;
+}
+
+.contact-adresse a:hover,
+.contact-adresse a:focus-visible {
+    border-bottom-color: currentColor;
+}
+
+.contact-liste {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: .4rem clamp(1.2rem, 4vw, 3rem);
+    font-variation-settings: "wdth" 80, "wght" 500;
+    font-size: .92rem;
+    color: var(--encre-faible);
+}
+
+.contact-note {
+    opacity: .7;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════
    REPLIS
    ═══════════════════════════════════════════════════════════════════════ */
 
@@ -1047,6 +1242,23 @@ tr.choisi th[scope="row"] {
     .poincon { width: 44px; }
 
     .vignette.vedette { grid-column: span 1; }
+
+    /* Les deux colonnes tombent : une marge de 14ch dans un écran de 384 px
+       laisse 20 caractères au texte, ce qui n'est plus une colonne mais une
+       gouttière. La mention de lettre reprend sa place au-dessus. */
+    .lettre,
+    .paire {
+        grid-template-columns: minmax(0, 1fr);
+        gap: .5rem;
+    }
+
+    .bloc h2.lettre-tete {
+        text-align: left;
+        padding-top: 0;
+        margin-bottom: .9rem;
+    }
+
+    .paire { gap: .35rem; }
 }
 
 /* Écrans bas (portable 1366×768, vieux téléphones) : mesuré, l'arrivée y

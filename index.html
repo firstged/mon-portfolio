@@ -513,10 +513,151 @@
             </ul>
         </section>
 
-        <p class="chantier" data-en="Who I am, what I love and how to reach me are being written."
-            data-ja="自己紹介・関心・連絡先は制作中です。">
-            Qui je suis, ce que j'aime et comment me joindre : en cours d'écriture.
-        </p>
+        <!-- ═══════════════════════════════════════════════════════════════
+             QUI JE SUIS
+             Après le travail, jamais avant : le travail gagne le droit à la
+             biographie. Et en un seul bloc de prose, pas en fiche — tout ce
+             qui précède est fragmenté, donc c'est le changement de rythme
+             qui marque l'endroit. Les faits sont tissés dans le texte au
+             lieu d'être listés : une liste de diplômes est un CV, et un CV
+             n'a pas de voix.
+             ═══════════════════════════════════════════════════════════════ -->
+        <section class="bloc lettre" id="moi" aria-labelledby="t-moi">
+
+            <h2 class="lettre-tete" id="t-moi" data-en="Who I am" data-ja="私について">Qui je suis</h2>
+
+            <div class="lettre-corps">
+                <p data-en="I am finishing a bachelor&rsquo;s degree in artificial intelligence and big data at the IUT &amp; SN, in Libreville. Before that I learned to repair computers, and I still do: students on campus bring me their machines, I open them up and look for the part that gave out. That same habit decides how I write code &mdash; a site you can open, read and repair, rather than a bundle you replace whole."
+                    data-ja="リーブルビルの IUT &amp; SN で、人工知能とビッグデータの学士課程を修了しようとしています。その前にパソコンの修理を覚え、今も続けています。学内の学生が機械を持ち込み、私はそれを開けて、壊れた部品を探します。その習慣が私のコードの書き方を決めています。丸ごと取り替える塊ではなく、開けて、読んで、直せるサイトを。">
+                    Je finis une licence professionnelle en intelligence artificielle et
+                    big data à l'IUT &amp; SN, à Libreville. Avant ça j'ai appris à réparer
+                    des ordinateurs, et je le fais toujours : les étudiants du campus
+                    m'apportent leurs machines, je les ouvre, je cherche la pièce qui a
+                    lâché. C'est cette habitude-là qui décide de ma façon de coder &mdash;
+                    un site qu'on peut ouvrir, lire et réparer, plutôt qu'un paquet qu'on
+                    remplace en entier.
+                </p>
+
+                <p data-en="In 2026 I spent two months at SUNU Assurances, in a cohort of sixty students recruited nationally. I built an internal tool there that I cannot show; the report was defended and marked 16/20. I also run Devs-Solutions, a student team that delivers sites and tools to Gabonese clients."
+                    data-ja="二〇二六年、全国から選ばれた六十人の学生とともに、SUNU 保険で二か月を過ごしました。そこで社内向けの道具を作りましたが、お見せできません。報告書は口頭試問を経て 20 点中 16 点でした。学生チーム Devs-Solutions も率いており、ガボンの顧客にサイトと道具を届けています。">
+                    En 2026 j'ai passé deux mois chez SUNU Assurances, dans une promotion de
+                    soixante étudiants recrutés au niveau national. J'y ai construit un outil
+                    interne que je ne peux pas montrer ; le rapport a été soutenu et noté
+                    <strong>16/20</strong>. Je dirige aussi <strong>Devs-Solutions</strong>,
+                    une équipe d'étudiants qui livre des sites et des outils à des clients
+                    gabonais.
+                </p>
+
+                <!-- Le fil du site dit en clair, et c'est le seul endroit où il
+                     est dit : le reste de la page le démontre. -->
+                <p data-en="What occupies me now: running machine learning on less. Compressing models, quantizing them, pruning them. It is the same gesture as the grid behind this page &mdash; reduce the number of possible values and spread the error over the neighbours."
+                    data-ja="今取り組んでいるのは、より少ない資源で機械学習を動かすことです。モデルを圧縮し、量子化し、枝刈りする。それはこのページの背後にある網目と同じ操作です。取りうる値の数を減らし、誤差を隣へ配る。">
+                    Ce qui m'occupe maintenant : <strong>faire tourner l'apprentissage
+                        automatique avec moins</strong>. Compresser les modèles, les
+                    quantifier, les élaguer. C'est le même geste que la trame derrière cette
+                    page &mdash; réduire le nombre de valeurs possibles, et répartir l'erreur
+                    sur les voisins.
+                </p>
+            </div>
+
+        </section>
+
+
+        <!-- ═══════════════════════════════════════════════════════════════
+             CE QUE J'AIME
+             La règle de sélection EST la forme de la section : à gauche le
+             goût, à droite ce qu'il a fabriqué. Rien n'entre sans sa
+             conséquence — sinon c'est la liste de goûts que tout le monde a.
+             ═══════════════════════════════════════════════════════════════ -->
+        <section class="bloc gouts" id="gouts" aria-labelledby="t-gouts">
+
+            <h2 class="gouts-tete" id="t-gouts" data-en="What I love" data-ja="好きなもの">Ce que j'aime</h2>
+            <p class="gouts-regle"
+                data-en="Nothing gets onto this page unless it has made something."
+                data-ja="何かを作り出したものだけが、このページに入ります。">
+                Rien n'entre ici qui n'ait fabriqué quelque chose.
+            </p>
+
+            <dl class="paires">
+
+                <div class="paire">
+                    <dt data-en="Manga, and the Japanese I have been learning since"
+                        data-ja="漫画、そしてそこから学び始めた日本語">
+                        Les mangas, et le japonais que j'apprends depuis
+                    </dt>
+                    <dd data-en="The third language of this site. The Japanese font is only fetched when you click 日本語, and subset to the characters actually on the page &mdash; if you never ask for it, you never pay for it."
+                        data-ja="このサイトの三つ目の言語。日本語の字体は 日本語 を押したときだけ取り寄せ、しかもページにある文字だけに絞ります。求めなければ、支払うこともありません。">
+                        <strong>La troisième langue de ce site.</strong> La fonte japonaise
+                        n'est téléchargée qu'au clic sur 日本語, et découpée aux seuls
+                        caractères présents dans la page : si vous ne la demandez pas, vous
+                        ne la payez jamais.
+                    </dd>
+                </div>
+
+                <div class="paire">
+                    <dt data-en="Writing" data-ja="書くこと">Écrire</dt>
+                    <dd data-en="EXprime: the idea of a place where elders &mdash; doctors, craftspeople, keepers of traditions &mdash; leave what they know before it goes. Nothing is built yet. It is the only thing on this page that does not exist."
+                        data-ja="EXprime。医師、職人、伝統の担い手といった年長者が、失われる前に知を預ける場、という構想です。まだ何も作っていません。このページで唯一、存在しないものです。">
+                        <strong>EXprime</strong> : l'idée d'un endroit où des anciens
+                        &mdash; médecins, artisans, gardiens de traditions &mdash; déposent
+                        ce qu'ils savent avant que ça se perde. Rien n'est encore bâti.
+                        <em>C'est la seule chose de cette page qui n'existe pas.</em>
+                    </dd>
+                </div>
+
+                <div class="paire">
+                    <dt data-en="The arithmetic of insurance" data-ja="保険の計算">
+                        Les calculs de l'assurance
+                    </dt>
+                    <dd data-en="A retirement calculator for the Gabonese CNSS: a spreadsheet first, then a command-line program. The pension rules are public and intricate, and nobody had made them easy to try out."
+                        data-ja="ガボン CNSS の年金計算機。まず表計算で、次にコマンドラインの programme で。年金の規則は公開されていますが入り組んでいて、誰も試しやすくしていませんでした。">
+                        <strong>Un calculateur de retraite CNSS</strong> : un tableur
+                        d'abord, puis un programme en ligne de commande. Les règles de
+                        pension sont publiques et enchevêtrées, et personne ne les avait
+                        rendues faciles à essayer.
+                    </dd>
+                </div>
+
+            </dl>
+
+            <p class="gouts-reste"
+                data-en="Cinema and music have not made anything yet, so they are not on this page."
+                data-ja="映画と音楽はまだ何も生んでいないので、このページには載せていません。">
+                Le cinéma et la musique n'ont encore rien fabriqué, donc ils ne sont pas
+                sur cette page.
+            </p>
+
+        </section>
+
+
+        <!-- ═══════════════════════════════════════════════════════════════
+             LE CONTACT
+             Le seul but du site. C'est donc le seul endroit où la page
+             devient une ligne unique et géante : tout ce qui précède est en
+             colonnes, ici il n'y a plus qu'une adresse.
+             ═══════════════════════════════════════════════════════════════ -->
+        <section class="bloc contact" id="contact" aria-labelledby="t-contact">
+
+            <h2 class="contact-tete" id="t-contact"
+                data-en="I am looking for a first position in data and artificial intelligence."
+                data-ja="データと人工知能の分野で、最初の職を探しています。">
+                Je cherche un premier poste en données et en intelligence artificielle.
+            </h2>
+
+            <p class="contact-adresse">
+                <a href="mailto:mayaghagedeon@gmail.com">mayaghagedeon@gmail.com</a>
+            </p>
+
+            <ul class="contact-liste">
+                <li><a href="https://github.com/firstged" rel="noopener">github.com/firstged</a></li>
+                <li data-en="Libreville, Gabon" data-ja="ガボン、リーブルビル">Libreville, Gabon</li>
+                <li lang="fr">Français &middot; <span lang="en">English</span> &middot;
+                    <span lang="ja">日本語</span> <span class="contact-note"
+                        data-en="(learning)" data-ja="（学習中）">(en cours)</span>
+                </li>
+            </ul>
+
+        </section>
 
     </main>
 
