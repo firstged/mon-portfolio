@@ -22,11 +22,16 @@
     --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
     --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
 
-    /* Noir PUR : sur un écran OLED de téléphone, un pixel noir ne s'allume
-       pas. L'argument du site tient jusque dans la couleur de fond. */
-    --nuit: #000000;
-    --craie: #f2f3ef;
-    --cendre: #6a7064;      /* gris à biais vert : choisi, pas hérité */
+    /* Relevé au pixel sur la référence qu'il a fournie (gabarit Held-Mint,
+       52 s de capture) : son fond n'est PAS un noir pur, c'est #081010 —
+       un noir tiré vers sa couleur d'accent. L'encre n'est pas blanche non
+       plus : #e0e0e0. Et ses gris secondaires sont à #909090, bien plus
+       clairs que ceux d'ici, ce qui est une des raisons pour lesquelles la
+       page paraissait « simplement noire ».
+       Même logique, teintée vers le phosphore plutôt que vers le bleu. */
+    --nuit: #080c09;
+    --craie: #e4e6e2;
+    --cendre: #8b918a;
     --phosphore: 155 255 60;
     --braise: 216 255 176;  /* le phosphore frappé fort vire au blanc-vert */
     --intensite: 1;
@@ -36,22 +41,22 @@
        une seule source de vérité pour la couleur, et les fiches suivent la
        peau sans second jeu de règles. */
     --fond: var(--nuit);
-    --fond-creux: #0a0b07;
+    --fond-creux: #0d120e;
     --encre: var(--craie);
     --encre-faible: var(--cendre);
     --signal: rgb(var(--phosphore));
 
     --trait-ep: 1px;
-    --trait: rgba(242, 243, 239, .2);
-    --trait-franc: #f2f3ef;
+    --trait: rgba(228, 230, 226, .22);
+    --trait-franc: #e4e6e2;
 
     --titrage: "Anton", "Arial Narrow", sans-serif;
     --courante: "JetBrains Mono", ui-monospace, monospace;
     --titrage-espace: .01em;
 
     /* Un acte dessiné doit se lire comme du papier dans les deux peaux. */
-    --papier-objet: #f2f3ef;
-    --trace-objet: #000000;
+    --papier-objet: #e4e6e2;
+    --trace-objet: #080c09;
 }
 
 
@@ -824,7 +829,7 @@ main {
 
 .poste-canal:hover { color: var(--encre); }
 
-.poste-canal[aria-pressed="true"] { color: var(--encre); }
+.poste-canal[aria-pressed="true"] { color: var(--signal); }
 
 /* Le canal en cours se lit à une encoche, jamais à une couleur :
    l'emphase se fait au contraste. */
@@ -908,6 +913,11 @@ main {
 .liens {
     margin: .2rem 0 0;
     font-size: .84rem;
+}
+
+.liens a {
+    color: var(--signal);
+    text-decoration-color: rgb(var(--phosphore) / .45);
 }
 
 
@@ -1007,7 +1017,7 @@ main {
 }
 
 .fiche summary:hover {
-    color: var(--encre);
+    color: var(--signal);
 }
 
 .fiche-corps {
@@ -1300,6 +1310,77 @@ tr.choisi th[scope="row"] {
     font-weight: 700;
     color: var(--encre);
     font-weight: normal;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   SÉLECTIONS — les événements
+
+   C'est la seule section de la page qui montre de vraies photographies en
+   couleur. Tout le reste est tramé en deux valeurs : la couleur y devient
+   donc un événement, pas un décor. C'est aussi ce qui répondait le plus
+   directement au reproche « c'est trop noir » — un bloc d'image réelle
+   casse une page de texte sur fond sombre comme aucun réglage de jeton ne
+   le fera.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.planches {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: clamp(1.6rem, 4vw, 3rem);
+    align-items: start;
+}
+
+.planche {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: .9rem;
+}
+
+/* La photo d'équipe porte la section : elle prend deux colonnes quand il y
+   a la place. Une grille où tout pèse pareil ne hiérarchise rien. */
+.planche--large { grid-column: span 2; }
+
+.planche img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: var(--trait-ep) solid var(--trait);
+}
+
+.planche figcaption {
+    display: flex;
+    flex-direction: column;
+    gap: .35rem;
+}
+
+.planche-quand {
+    font-size: .64rem;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--signal);
+}
+
+.planche-dit {
+    max-width: 54ch;
+    font-size: .92rem;
+    line-height: 1.55;
+    color: var(--encre-faible);
+}
+
+.planche-dit strong {
+    color: var(--encre);
+    font-weight: 700;
+}
+
+.planche-dit em {
+    font-style: italic;
+    color: var(--encre);
+}
+
+@media (max-width: 760px) {
+    .planche--large { grid-column: span 1; }
 }
 
 
