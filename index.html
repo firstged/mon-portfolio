@@ -7,7 +7,7 @@
     <title>Gédéon Mouloundi Mayagha — IA et données, Libreville</title>
     <meta name="description"
         content="Je construis des outils de données qui tiennent sur une connexion fragile et qui servent vraiment quelqu'un. Souveraineté numérique du Gabon, IA et Big Data. Libreville.">
-    <meta name="theme-color" content="#0b0b0c">
+    <meta name="theme-color" content="#000000">
     <link rel="icon" href="marque/gfirst-favicon.svg" type="image/svg+xml">
 
     <link rel="canonical" href="https://firstged.github.io/mon-portfolio/">
@@ -38,10 +38,13 @@
     }
     </script>
 
+    <!-- Une seule famille, variable sur deux axes (chasse et graisse) : un
+         fichier au lieu de trois, et toutes les graisses du site dedans. La
+         bitmap n'est là que pour les lettres qui décrochent. -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo+Black&family=JetBrains+Mono:wght@400;700&display=swap">
+        href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Pixelify+Sans:wght@400..700&display=swap">
     <link rel="stylesheet" href="css/gfirst.css">
 
     <!-- Posée ici et pas en fin de page : la règle d'éveil ne doit exister
@@ -52,66 +55,169 @@
 <body>
     <a class="saut" href="#projets">Aller directement aux projets</a>
 
+    <!-- La trame de phosphore. Elle est en `fixed` et opaque : c'est elle
+         le fond du document entier, donc il n'y a aucune couture d'une
+         section à l'autre. -->
+    <canvas class="trame" aria-hidden="true"></canvas>
+
     <!-- ═══════════════════════════════════════════════════════════════════
          L'ARRIVÉE
-         Le nom, et la marque frappée en bas à droite — un poinçon est ce que
-         le maître frappe dans ce qu'il fabrique. Rien d'autre.
+         Le nom, la marque frappée, et un ARBITRAGE à la place du titre de
+         poste. « Métier · Ville — disponible » est la ligne de tous les
+         portfolios du monde ; une décision contre-intuitive n'appartient
+         qu'à celui qui l'a prise.
          ═══════════════════════════════════════════════════════════════════ -->
-    <header class="arrivee" id="arrivee">
+    <div class="scene" id="arrivee">
 
-        <p class="lieu" data-en="Libreville, Gabon" data-ja="リーブルビル、ガボン">Libreville, Gabon</p>
+        <header class="enseigne">
+            <!-- Les trois états arrêtés dans la charte, dans un seul
+                 fichier : B1 cercle (marque officielle), B4 sceau creusé,
+                 B5 nue. Les tracés sont déclarés une fois et rappelés par
+                 <use> — le sceau réutilise exactement la même géométrie
+                 que la marque, en réserve. -->
+            <svg class="poincon" viewBox="0 0 100 100" data-etat="cercle" role="img"
+                aria-label="Gfirst, la marque de Gédéon">
+                <defs>
+                    <g id="gf-lettres">
+                        <path d="M82,50 A32,32 0 1 1 74.5,29.4" />
+                        <path d="M78,50 L50,50" />
+                        <path d="M50,32 L50,68" />
+                        <path d="M42,32 L58,32" />
+                        <path d="M42,68 L58,68" />
+                    </g>
+                    <mask id="gf-creux">
+                        <rect x="5" y="5" width="90" height="90" rx="7" fill="#fff" />
+                        <g fill="none" stroke="#000" stroke-linecap="square" stroke-linejoin="round"
+                            transform="translate(9 9) scale(0.82)" stroke-width="7">
+                            <use href="#gf-lettres" />
+                        </g>
+                    </mask>
+                </defs>
+                <circle class="enceinte" cx="50" cy="50" r="45" />
+                <g class="lettres" transform="translate(9 9) scale(0.82)">
+                    <use href="#gf-lettres" />
+                </g>
+                <rect class="sceau" x="5" y="5" width="90" height="90" rx="7" fill="currentColor"
+                    mask="url(#gf-creux)" />
+            </svg>
+        </header>
 
-        <div class="plan">
+        <div class="corps">
+            <!-- data-source porte la notation du découpeur : {er} devient un
+                 <sup> insécable. Le HTML visible, lui, reste lisible sans
+                 JavaScript. -->
             <h1 class="nom" aria-label="Gédéon Mouloundi Mayagha">
-                <span class="ligne">Gédéon</span>
-                <span class="ligne">Mouloundi</span>
-                <span class="ligne">Mayagha</span>
+                <span class="ligne" data-gresille data-source="Gédéon I{er}">Gédéon I<sup>er</sup></span>
+                <span class="ligne" data-gresille>Mouloundi</span>
+                <span class="ligne" data-gresille>Mayagha</span>
             </h1>
 
-            <svg class="poincon" viewBox="0 0 100 100" role="img" aria-label="Gfirst, marque de Gédéon">
-                <circle cx="50" cy="50" r="45" class="enceinte" />
-                <g class="lettres" transform="translate(9 9) scale(0.82)">
-                    <path d="M82,50 A32,32 0 1 1 74.5,29.4" />
-                    <path d="M78,50 L50,50" />
-                    <path d="M50,32 L50,68" />
-                    <path d="M42,32 L58,32" />
-                    <path d="M42,68 L58,68" />
-                </g>
-            </svg>
+            <div class="signature">
+                <!-- Pas de data-gresille ici : c'est l'information qu'on
+                     vient lire. Ce qu'on lit ne bouge pas pour faire joli. -->
+                <p class="evidence" data-en="The most accurate model was missing one defaulter in two."
+                    data-ja="最も正確なモデルは、延滞者の二人に一人を見逃していました。">
+                    Le modèle le plus exact laissait passer un insolvable sur deux.
+                </p>
+                <p class="verdict" data-en="I kept the less accurate one." data-ja="私は精度の低いほうを選びました。">
+                    J'ai gardé le moins exact.
+                </p>
+            </div>
         </div>
 
         <p class="propos"
-            data-en="I build data tools that hold up on a fragile connection and actually serve someone. What I'm after: that Gabon keeps control of its own data, and takes part in what gets invented elsewhere."
-            data-ja="不安定な回線でも動き、誰かの役に立つデータの道具をつくっています。目指すのは、ガボンが自国のデータを自ら握り、世界の技術の歩みに加わることです。">
-            <strong>Je construis des outils de données qui tiennent sur une connexion
-                fragile et qui servent vraiment quelqu'un.</strong>
+            data-en="&lt;b&gt;I build data tools that hold up on a fragile connection and actually serve someone.&lt;/b&gt; What I'm after: that Gabon keeps control of its own data, and takes part in what gets invented elsewhere."
+            data-ja="&lt;b&gt;不安定な回線でも動き、誰かの役に立つデータの道具をつくっています。&lt;/b&gt;目指すのは、ガボンが自国のデータを自ら握り、世界の技術の歩みに加わることです。">
+            <b>Je construis des outils de données qui tiennent sur une connexion
+                fragile et qui servent vraiment quelqu'un.</b>
             Ce que je vise : que le Gabon garde la main sur ses données, et prenne part
             à ce qui s'invente ailleurs.
         </p>
 
-        <div class="plaque">
-            <div class="reglage" role="group" aria-label="Profondeur de bits">
-                <span class="intitule">Profondeur</span>
+        <div class="pupitre">
+            <div class="reglage" role="group" aria-label="Peau">
+                <span class="quoi" data-en="Skin" data-ja="外装">Peau</span>
                 <button type="button" data-peau="brut" aria-pressed="true">Brut</button>
-                <button type="button" data-peau="net" aria-pressed="false">Net</button>
-                <button type="button" data-peau="papier" aria-pressed="false">Papier</button>
+                <button type="button" data-peau="cool" aria-pressed="false">Cool</button>
             </div>
             <div class="reglage" role="group" aria-label="Langue">
-                <span class="intitule">Langue</span>
+                <span class="quoi" data-en="Language" data-ja="言語">Langue</span>
                 <button type="button" data-langue="fr" aria-pressed="true" lang="fr">FR</button>
                 <button type="button" data-langue="en" aria-pressed="false" lang="en">EN</button>
                 <button type="button" data-langue="ja" aria-pressed="false" lang="ja">日本語</button>
             </div>
         </div>
 
-        <a class="descente" href="#projets">
-            <span data-en="The work" data-ja="仕事を見る">Les projets</span>
-            <span class="rail" aria-hidden="true"><i></i></span>
-        </a>
-
-    </header>
+    </div>
 
     <main>
+
+        <!-- ═══════════════════════════════════════════════════════════════
+             JANVIER, PUIS OCTOBRE
+             Deuxième endroit du site, et c'est volontaire : mettre son
+             travail d'il y a dix mois juste après son nom, aucun portfolio
+             ne le fait. Ça prouve en dix secondes que la page n'est pas un
+             modèle rempli, et ça explique pourquoi tout le reste est bâti
+             comme il l'est.
+             Tous les chiffres sont mesurés le 11 novembre 2026, pas estimés.
+             ═══════════════════════════════════════════════════════════════ -->
+        <section class="regle" id="regle" aria-labelledby="t-regle">
+
+            <h2 class="bascule" id="t-regle" data-gresille data-en="January, then October"
+                data-ja="一月、そして十月">Janvier, puis octobre</h2>
+
+            <div class="temps">
+                <p class="quand" data-en="January 2026" data-ja="2026年1月">Janvier 2026</p>
+                <h3 class="piece">May&rsquo;s</h3>
+                <p class="dit"
+                    data-en="This one I would not build the same way again &mdash; which is exactly why it is here. Catering and pastry, live, answering in under a second. But to show itself it fetches &lt;b&gt;609&nbsp;KB from four third-party servers&lt;/b&gt;: Tailwind assembles the stylesheet inside the visitor&rsquo;s browser, 398&nbsp;KB on its own. My own code weighs 23."
+                    data-ja="これは今なら同じようには作りません。だからこそここに置いています。ケータリングと洋菓子のサイトで、一秒以内に応答します。ただし表示のために、&lt;b&gt;外部四社のサーバーから609 KBを取り寄せます&lt;/b&gt;。Tailwind は閲覧者のブラウザ内でスタイルシートを組み立て、それだけで 398 KB。私自身のコードは 23 KB です。">
+                    Celui-ci, je ne le referais plus pareil &mdash; c&rsquo;est exactement pour
+                    ça qu&rsquo;il est là. Traiteur et pâtisserie, en ligne, il répond en moins
+                    d&rsquo;une seconde. Mais pour s&rsquo;afficher il va chercher
+                    <b>609&nbsp;Ko sur quatre serveurs tiers</b> : Tailwind assemble la feuille
+                    de style dans le navigateur du visiteur, 398&nbsp;Ko à lui seul. Mon code,
+                    lui, en pèse 23.
+                </p>
+                <div class="mesure" data-mien="23" data-ailleurs="609" aria-hidden="true"></div>
+                <p class="unite"
+                    data-en="One square is one kilobyte. The large ones are my code; the small ones are what the page goes and fetches elsewhere."
+                    data-ja="一つのマスが 1 KB です。大きいマスは私のコード、小さいマスはページが外から取り寄せるものです。">
+                    Une case vaut un kilo-octet. Les grandes sont mon code, les petites ce que
+                    la page va chercher ailleurs.
+                </p>
+            </div>
+
+            <p class="origine" data-en="That project is what made me write down the rule I have applied ever since."
+                data-ja="この案件が、それ以来守っている規則を書き留めさせました。">
+                C&rsquo;est ce projet qui m&rsquo;a fait écrire la règle que je m&rsquo;applique
+                depuis.
+            </p>
+
+            <p class="loi" data-gresille
+                data-en="No dependencies on a showcase site. Not out of purism: my visitors are in Gabon, usually on a phone, on a connection that drops."
+                data-ja="紹介サイトに外部依存は置かない。主義のためではありません。私の訪問者はガボンにいて、多くは携帯電話から、途切れる回線で見ています。">Aucune
+                dépendance sur un site vitrine. Pas par purisme : mes visiteurs sont au Gabon,
+                souvent au téléphone, sur une connexion qui lâche.</p>
+
+            <div class="temps temps--tard">
+                <p class="quand" data-en="October 2026" data-ja="2026年10月">Octobre 2026</p>
+                <h3 class="piece">Nkunkuma</h3>
+                <p class="dit"
+                    data-en="Land-case tracking for a property professional in Libreville. Same kind of job, nine months later: &lt;b&gt;105&nbsp;KB all in, nothing from anyone else&lt;/b&gt;, and a case file opens with no network at all."
+                    data-ja="リーブルビルの土地専門家のための案件管理。九か月後、同種の依頼で、&lt;b&gt;合計 105 KB、外部からは何も取り寄せず&lt;/b&gt;、通信がなくても案件を開けます。">
+                    Suivi de dossiers fonciers, pour un professionnel du foncier à Libreville.
+                    Même genre de commande, neuf mois plus tard : <b>105&nbsp;Ko en tout, rien
+                        chez personne</b>, et un dossier s&rsquo;ouvre sans réseau.
+                </p>
+                <div class="mesure" data-mien="105" data-ailleurs="0" aria-hidden="true"></div>
+            </div>
+
+            <p class="greffe" data-en="Measured 11 November 2026." data-ja="2026年 11 月 11 日に計測。">
+                Mesuré le 11 novembre 2026.
+            </p>
+
+        </section>
 
         <!-- ═══════════════════════════════════════════════════════════════
              LES PROJETS
@@ -175,10 +281,10 @@
                                                 class="gachis" />
                                             <g transform="translate(66 42) rotate(-5)">
                                                 <rect width="78" height="66" class="acte" />
-                                                <rect x="8" y="8" width="38" height="5" class="ligne-forte" />
-                                                <rect x="8" y="22" width="62" height="3" class="ligne" />
-                                                <rect x="8" y="31" width="62" height="3" class="ligne" />
-                                                <rect x="8" y="40" width="44" height="3" class="ligne" />
+                                                <rect x="8" y="8" width="38" height="5" class="trait-acte-fort" />
+                                                <rect x="8" y="22" width="62" height="3" class="trait-acte" />
+                                                <rect x="8" y="31" width="62" height="3" class="trait-acte" />
+                                                <rect x="8" y="40" width="44" height="3" class="trait-acte" />
                                             </g>
                                         </svg>
                                         <p class="lecture"><b>4,7</b><span>sur 11</span></p>
@@ -188,10 +294,10 @@
                                             <rect x="1" y="1" width="208" height="148" class="pellicule" />
                                             <g transform="translate(16 8)">
                                                 <rect width="178" height="134" class="acte" />
-                                                <rect x="18" y="16" width="86" height="11" class="ligne-forte" />
-                                                <rect x="18" y="47" width="142" height="7" class="ligne" />
-                                                <rect x="18" y="70" width="142" height="7" class="ligne" />
-                                                <rect x="18" y="93" width="100" height="7" class="ligne" />
+                                                <rect x="18" y="16" width="86" height="11" class="trait-acte-fort" />
+                                                <rect x="18" y="47" width="142" height="7" class="trait-acte" />
+                                                <rect x="18" y="70" width="142" height="7" class="trait-acte" />
+                                                <rect x="18" y="93" width="100" height="7" class="trait-acte" />
                                             </g>
                                         </svg>
                                         <p class="lecture"><b>6,7</b><span>sur 11</span></p>
@@ -390,13 +496,15 @@
                 <li class="vignette">
                     <p class="genre" data-en="Before the rule" data-ja="ルール以前">Avant la règle</p>
                     <h3>May's</h3>
+                    <!-- La fiche de ce projet est en haut de page : c'est lui
+                         qui ouvre le site, donc on ne raconte pas l'histoire
+                         deux fois. Ici, le livrable et son adresse. -->
                     <p class="resume"
-                        data-en="January 2026. It is online and it answers fast — and it loads four external libraries for three screens. This is the project that made me write the rule I apply now: no dependencies on a showcase site."
-                        data-ja="二〇二六年一月。外部ライブラリを四つ読み込みます。今の私の規則は、この案件から来ました。">
-                        Janvier 2026. Le site est en ligne et répond vite — et il charge
-                        <strong>quatre bibliothèques externes</strong> pour trois écrans. C'est ce
-                        projet qui m'a fait écrire la règle que je m'applique depuis : aucune
-                        dépendance sur un site vitrine.
+                        data-en="Catering and pastry, Libreville. Menu, gallery, orders on WhatsApp. January 2026 — &lt;strong&gt;the project the rule came out of&lt;/strong&gt;, told at the top of this page."
+                        data-ja="リーブルビルのケータリングと洋菓子。献立、写真、注文は WhatsApp で。二〇二六年一月、&lt;strong&gt;私の規則の出どころ&lt;/strong&gt;です。">
+                        Traiteur et pâtisserie, à Libreville. Les plats, les photos, la commande
+                        sur WhatsApp. Janvier 2026 — <strong>le projet dont la règle est
+                            sortie</strong>, raconté en haut de cette page.
                     </p>
                     <p class="liens"><a href="https://firstged.github.io/nel-services/" rel="noopener">Voir le
                             site</a></p>

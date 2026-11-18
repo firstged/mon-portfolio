@@ -35,3 +35,10 @@ textile/
 .DS_Store
 Thumbs.db
 *.log
+
+# Skills d'agent installees par `npx skills` (animate, Emil Kowalski).
+# Outil de developpement : rien a faire dans un depot public qui SERT le
+# site. Sans ca, GitHub Pages les publierait avec le reste.
+.agents/
+.claude/
+skills-lock.json

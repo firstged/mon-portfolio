@@ -2,104 +2,87 @@
    GFIRST — portfolio de Gédéon Mouloundi Mayagha
    Aucune dépendance. Seule chose chargée de l'extérieur : Google Fonts.
 
-   Trois peaux commutables. Le bouton n'est pas un mode sombre : c'est une
-   commande de profondeur de bits. BRUT (1 bit), NET (24 bits) et PAPIER
-   (sérigraphie) sont le même site à trois précisions.
+   Deux mécanismes, un seul appareil :
+   · le fond est une grille de phosphore qui retient la vitesse du doigt ;
+   · les textes grésillent en permanence — une lettre perd sa définition
+     et retombe en pixels, puis se rétablit.
+   Le second n'est pas un décor posé sur le premier : c'est le même signal
+   qui décroche, au fond comme à la surface.
+
+   Deux peaux. Le bouton n'est pas un mode sombre : c'est une commande de
+   profondeur de bits. BRUT est le signal brut, COOL le signal reconstitué.
    ═══════════════════════════════════════════════════════════════════════ */
 
 
-/* ═══ JETONS — PEAU « BRUT » (1 bit) ═══ */
+/* ═══ JETONS — PEAU « BRUT » ═══════════════════════════════════════════ */
 
 :root {
-    --fond: #0b0b0c;
-    --fond-creux: #131317;
-    --encre: #f4f4ee;
-    --encre-faible: #8d8d86;
+    /* Courbes : les deux seules du projet. Les `ease-out` et `ease-in-out`
+       natifs du navigateur sont trop mous pour qu'un mouvement se lise. */
+    --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+    --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
 
-    /* La charte du poinçon n'a pas de couleur d'accent : encre, papier, fond
-       sombre, et c'est tout. Un vert couru sur les boutons, les puces et les
-       chiffres est ce qui rendait le site bruyant. Il reste disponible comme
-       SIGNAL — une occurrence par écran au maximum. L'emphase ordinaire se
-       fait au contraste, pas à la teinte. */
-    --accent: #f4f4ee;
-    --sur-accent: #0b0b0c;
-    --signal: #c3f200;
+    /* Noir PUR : sur un écran OLED de téléphone, un pixel noir ne s'allume
+       pas. L'argument du site tient jusque dans la couleur de fond. */
+    --nuit: #000000;
+    --craie: #f2f3ef;
+    --cendre: #6a7064;      /* gris à biais vert : choisi, pas hérité */
+    --phosphore: 155 255 60;
+    --braise: 216 255 176;  /* le phosphore frappé fort vire au blanc-vert */
+    --intensite: 1;
+
+    /* Noms employés par les fiches projets, écrites avant la bascule de
+       direction. Les tenir comme alias plutôt que de renommer partout :
+       une seule source de vérité pour la couleur, et les fiches suivent la
+       peau sans second jeu de règles. */
+    --fond: var(--nuit);
+    --fond-creux: #0a0b07;
+    --encre: var(--craie);
+    --encre-faible: var(--cendre);
+    --signal: rgb(var(--phosphore));
 
     --trait-ep: 1px;
-    --trait: rgba(244, 244, 238, .22);
-    --trait-franc: #f4f4ee;
-    --rayon: 0px;
+    --trait: rgba(242, 243, 239, .2);
+    --trait-franc: #f2f3ef;
 
-    --titrage: "Anton", "Arial Narrow", sans-serif;
-    --courante: "JetBrains Mono", ui-monospace, monospace;
-    --titrage-espace: 0.01em;
-    --nom-echelle: 1;
+    --titrage: "Archivo", Helvetica, Arial, sans-serif;
+    --titrage-espace: -.018em;
 
-    --papier-objet: #f4f4ee;
-    --trace-objet: #0b0b0c;
-
-    --texture: radial-gradient(rgba(244, 244, 238, .05) 1px, transparent 1.1px);
-    --texture-taille: 3px 3px;
+    /* Un acte dessiné doit se lire comme du papier dans les deux peaux. */
+    --papier-objet: #f2f3ef;
+    --trace-objet: #000000;
 }
 
 
-/* ═══ JETONS — PEAU « NET » (24 bits) ═══ */
+/* ═══ JETONS — PEAU « COOL » ═══════════════════════════════════════════
+   La lueur s'inverse : elle creuse au lieu d'éclairer, sinon la trame
+   disparaît sur un fond clair.                                          */
 
-[data-peau="net"] {
-    --fond: #21272a;
-    --fond-creux: #1b2124;
-    --encre: #dde5e3;
-    --encre-faible: #7d8a88;
+:root[data-peau="cool"] {
+    --nuit: #e9e6dc;
+    --craie: #14160f;
+    --cendre: #767162;
+    --phosphore: 44 92 18;
+    --braise: 12 28 6;
+    /* Mesuré, et c'est pour ça que COOL est moins intense que BRUT : sur le
+       fond crème, une cellule chargée à fond ramenait le texte à 2,87:1 de
+       contraste — sous le minimum lisible. À .45 la trame se voit encore et
+       le texte qui la traverse reste à 7,1:1. En BRUT le problème n'existe
+       pas : le phosphore éclaire un fond noir au lieu de le creuser. */
+    --intensite: .45;
 
-    --accent: #dde5e3;
-    --sur-accent: #15191b;
-    --signal: #7fd4c6;
-
-    --trait: rgba(221, 229, 227, .18);
-    --trait-franc: #dde5e3;
-    --rayon: 2px;
-
-    --titrage: "Archivo Black", Georgia, sans-serif;
-    --titrage-espace: -0.015em;
-    --nom-echelle: .72;
-
-    --papier-objet: #dde5e3;
-    --trace-objet: #21272a;
-
-    --texture: none;
-    --texture-taille: auto;
-}
-
-
-/* ═══ JETONS — PEAU « PAPIER » (sérigraphie) ═══ */
-
-[data-peau="papier"] {
-    --fond: #e8e4d9;
     --fond-creux: #ded9cc;
-    --encre: #17160f;
-    --encre-faible: #6b675a;
+    --trait: rgba(20, 22, 15, .22);
+    --trait-franc: #14160f;
 
-    --accent: #17160f;
-    --sur-accent: #e8e4d9;
-    --signal: #c4341f;
-
-    --trait: rgba(23, 22, 15, .22);
-    --trait-franc: #17160f;
-    --rayon: 0px;
-
-    --titrage: "Archivo Black", Georgia, sans-serif;
-    --titrage-espace: -0.025em;
-    --nom-echelle: .72;
-
+    /* En COOL le fond est déjà crème : il faut un papier PLUS CLAIR que le
+       fond, ce qu'un simple `var(--craie)` ne donnerait pas. */
     --papier-objet: #fbf9f2;
-    --trace-objet: #17160f;
-
-    --texture: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E");
-    --texture-taille: 140px 140px;
+    --trace-objet: #14160f;
 }
 
 
-/* ═══ SOCLE ═══ */
+/* ═══ SOCLE ════════════════════════════════════════════════════════════ */
 
 *,
 *::before,
@@ -111,35 +94,25 @@ html {
     scroll-behavior: smooth;
 }
 
-/* Pas une seule bordure entre les sections : le fond lui-même dérive sur
-   toute la hauteur du document. C'est le dégradé qui dit qu'on avance, et
-   il n'y a donc aucune couture à franchir. */
+/* Aucune bordure, aucun dégradé de section à section : la trame est en
+   `fixed`, donc le fond ne s'interrompt jamais. Il n'y a aucune couture à
+   franchir — seul le rythme typographique marque l'endroit. */
 body {
     margin: 0;
-    background-color: var(--fond);
-    background-image:
-        var(--texture),
-        linear-gradient(180deg,
-            var(--fond) 0%,
-            var(--fond-creux) 34%,
-            var(--fond) 62%,
-            var(--fond-creux) 100%);
-    background-size: var(--texture-taille), 100% 100%;
-    color: var(--encre);
-    font-family: var(--courante);
+    min-height: 100svh;
+    background: var(--nuit);
+    color: var(--craie);
+    font-family: "Archivo", Helvetica, Arial, sans-serif;
+    font-variation-settings: "wdth" 100, "wght" 400;
     font-size: clamp(0.92rem, 0.3vw + 0.86rem, 1rem);
     line-height: 1.65;
     -webkit-font-smoothing: antialiased;
-    transition: background-color .5s ease, color .5s ease;
-}
-
-:focus-visible {
-    outline: 2px solid var(--signal);
-    outline-offset: 3px;
+    overflow-x: clip;
+    transition: background .32s var(--ease-out), color .32s var(--ease-out);
 }
 
 a {
-    color: var(--encre);
+    color: var(--craie);
     text-decoration-thickness: 1px;
     text-underline-offset: .25em;
     text-decoration-color: var(--trait);
@@ -148,6 +121,11 @@ a {
 
 a:hover {
     text-decoration-color: currentColor;
+}
+
+:where(button, a):focus-visible {
+    outline: 2px solid var(--craie);
+    outline-offset: 3px;
 }
 
 .saut {
@@ -159,85 +137,77 @@ a:hover {
     left: 1rem;
     top: 1rem;
     z-index: 99;
-    background: var(--encre);
-    color: var(--fond);
+    background: var(--craie);
+    color: var(--nuit);
     padding: .6rem 1rem;
 }
 
-/* Le changement de langue ne doit pas claquer : le texte s'efface, se
-   remplace hors de vue, puis revient. Deux dixièmes suffisent — au-delà on
-   attend, en deçà on voit la substitution se faire. */
-.js [data-en] {
-    transition: opacity .2s ease;
+
+/* ═══ LA TRAME ═════════════════════════════════════════════════════════ */
+
+.trame {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
 }
 
-.js [data-en].mue {
-    opacity: 0;
+/* Tout le contenu passe au-dessus de la trame. Sans cette règle, la toile
+   en `fixed` recouvrirait les sections qui suivent l'arrivée. */
+main {
+    position: relative;
+    z-index: 1;
 }
 
 
 /* ═══════════════════════════════════════════════════════════════════════
-   L'ARRIVÉE — le nom, et la marque frappée. Rien d'autre.
+   L'ARRIVÉE
    ═══════════════════════════════════════════════════════════════════════ */
 
-.arrivee {
+.scene {
     position: relative;
+    z-index: 1;
     min-height: 100svh;
     display: grid;
     grid-template-rows: auto 1fr auto;
-    gap: clamp(1.4rem, 4vh, 3rem);
-    padding: clamp(1.1rem, 3vw, 2.6rem);
+    gap: clamp(1.4rem, 3.5vh, 2.6rem);
+    padding: clamp(1.1rem, 3.2vw, 2.4rem);
+    /* Le nom déborde par la droite : il est trop grand pour le mur. C'est
+       le seul endroit où la page sort de ses marges. */
+    overflow: clip;
 }
 
-.lieu {
-    margin: 0;
-    font-size: .68rem;
-    letter-spacing: .26em;
-    text-transform: uppercase;
-    color: var(--encre-faible);
-}
 
-.plan {
-    grid-row: 2;
-    align-self: center;
+/* ═══ L'ENSEIGNE — la marque tient le coin, c'est sa place ═════════════ */
+
+.enseigne {
     display: flex;
-    align-items: flex-end;
-    gap: clamp(.6rem, 1.6vw, 1.4rem);
-    flex-wrap: wrap;
 }
-
-.nom {
-    flex: 0 1 auto;
-    margin: 0;
-    font-family: var(--titrage);
-    font-weight: 400;
-    font-size: calc(clamp(2.9rem, 14vw, 15rem) * var(--nom-echelle));
-    line-height: .84;
-    letter-spacing: var(--titrage-espace);
-    text-transform: uppercase;
-}
-
-.nom .ligne {
-    display: block;
-}
-
-.nom .ligne:nth-child(2) {
-    color: var(--encre-faible);
-}
-
-
-/* ═══ LE POINÇON ═══
-   Un poinçon est ce que le maître frappe dans ce qu'il fabrique : il est
-   donc posé au pied du nom, légèrement de travers, comme une marque
-   appuyée à la main — pas centré, pas droit, pas en médaillon. */
 
 .poincon {
-    flex: none;
-    width: clamp(92px, 11vw, 160px);
+    width: clamp(42px, 4.6vw, 58px);
     height: auto;
-    color: var(--encre);
+    color: var(--craie);
     transform: rotate(-3deg);
-    margin-bottom: .3em;
+}
+
+/* Le poinçon est FRAPPÉ, pas posé : il arrive trop grand, dépasse sous la
+   taille finale, puis se relève. Le dépassement est dans les images-clés et
+   non dans une courbe à rebond inventée — et en animation CSS plutôt qu'en
+   transition pilotée par `setTimeout`, parce qu'elle tombe pendant que la
+   page charge encore ses fontes et que le fil principal est pris. */
+.js .poincon {
+    opacity: 0;
+}
+
+.pret .poincon {
+    animation: frappe .32s var(--ease-out) .62s both;
+}
+
+@keyframes frappe {
+    from { opacity: 0; transform: rotate(-3deg) scale(1.9); }
+    62%  { opacity: 1; transform: rotate(-3deg) scale(.94); }
+    to   { opacity: 1; transform: rotate(-3deg) scale(1); }
 }
 
 .poincon .enceinte {
@@ -254,144 +224,405 @@ a:hover {
     stroke-linejoin: round;
 }
 
-.js .poincon {
-    animation: frappe .62s cubic-bezier(.16, .9, .3, 1) both;
-}
-
-/* Une frappe, pas une apparition : la marque arrive trop grande et s'écrase
-   sur sa position, comme un tampon qu'on appuie. */
-@keyframes frappe {
-    from {
-        opacity: 0;
-        transform: rotate(-9deg) scale(1.4);
-    }
-
-    55% {
-        opacity: 1;
-    }
-
-    to {
-        opacity: 1;
-        transform: rotate(-3deg) scale(1);
-    }
-}
-
-.propos {
-    grid-row: 3;
-    margin: 0;
-    max-width: 54ch;
-    font-size: clamp(.95rem, 1.4vw, 1.1rem);
-    color: var(--encre-faible);
-}
-
-.propos strong {
-    color: var(--encre);
-    font-weight: 700;
+/* La marque décroche entre ses trois états arrêtés. Elle revient toujours
+   au cercle : c'est la forme officielle, les deux autres sont des accidents
+   de signal. */
+.poincon[data-etat="cercle"] .sceau,
+.poincon[data-etat="nu"] .sceau,
+.poincon[data-etat="nu"] .enceinte,
+.poincon[data-etat="sceau"] .enceinte,
+.poincon[data-etat="sceau"] .lettres {
+    display: none;
 }
 
 
-/* ═══ LA PLAQUE ═══ */
+/* ═══ LE NOM ═══════════════════════════════════════════════════════════ */
 
-.plaque {
-    position: absolute;
-    z-index: 4;
-    top: clamp(1.1rem, 3vw, 2.6rem);
-    right: clamp(1.1rem, 3vw, 2.6rem);
+.corps {
+    align-self: center;
     display: flex;
     flex-direction: column;
-    gap: .5rem;
-    align-items: flex-end;
+    gap: clamp(1.4rem, 4vh, 2.8rem);
+}
+
+.nom {
+    margin: 0;
+    font-variation-settings: "wdth" 125, "wght" 900;
+    /* Dimensionné sur les DEUX axes. Mesuré : « Mouloundi » occupe 6,45 px
+       de large par pixel de corps, et le bloc fait trois lignes à 0,84 —
+       une taille calée sur la seule largeur tient à l'horizontale mais
+       dévore un écran de portable en hauteur (520 px sur 768). `min()`
+       laisse l'axe le plus contraint décider : vw gagne sur téléphone, svh
+       gagne sur écran large et bas. */
+    font-size: clamp(1.9rem, min(12vw, 16svh), 10rem);
+    line-height: .84;
+    letter-spacing: -.022em;
+    /* line-height sous 1 rogne les diacritiques, et la boîte de ligne se
+       cale sur la hauteur de capitale : l'accent du É de GÉDÉON — l'état de
+       règne — passe au-dessus et se fait couper. La marge le rattrape. */
+    padding-top: .17em;
+    white-space: nowrap;
+    /* Hauteur réservée pour trois lignes : quand le nom zappe en « Gfirst »
+       il n'en occupe plus qu'une, et sans réserve toute la page remonterait
+       d'un coup à chaque bascule. */
+    min-height: 2.6em;
+}
+
+.nom .ligne {
+    display: block;
+    /* Décalage posé par le JS quand une bande décroche. */
+    transform: translateX(var(--decroche, 0px));
+    will-change: transform;
+}
+
+/* L'ARBITRAGE, à la place du titre de poste.
+   « Métier · Ville — disponible » est la ligne de tous les portfolios du
+   monde, et elle cumule trois signatures de page générée. Une décision
+   contre-intuitive, elle, n'appartient qu'à celui qui l'a prise. Deux
+   membres et aucun libellé : l'évidence, puis ce que j'ai fait. C'est le
+   contraste de graisse qui dit lequel est lequel. */
+.signature {
+    display: flex;
+    flex-direction: column;
+    gap: .22rem;
+    max-width: 40ch;
+}
+
+.evidence {
+    margin: 0;
+    font-variation-settings: "wdth" 78, "wght" 500;
+    font-size: clamp(.86rem, 1.5vw, 1rem);
+    line-height: 1.36;
+    color: var(--cendre);
+}
+
+.verdict {
+    margin: 0;
+    font-variation-settings: "wdth" 88, "wght" 800;
+    font-size: clamp(1.02rem, 2vw, 1.28rem);
+    line-height: 1.22;
+    color: var(--craie);
+}
+
+
+/* ═══ LE PROPOS ════════════════════════════════════════════════════════ */
+
+.propos {
+    margin: 0 0 0 auto;
+    /* Décalé vers la droite : la page n'est pas une colonne unique alignée
+       à gauche, ce qui est le gabarit que la charte interdit. */
+    max-width: 54ch;
+    font-size: clamp(1rem, 1.5vw, 1.15rem);
+    line-height: 1.52;
+    color: var(--cendre);
+    text-wrap: pretty;
+}
+
+.propos b {
+    font-variation-settings: "wdth" 100, "wght" 600;
+    color: var(--craie);
+    font-weight: normal;
+}
+
+
+/* ═══ LE GRÉSILLEMENT ══════════════════════════════════════════════════
+   Une lettre qui décroche perd sa définition : elle retombe dans une fonte
+   bitmap et prend la couleur du phosphore. C'est la profondeur de bits du
+   pupitre, appliquée à la typographie — pas une police tirée au hasard. */
+
+.mot {
+    white-space: nowrap;
+}
+
+.gr {
+    display: inline-block;
+    text-align: center;
+    /* Largeur figée au montage : sans elle, le passage à la fonte bitmap
+       décalerait toutes les lettres suivantes et le mot entier danserait. */
+    transform: translateY(var(--saut, 0px));
+}
+
+/* Le chiffre de règne. Un vrai <sup> et non les exposants Unicode ᵉ ʳ :
+   Archivo ne porte pas ces glyphes et le navigateur les remplacerait par
+   une fonte de secours — deux caractères d'une autre police au milieu du
+   nom. « er » reste d'un seul tenant : il grésille comme une lettre. */
+.nom sup.gr {
+    font-size: .40em;
+    vertical-align: super;
+    line-height: 0;
+    letter-spacing: -.01em;
+    margin-left: .04em;
+}
+
+.gr[data-bug="police"],
+.gr[data-bug="les-deux"] {
+    font-family: "Pixelify Sans", "Archivo", monospace;
+    font-variation-settings: "wght" 700;
+    letter-spacing: 0;
+}
+
+.gr[data-bug="couleur"],
+.gr[data-bug="les-deux"] {
+    color: rgb(var(--phosphore));
+}
+
+
+/* ═══ LES RÉGLAGES ═════════════════════════════════════════════════════
+   Les étiquettes du pupitre ne grésillent pas : ce sont des commandes.
+   Faire clignoter un contrôle nuit à sa lisibilité sans rien raconter — la
+   hardiesse se dépense à un seul endroit, et c'est le nom.              */
+
+.pupitre {
+    display: flex;
+    flex-wrap: wrap;
+    gap: clamp(1rem, 3vw, 2.4rem);
+    align-items: baseline;
 }
 
 .reglage {
     display: flex;
-    align-items: center;
-    gap: .25rem;
+    align-items: baseline;
+    gap: .55rem;
 }
 
-.intitule {
-    font-size: .58rem;
-    letter-spacing: .2em;
-    text-transform: uppercase;
-    color: var(--encre-faible);
-    margin-right: .3rem;
+.reglage .quoi {
+    font-variation-settings: "wdth" 70, "wght" 500;
+    font-size: .78rem;
+    color: var(--cendre);
 }
 
 .reglage button {
-    font-family: var(--courante);
-    font-size: .66rem;
-    letter-spacing: .1em;
-    text-transform: uppercase;
-    padding: .32rem .6rem;
-    border: var(--trait-ep) solid var(--trait);
-    border-radius: var(--rayon);
-    background: transparent;
-    color: var(--encre-faible);
+    appearance: none;
+    background: none;
+    border: 0;
+    padding: .45rem .2rem;
+    margin: 0;
+    font: inherit;
+    font-variation-settings: "wdth" 85, "wght" 500;
+    font-size: .9rem;
+    color: var(--cendre);
     cursor: pointer;
-    transition: color .25s, border-color .25s, background-color .25s;
+    position: relative;
+    transition: color .22s ease;
+    min-height: 44px;   /* cible au doigt, sans l'imposer visuellement */
 }
 
 .reglage button:hover {
-    color: var(--encre);
-    border-color: var(--trait-franc);
+    color: var(--craie);
 }
 
-/* Le réglage actif est frappé, pas colorié : encre pleine, fond réservé. */
 .reglage button[aria-pressed="true"] {
-    background: var(--encre);
-    border-color: var(--encre);
-    color: var(--fond);
+    color: var(--craie);
+    font-variation-settings: "wdth" 85, "wght" 800;
 }
 
-
-/* ═══ LA DESCENTE ═══ */
-
-.descente {
+/* L'état actif se lit à la graisse et à une encoche sous la ligne de base —
+   jamais à une couleur. L'emphase se fait au contraste. */
+.reglage button[aria-pressed="true"]::after {
+    content: "";
     position: absolute;
-    z-index: 4;
-    right: clamp(1.1rem, 3vw, 2.6rem);
-    bottom: clamp(1.1rem, 3vw, 2.6rem);
-    display: flex;
-    align-items: center;
-    gap: .7rem;
-    color: var(--encre-faible);
-    text-decoration: none;
-    font-size: .66rem;
-    letter-spacing: .2em;
-    text-transform: uppercase;
+    left: .2rem;
+    right: .2rem;
+    bottom: .55rem;
+    height: 2px;
+    background: currentColor;
 }
 
-.descente:hover {
-    color: var(--encre);
+
+/* ═══ ENTRÉE — une seule séquence orchestrée, pas un fondu par bloc ════ */
+
+.js .propos,
+.js .pupitre,
+.js .signature {
+    opacity: 0;
 }
 
-.rail {
-    display: block;
-    position: relative;
-    width: 1px;
-    height: 54px;
-    background: var(--trait);
+.js .nom .ligne {
+    opacity: 0;
+    transform: translateX(-.14em);
 }
 
-.rail i {
-    position: absolute;
-    left: -1px;
-    width: 3px;
-    height: 3px;
-    background: var(--encre);
-    animation: descend 2.6s cubic-bezier(.6, 0, .4, 1) infinite;
+/* Rien n'entre en même temps : 70 ms séparent chaque bloc. L'enseigne est
+   absente de cette liste — le poinçon a sa propre frappe. */
+.pret .propos,
+.pret .pupitre,
+.pret .signature {
+    opacity: 1;
+    transition: opacity .28s var(--ease-out);
 }
 
-@keyframes descend {
-    0% { top: 0; opacity: 0; }
-    25% { opacity: 1; }
-    75% { opacity: 1; }
-    100% { top: 51px; opacity: 0; }
+.pret .signature { transition-delay: .69s; }
+.pret .propos    { transition-delay: .76s; }
+.pret .pupitre   { transition-delay: .83s; }
+
+.pret .nom .ligne {
+    opacity: 1;
+    transform: translateX(var(--decroche, 0px));
+    transition: opacity .42s var(--ease-out), transform .42s var(--ease-out);
+}
+
+/* `:where()` garde ces délais à la même spécificité que la règle ci-dessus :
+   sans lui, ils l'emporteraient sur `.pose` et le décrochage repartirait
+   avec un retard à l'allumage. */
+.pret .nom .ligne:where(:nth-child(1)) { transition-delay: .06s; }
+.pret .nom .ligne:where(:nth-child(2)) { transition-delay: .13s; }
+.pret .nom .ligne:where(:nth-child(3)) { transition-delay: .20s; }
+
+/* Une fois le nom posé, la transition de `transform` DOIT disparaître :
+   c'est elle qui porte le décrochage, et un signal qui décroche saute, il
+   ne glisse pas. Avec elle, la bande partait mollement sur 420 ms. */
+.pose .nom .ligne {
+    transition: opacity .42s var(--ease-out);
+    transition-delay: 0s;
 }
 
 
 /* ═══════════════════════════════════════════════════════════════════════
-   LES BLOCS
+   LA RÈGLE — janvier, puis octobre
+
+   L'alternance d'alignement n'est pas un ornement — gauche, puis centre,
+   puis droite suit la chronologie, et c'est elle qui empêche la répétition
+   du même gabarit de section.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.regle {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    justify-items: start;
+    gap: clamp(1.9rem, 5.5vh, 3.4rem);
+    padding: clamp(2.6rem, 8vh, 5.5rem) clamp(1.1rem, 3.2vw, 2.4rem) clamp(4rem, 13vh, 8rem);
+}
+
+.bascule {
+    margin: 0;
+    font-variation-settings: "wdth" 112, "wght" 900;
+    font-size: clamp(1.55rem, 5.2vw, 3.3rem);
+    line-height: .98;
+    letter-spacing: -.018em;
+    color: var(--craie);
+}
+
+.temps {
+    display: grid;
+    gap: .5rem;
+    max-width: 46ch;
+}
+
+.temps--tard { justify-self: end; }
+.temps--tard .quand,
+.temps--tard .piece { text-align: right; }
+.temps--tard .mesure { justify-content: flex-end; }
+
+.quand {
+    margin: 0;
+    /* Pas de capitales espacées : la date est une information, pas une
+       étiquette décorative posée au-dessus du titre. */
+    font-variation-settings: "wdth" 70, "wght" 800;
+    font-size: clamp(.76rem, 1.35vw, .88rem);
+    color: var(--cendre);
+}
+
+.piece {
+    margin: 0;
+    font-variation-settings: "wdth" 104, "wght" 800;
+    font-size: clamp(1.35rem, 3.6vw, 2.2rem);
+    line-height: 1.02;
+    letter-spacing: -.012em;
+    color: var(--craie);
+}
+
+.dit {
+    margin: .25rem 0 0;
+    font-size: clamp(.95rem, 1.45vw, 1.08rem);
+    line-height: 1.5;
+    color: var(--cendre);
+    text-wrap: pretty;
+}
+
+.dit b {
+    font-variation-settings: "wdth" 100, "wght" 700;
+    color: var(--craie);
+    font-weight: normal;
+}
+
+/* LA MESURE. Une case vaut un kilo-octet, et c'est la même case que celles
+   du fond : la surface occupée EST l'argument, et non un graphique posé à
+   côté du propos.
+
+   Les deux natures se distinguent à la TAILLE, pas à la seule couleur : en
+   peau COOL l'encre et le phosphore sont tous deux sombres, et un codage
+   par teinte seule y deviendrait illisible — pour tout le monde, pas
+   seulement pour un œil daltonien.                                      */
+.mesure {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px;
+    margin-top: .85rem;
+    width: 100%;
+}
+
+.ko {
+    width: 8px;
+    height: 8px;
+    display: block;
+    opacity: 0;
+}
+
+.ko--mien { background: var(--craie); }
+.ko--ailleurs {
+    background: rgb(var(--phosphore) / .8);
+    transform: scale(.5);
+}
+
+.compte .ko {
+    opacity: 1;
+    transition: opacity .16s linear var(--retard, 0ms);
+}
+
+.regle .unite {
+    margin: .7rem 0 0;
+    max-width: 44ch;
+    font-variation-settings: "wdth" 76, "wght" 500;
+    font-size: clamp(.72rem, 1.2vw, .82rem);
+    line-height: 1.45;
+    color: var(--cendre);
+}
+
+.origine {
+    margin: 0;
+    max-width: 34ch;
+    font-variation-settings: "wdth" 80, "wght" 500;
+    font-size: clamp(.86rem, 1.4vw, .98rem);
+    line-height: 1.45;
+    color: var(--cendre);
+}
+
+/* La règle est le pivot de la section : plus grosse taille après le nom, et
+   le seul bloc centré de toute la page. */
+.loi {
+    margin: 0;
+    justify-self: center;
+    max-width: 34ch;
+    font-size: clamp(1.18rem, 3vw, 1.95rem);
+    line-height: 1.26;
+    font-variation-settings: "wdth" 94, "wght" 600;
+    letter-spacing: -.008em;
+    color: var(--craie);
+    text-wrap: pretty;
+}
+
+.greffe {
+    margin: 0;
+    justify-self: center;
+    font-variation-settings: "wdth" 74, "wght" 500;
+    font-size: clamp(.72rem, 1.2vw, .8rem);
+    color: var(--cendre);
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   LES PIÈCES
    ═══════════════════════════════════════════════════════════════════════ */
 
 .bloc {
@@ -408,11 +639,10 @@ a:hover {
 .bloc h2 {
     margin: 0;
     font-family: var(--titrage);
-    font-weight: 400;
-    font-size: calc(clamp(2rem, 6vw, 4.5rem) * var(--nom-echelle));
+    font-variation-settings: "wdth" 112, "wght" 900;
+    font-size: clamp(2rem, 6vw, 4.5rem);
     line-height: .92;
     letter-spacing: var(--titrage-espace);
-    text-transform: uppercase;
 }
 
 .bloc-chapo {
@@ -422,10 +652,10 @@ a:hover {
 }
 
 
-/* ═══ LES VIGNETTES ═══
+/* ═══ LES VIGNETTES ════════════════════════════════════════════════════
    Ce qu'un visiteur voit en arrivant : le projet, pour qui, un lien. Le
-   détail d'ingénierie se déplie pour qui le demande — on ne l'impose pas
-   à quelqu'un qui vient d'arriver. */
+   détail d'ingénierie se déplie pour qui le demande — on ne l'impose pas à
+   quelqu'un qui vient d'arriver.                                        */
 
 .vignettes {
     list-style: none;
@@ -452,8 +682,9 @@ a:hover {
 
 .genre {
     margin: 0;
-    font-size: .6rem;
-    letter-spacing: .2em;
+    font-variation-settings: "wdth" 70, "wght" 700;
+    font-size: .64rem;
+    letter-spacing: .18em;
     text-transform: uppercase;
     color: var(--encre-faible);
 }
@@ -461,11 +692,10 @@ a:hover {
 .vignette h3 {
     margin: 0;
     font-family: var(--titrage);
-    font-weight: 400;
-    font-size: calc(clamp(1.5rem, 3vw, 2.4rem) * var(--nom-echelle));
+    font-variation-settings: "wdth" 104, "wght" 800;
+    font-size: clamp(1.5rem, 3vw, 2.4rem);
     line-height: 1;
     letter-spacing: var(--titrage-espace);
-    text-transform: uppercase;
 }
 
 .resume {
@@ -475,26 +705,26 @@ a:hover {
 }
 
 .resume strong {
+    font-variation-settings: "wdth" 100, "wght" 700;
     color: var(--encre);
-    font-weight: 700;
+    font-weight: normal;
 }
 
 .outils {
     margin: 0;
-    font-size: .74rem;
+    font-variation-settings: "wdth" 84, "wght" 400;
+    font-size: .78rem;
     color: var(--encre-faible);
-    opacity: .8;
+    opacity: .85;
 }
 
 .liens {
     margin: .2rem 0 0;
-    font-size: .8rem;
-    letter-spacing: .04em;
+    font-size: .84rem;
 }
 
 
-
-/* ═══ LA FICHE QUI SE DÉPLIE ═══ */
+/* ═══ LA FICHE QUI SE DÉPLIE ═══════════════════════════════════════════ */
 
 .fiche {
     margin-top: .5rem;
@@ -508,11 +738,13 @@ a:hover {
     display: inline-flex;
     align-items: center;
     gap: .55rem;
-    font-size: .68rem;
-    letter-spacing: .16em;
+    font-variation-settings: "wdth" 76, "wght" 700;
+    font-size: .7rem;
+    letter-spacing: .14em;
     text-transform: uppercase;
     color: var(--encre-faible);
     transition: color .25s ease;
+    min-height: 44px;
 }
 
 .fiche summary::-webkit-details-marker {
@@ -560,22 +792,23 @@ a:hover {
     margin: 0;
     max-width: 44ch;
     font-family: var(--titrage);
-    font-weight: 400;
+    font-variation-settings: "wdth" 94, "wght" 600;
     font-size: clamp(1.15rem, 2.2vw, 1.7rem);
-    line-height: 1.15;
+    line-height: 1.22;
     letter-spacing: var(--titrage-espace);
     color: var(--encre-faible);
 }
 
 .fiche-attaque strong {
+    font-variation-settings: "wdth" 94, "wght" 800;
     color: var(--encre);
-    font-weight: inherit;
+    font-weight: normal;
 }
 
 .fiche-corps h4 {
     margin: 0 0 .5rem;
     font-family: var(--titrage);
-    font-weight: 400;
+    font-variation-settings: "wdth" 88, "wght" 800;
     font-size: clamp(1rem, 1.8vw, 1.3rem);
     letter-spacing: var(--titrage-espace);
     text-transform: uppercase;
@@ -588,12 +821,13 @@ a:hover {
 }
 
 .fiche-corps strong {
+    font-variation-settings: "wdth" 100, "wght" 700;
     color: var(--encre);
-    font-weight: 700;
+    font-weight: normal;
 }
 
 
-/* ═══ LE BUDGET DE JETONS ═══ */
+/* ═══ LE BUDGET DE JETONS ══════════════════════════════════════════════ */
 
 .budget {
     margin: 0;
@@ -634,12 +868,12 @@ a:hover {
     fill: var(--papier-objet);
 }
 
-.ligne,
-.ligne-forte {
+.trait-acte,
+.trait-acte-fort {
     fill: var(--trace-objet);
 }
 
-.ligne {
+.trait-acte {
     opacity: .38;
 }
 
@@ -652,11 +886,12 @@ a:hover {
 
 .lecture b {
     font-family: var(--titrage);
-    font-weight: 400;
+    font-variation-settings: "wdth" 100, "wght" 800;
     font-size: clamp(1.6rem, 3.2vw, 2.4rem);
     line-height: 1;
     color: var(--encre-faible);
     font-variant-numeric: tabular-nums;
+    font-weight: normal;
 }
 
 /* Le signal ne sert qu'ici dans toute la page : le chiffre que le recadrage
@@ -666,6 +901,7 @@ a:hover {
 }
 
 .lecture span {
+    font-variation-settings: "wdth" 74, "wght" 500;
     font-size: .68rem;
     letter-spacing: .12em;
     text-transform: uppercase;
@@ -680,7 +916,7 @@ a:hover {
 }
 
 
-/* ═══ LE TABLEAU ═══ */
+/* ═══ LE TABLEAU ═══════════════════════════════════════════════════════ */
 
 .cadre-table {
     overflow-x: auto;
@@ -697,7 +933,8 @@ a:hover {
 .fiche-corps caption {
     text-align: left;
     padding: .7rem 0;
-    font-size: .68rem;
+    font-variation-settings: "wdth" 76, "wght" 600;
+    font-size: .7rem;
     letter-spacing: .1em;
     text-transform: uppercase;
     color: var(--encre-faible);
@@ -708,17 +945,17 @@ a:hover {
     text-align: left;
     padding: .65rem .85rem .65rem 0;
     font-size: .86rem;
-    font-weight: 400;
+    font-weight: normal;
     border-bottom: var(--trait-ep) solid var(--trait);
     vertical-align: baseline;
 }
 
 .fiche-corps thead th {
-    font-size: .6rem;
+    font-variation-settings: "wdth" 70, "wght" 700;
+    font-size: .64rem;
     letter-spacing: .12em;
     text-transform: uppercase;
     color: var(--encre-faible);
-    font-weight: 700;
 }
 
 .fiche-corps tbody tr:last-child th,
@@ -727,13 +964,13 @@ a:hover {
 }
 
 .fiche-corps td b,
-.unite {
+.fiche-corps .unite {
     font-variant-numeric: tabular-nums;
 }
 
-.unite {
+.fiche-corps .unite {
     color: var(--encre-faible);
-    font-weight: 400;
+    font-weight: normal;
 }
 
 /* La colonne qui décide est tenue au-dessus des autres au fond creusé et au
@@ -744,12 +981,14 @@ a:hover {
 }
 
 td.decisive b {
+    font-variation-settings: "wdth" 100, "wght" 800;
     color: var(--encre);
     font-size: 1rem;
 }
 
 .note {
     display: inline-block;
+    font-variation-settings: "wdth" 70, "wght" 500;
     font-size: .64rem;
     letter-spacing: .08em;
     text-transform: uppercase;
@@ -757,32 +996,20 @@ td.decisive b {
 }
 
 tr.choisi th[scope="row"] {
+    font-variation-settings: "wdth" 100, "wght" 700;
     color: var(--encre);
-    font-weight: 700;
 }
 
 .fanion {
     display: inline-block;
     margin-left: .45rem;
     padding: .08rem .35rem;
-    font-size: .56rem;
+    font-variation-settings: "wdth" 70, "wght" 700;
+    font-size: .58rem;
     letter-spacing: .14em;
     text-transform: uppercase;
     background: var(--encre);
     color: var(--fond);
-    font-weight: 700;
-}
-
-
-/* ═══ CHANTIER — repère provisoire ═══ */
-
-.chantier {
-    margin: 0;
-    padding: clamp(3rem, 10vh, 7rem) clamp(1.1rem, 3vw, 2.6rem) clamp(5rem, 14vh, 9rem);
-    color: var(--encre-faible);
-    font-size: .72rem;
-    letter-spacing: .18em;
-    text-transform: uppercase;
 }
 
 
@@ -791,59 +1018,49 @@ tr.choisi th[scope="row"] {
    ═══════════════════════════════════════════════════════════════════════ */
 
 @media (max-width: 760px) {
-    .plan {
-        align-items: flex-start;
-        flex-direction: column;
-        gap: 1.4rem;
+    /* L'alternance d'alignement tombe sous 760 px : un bloc poussé à droite
+       dans une colonne de 384 px n'est plus une alternance, c'est un bloc
+       mal placé. Le contraste de rythme passe alors par les tailles. */
+    .temps,
+    .loi,
+    .origine { max-width: 100%; }
+
+    .temps--tard { justify-self: start; }
+    .temps--tard .quand,
+    .temps--tard .piece { text-align: left; }
+    .temps--tard .mesure { justify-content: flex-start; }
+
+    .loi,
+    .greffe { justify-self: start; }
+
+    .ko { width: 7px; height: 7px; }
+
+    /* Plus de taille de nom par point de rupture : le `min(vw, svh)`
+       ci-dessus s'en charge sur tous les écrans d'un seul tenant. Il ne
+       reste ici que ce qui relève vraiment de la mise en page étroite. */
+    .propos {
+        margin-left: 0;
+        max-width: 100%;
     }
 
-    .poincon {
-        margin-bottom: 0;
-        align-self: flex-end;
-    }
+    .scene { gap: 1.2rem; }
+    .poincon { width: 44px; }
 
-    .plaque {
-        position: static;
-        flex-direction: row;
-        flex-wrap: wrap;
-        align-items: center;
-        justify-content: flex-start;
-        gap: .5rem 1.1rem;
-        order: 9;
-    }
+    .vignette.vedette { grid-column: span 1; }
+}
 
-    .descente {
-        position: static;
-        order: 10;
-    }
-
-    .rail {
-        width: 44px;
-        height: 1px;
-    }
-
-    .rail i {
-        left: 0;
-        top: -1px;
-        animation-name: avance;
-    }
-
-    @keyframes avance {
-        0% { left: 0; opacity: 0; }
-        25% { opacity: 1; }
-        75% { opacity: 1; }
-        100% { left: 41px; opacity: 0; }
-    }
-
-    .vignette.vedette {
-        grid-column: span 1;
-    }
+/* Écrans bas (portable 1366×768, vieux téléphones) : mesuré, l'arrivée y
+   débordait de 6 à 7 px. C'est l'interligne entre blocs qu'on resserre, pas
+   le nom — le réduire encore le rendrait timide sur les grands écrans, qui
+   n'ont pas le problème. */
+@media (max-height: 820px) {
+    .scene { gap: clamp(.8rem, 2vh, 1.5rem); }
 }
 
 
-/* ═══ ÉVEIL AU DÉFILEMENT ═══
+/* ═══ ÉVEIL AU DÉFILEMENT ══════════════════════════════════════════════
    La classe n'est posée que si l'observateur existe ET que le mouvement
-   n'est pas réduit : sans JavaScript, tout est déjà visible. */
+   n'est pas réduit : sans JavaScript, tout est déjà visible.            */
 
 .js .eveil {
     opacity: 0;
@@ -856,18 +1073,43 @@ tr.choisi th[scope="row"] {
     transform: none;
 }
 
-/* Le mouvement n'est jamais porteur d'information : tout coupé, la page
-   reste entière et lisible. */
+
+/* ═══ MOUVEMENT RÉDUIT ═════════════════════════════════════════════════
+   Plus doux, pas zéro. Les fondus d'opacité restent — ils font comprendre
+   ce qui arrive — et seuls les déplacements, les échelles et le
+   grésillement disparaissent.                                           */
+
 @media (prefers-reduced-motion: reduce) {
-    html {
-        scroll-behavior: auto;
+    html { scroll-behavior: auto; }
+
+    .js .nom .ligne,
+    .pret .nom .ligne,
+    .pose .nom .ligne {
+        transform: none;
+        transition: opacity .28s var(--ease-out);
     }
 
-    *,
-    *::before,
-    *::after {
-        animation-duration: .001ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: .001ms !important;
+    .gr { transform: none !important; }
+
+    .poincon {
+        animation: none;
+        opacity: 1;
+        transform: rotate(-3deg);
     }
+
+    .js .poincon { opacity: 1; }
+
+    /* Les cases arrivent quand même — elles portent l'information — mais
+       d'un seul tenant, sans égrenage. */
+    .ko { opacity: 1; }
+    .compte .ko { transition: none; }
+
+    .js .eveil,
+    .js .eveil.vu {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
+
+    .fiche[open] .fiche-corps { animation: none; }
 }
