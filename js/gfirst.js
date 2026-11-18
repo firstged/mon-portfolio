@@ -495,6 +495,66 @@
 
 
     /* ═══════════════════════════════════════════════════════════════════
+       L'EFFET PIXEL — les captures décrochent au survol
+
+       Une impulsion, pas un état : la capture se grossit en gros pixels
+       puis se rétablit toute seule. Un état coarse tenu tant que le doigt
+       reste dessus cacherait justement ce qu'on vient regarder.
+
+       La toile n'est créée qu'au premier survol — cinq toiles montées au
+       chargement pour un effet que personne n'a encore demandé, c'est le
+       genre de dépense que ce site refuse.
+       ═══════════════════════════════════════════════════════════════════ */
+
+    if (!doux) {
+        $$(".ecran").forEach(function (cadre) {
+            var img = $("img", cadre);
+            if (!img) { return; }
+            var toile = null, ctx2 = null, debut = 0, encours = false;
+
+            var DUREE = 540;
+            var GROS = 9;   // taille du plus gros pixel, en pixels d'image
+
+            function pulsation(t) {
+                var a = clamp((t - debut) / DUREE, 0, 1);
+                /* Aller-retour : le décrochage monte vite et redescend plus
+                   lentement, comme une charge qui s'évacue. */
+                var f = a < .32 ? a / .32 : 1 - (a - .32) / .68;
+                var k = 1 + f * f * (GROS - 1);
+                var l = Math.max(1, Math.round(toile.width / k));
+                var h = Math.max(1, Math.round(toile.height / k));
+                ctx2.imageSmoothingEnabled = false;
+                ctx2.clearRect(0, 0, toile.width, toile.height);
+                ctx2.drawImage(img, 0, 0, l, h);
+                ctx2.drawImage(toile, 0, 0, l, h, 0, 0, toile.width, toile.height);
+                if (a < 1) {
+                    requestAnimationFrame(pulsation);
+                } else {
+                    encours = false;
+                    toile.style.opacity = "0";
+                }
+            }
+
+            cadre.addEventListener("pointerenter", function () {
+                if (encours || !img.complete || !img.naturalWidth) { return; }
+                if (!toile) {
+                    toile = document.createElement("canvas");
+                    toile.width = img.naturalWidth;
+                    toile.height = img.naturalHeight;
+                    toile.setAttribute("aria-hidden", "true");
+                    ctx2 = toile.getContext("2d");
+                    cadre.appendChild(toile);
+                }
+                toile.style.opacity = "1";
+                encours = true;
+                debut = performance.now();
+                requestAnimationFrame(pulsation);
+            });
+        });
+    }
+
+
+    /* ═══════════════════════════════════════════════════════════════════
        LES PUPITRES
        ═══════════════════════════════════════════════════════════════════ */
 

@@ -724,6 +724,60 @@ main {
 }
 
 
+/* ═══ L'ÉCRAN DES PIÈCES LIVRÉES ═══════════════════════════════════════
+   Les cinq sites en ligne portent leur capture ; les quatre pièces qu'on
+   ouvre n'en ont pas. Ce n'est pas une grille incomplète : c'est ce qui
+   sépare les deux registres de l'établi, les objets finis sur l'étagère
+   et les pièces démontées sur la table.
+
+   Les captures sont tramées en 1 bit, hors ligne, au même algorithme
+   d'Atkinson que le reste du site. Les cinq pèsent 28 Ko à elles toutes —
+   une seule capture en couleur en pèserait davantage.                   */
+
+.ecran {
+    margin: 0 0 .35rem;
+    position: relative;
+    /* La peau décide de la polarité, et chaque capture a la sienne. Sur un
+       fond noir une capture de site clair deviendrait un pavé blanc qui
+       écrase tout : on la retourne, et elle se lit comme du phosphore. Mais
+       LEYLOR et Le Pavillonneur sont déjà des sites sombres — les retourner
+       ferait exactement le pavé blanc qu'on évite chez les autres. D'où
+       `data-nuit`, posé à la main d'après la luminance moyenne mesurée au
+       tramage (8 et 70 sur 255, contre 214 à 248 pour les trois autres).
+       Le filtre est sur le cadre et non sur l'image, sinon la toile du
+       survol ne suivrait pas. */
+    filter: invert(1);
+}
+
+.ecran[data-nuit] {
+    filter: none;
+}
+
+:root[data-peau="cool"] .ecran {
+    filter: none;
+}
+
+:root[data-peau="cool"] .ecran[data-nuit] {
+    filter: invert(1);
+}
+
+.ecran img,
+.ecran canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 10;
+    /* Sans ça le navigateur lisse la trame et la capture redevient un gris
+       sale : chaque point doit rester un point. */
+    image-rendering: pixelated;
+}
+
+.ecran canvas {
+    position: absolute;
+    inset: 0;
+}
+
+
 /* ═══ LA FICHE QUI SE DÉPLIE ═══════════════════════════════════════════ */
 
 .fiche {
