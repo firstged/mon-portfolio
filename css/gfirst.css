@@ -45,8 +45,9 @@
     --trait: rgba(242, 243, 239, .2);
     --trait-franc: #f2f3ef;
 
-    --titrage: "Archivo", Helvetica, Arial, sans-serif;
-    --titrage-espace: -.018em;
+    --titrage: "Anton", "Arial Narrow", sans-serif;
+    --courante: "JetBrains Mono", ui-monospace, monospace;
+    --titrage-espace: .01em;
 
     /* Un acte dessiné doit se lire comme du papier dans les deux peaux. */
     --papier-objet: #f2f3ef;
@@ -102,8 +103,7 @@ body {
     min-height: 100svh;
     background: var(--nuit);
     color: var(--craie);
-    font-family: "Archivo", Helvetica, Arial, sans-serif;
-    font-variation-settings: "wdth" 100, "wght" 400;
+    font-family: var(--courante);
     font-size: clamp(0.92rem, 0.3vw + 0.86rem, 1rem);
     line-height: 1.65;
     -webkit-font-smoothing: antialiased;
@@ -247,7 +247,9 @@ main {
 
 .nom {
     margin: 0;
-    font-variation-settings: "wdth" 125, "wght" 900;
+    font-family: var(--titrage);
+    font-weight: 400;
+    text-transform: uppercase;
     /* Dimensionné sur les DEUX axes. Mesuré : « Mouloundi » occupe 6,45 px
        de large par pixel de corps, et le bloc fait trois lignes à 0,84 —
        une taille calée sur la seule largeur tient à l'horizontale mais
@@ -275,36 +277,6 @@ main {
     will-change: transform;
 }
 
-/* L'ARBITRAGE, à la place du titre de poste.
-   « Métier · Ville — disponible » est la ligne de tous les portfolios du
-   monde, et elle cumule trois signatures de page générée. Une décision
-   contre-intuitive, elle, n'appartient qu'à celui qui l'a prise. Deux
-   membres et aucun libellé : l'évidence, puis ce que j'ai fait. C'est le
-   contraste de graisse qui dit lequel est lequel. */
-.signature {
-    display: flex;
-    flex-direction: column;
-    gap: .22rem;
-    max-width: 40ch;
-}
-
-.evidence {
-    margin: 0;
-    font-variation-settings: "wdth" 78, "wght" 500;
-    font-size: clamp(.86rem, 1.5vw, 1rem);
-    line-height: 1.36;
-    color: var(--cendre);
-}
-
-.verdict {
-    margin: 0;
-    font-variation-settings: "wdth" 88, "wght" 800;
-    font-size: clamp(1.02rem, 2vw, 1.28rem);
-    line-height: 1.22;
-    color: var(--craie);
-}
-
-
 /* ═══ LE PROPOS ════════════════════════════════════════════════════════ */
 
 .propos {
@@ -319,7 +291,7 @@ main {
 }
 
 .propos b {
-    font-variation-settings: "wdth" 100, "wght" 600;
+    font-weight: 700;
     color: var(--craie);
     font-weight: normal;
 }
@@ -356,8 +328,8 @@ main {
 
 .gr[data-bug="police"],
 .gr[data-bug="les-deux"] {
-    font-family: "Pixelify Sans", "Archivo", monospace;
-    font-variation-settings: "wght" 700;
+    font-family: "Pixelify Sans", var(--courante), monospace;
+    font-weight: 700;
     letter-spacing: 0;
 }
 
@@ -386,7 +358,7 @@ main {
 }
 
 .reglage .quoi {
-    font-variation-settings: "wdth" 70, "wght" 500;
+    font-weight: 400;
     font-size: .78rem;
     color: var(--cendre);
 }
@@ -398,7 +370,7 @@ main {
     padding: .45rem .2rem;
     margin: 0;
     font: inherit;
-    font-variation-settings: "wdth" 85, "wght" 500;
+    font-weight: 400;
     font-size: .9rem;
     color: var(--cendre);
     cursor: pointer;
@@ -413,7 +385,7 @@ main {
 
 .reglage button[aria-pressed="true"] {
     color: var(--craie);
-    font-variation-settings: "wdth" 85, "wght" 800;
+    font-weight: 700;
 }
 
 /* L'état actif se lit à la graisse et à une encoche sous la ligne de base —
@@ -478,150 +450,6 @@ main {
 
 
 /* ═══════════════════════════════════════════════════════════════════════
-   LA RÈGLE — janvier, puis octobre
-
-   L'alternance d'alignement n'est pas un ornement — gauche, puis centre,
-   puis droite suit la chronologie, et c'est elle qui empêche la répétition
-   du même gabarit de section.
-   ═══════════════════════════════════════════════════════════════════════ */
-
-.regle {
-    position: relative;
-    z-index: 1;
-    display: grid;
-    justify-items: start;
-    gap: clamp(1.9rem, 5.5vh, 3.4rem);
-    padding: clamp(2.6rem, 8vh, 5.5rem) clamp(1.1rem, 3.2vw, 2.4rem) clamp(4rem, 13vh, 8rem);
-}
-
-.bascule {
-    margin: 0;
-    font-variation-settings: "wdth" 112, "wght" 900;
-    font-size: clamp(1.55rem, 5.2vw, 3.3rem);
-    line-height: .98;
-    letter-spacing: -.018em;
-    color: var(--craie);
-}
-
-.temps {
-    display: grid;
-    gap: .5rem;
-    max-width: 46ch;
-}
-
-.temps--tard { justify-self: end; }
-.temps--tard .quand,
-.temps--tard .piece { text-align: right; }
-.temps--tard .mesure { justify-content: flex-end; }
-
-.quand {
-    margin: 0;
-    /* Pas de capitales espacées : la date est une information, pas une
-       étiquette décorative posée au-dessus du titre. */
-    font-variation-settings: "wdth" 70, "wght" 800;
-    font-size: clamp(.76rem, 1.35vw, .88rem);
-    color: var(--cendre);
-}
-
-.piece {
-    margin: 0;
-    font-variation-settings: "wdth" 104, "wght" 800;
-    font-size: clamp(1.35rem, 3.6vw, 2.2rem);
-    line-height: 1.02;
-    letter-spacing: -.012em;
-    color: var(--craie);
-}
-
-.dit {
-    margin: .25rem 0 0;
-    font-size: clamp(.95rem, 1.45vw, 1.08rem);
-    line-height: 1.5;
-    color: var(--cendre);
-    text-wrap: pretty;
-}
-
-.dit b {
-    font-variation-settings: "wdth" 100, "wght" 700;
-    color: var(--craie);
-    font-weight: normal;
-}
-
-/* LA MESURE. Une case vaut un kilo-octet, et c'est la même case que celles
-   du fond : la surface occupée EST l'argument, et non un graphique posé à
-   côté du propos.
-
-   Les deux natures se distinguent à la TAILLE, pas à la seule couleur : en
-   peau COOL l'encre et le phosphore sont tous deux sombres, et un codage
-   par teinte seule y deviendrait illisible — pour tout le monde, pas
-   seulement pour un œil daltonien.                                      */
-.mesure {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 2px;
-    margin-top: .85rem;
-    width: 100%;
-}
-
-.ko {
-    width: 8px;
-    height: 8px;
-    display: block;
-    opacity: 0;
-}
-
-.ko--mien { background: var(--craie); }
-.ko--ailleurs {
-    background: rgb(var(--phosphore) / .8);
-    transform: scale(.5);
-}
-
-.compte .ko {
-    opacity: 1;
-    transition: opacity .16s linear var(--retard, 0ms);
-}
-
-.regle .unite {
-    margin: .7rem 0 0;
-    max-width: 44ch;
-    font-variation-settings: "wdth" 76, "wght" 500;
-    font-size: clamp(.72rem, 1.2vw, .82rem);
-    line-height: 1.45;
-    color: var(--cendre);
-}
-
-.origine {
-    margin: 0;
-    max-width: 34ch;
-    font-variation-settings: "wdth" 80, "wght" 500;
-    font-size: clamp(.86rem, 1.4vw, .98rem);
-    line-height: 1.45;
-    color: var(--cendre);
-}
-
-/* La règle est le pivot de la section : plus grosse taille après le nom, et
-   le seul bloc centré de toute la page. */
-.loi {
-    margin: 0;
-    justify-self: center;
-    max-width: 34ch;
-    font-size: clamp(1.18rem, 3vw, 1.95rem);
-    line-height: 1.26;
-    font-variation-settings: "wdth" 94, "wght" 600;
-    letter-spacing: -.008em;
-    color: var(--craie);
-    text-wrap: pretty;
-}
-
-.greffe {
-    margin: 0;
-    justify-self: center;
-    font-variation-settings: "wdth" 74, "wght" 500;
-    font-size: clamp(.72rem, 1.2vw, .8rem);
-    color: var(--cendre);
-}
-
-
-/* ═══════════════════════════════════════════════════════════════════════
    LES PIÈCES
    ═══════════════════════════════════════════════════════════════════════ */
 
@@ -639,7 +467,7 @@ main {
 .bloc h2 {
     margin: 0;
     font-family: var(--titrage);
-    font-variation-settings: "wdth" 112, "wght" 900;
+    font-weight: 700;
     font-size: clamp(2rem, 6vw, 4.5rem);
     line-height: .92;
     letter-spacing: var(--titrage-espace);
@@ -682,7 +510,7 @@ main {
 
 .genre {
     margin: 0;
-    font-variation-settings: "wdth" 70, "wght" 700;
+    font-weight: 700;
     font-size: .64rem;
     letter-spacing: .18em;
     text-transform: uppercase;
@@ -692,7 +520,7 @@ main {
 .vignette h3 {
     margin: 0;
     font-family: var(--titrage);
-    font-variation-settings: "wdth" 104, "wght" 800;
+    font-weight: 700;
     font-size: clamp(1.5rem, 3vw, 2.4rem);
     line-height: 1;
     letter-spacing: var(--titrage-espace);
@@ -705,14 +533,14 @@ main {
 }
 
 .resume strong {
-    font-variation-settings: "wdth" 100, "wght" 700;
+    font-weight: 700;
     color: var(--encre);
     font-weight: normal;
 }
 
 .outils {
     margin: 0;
-    font-variation-settings: "wdth" 84, "wght" 400;
+    font-weight: 400;
     font-size: .78rem;
     color: var(--encre-faible);
     opacity: .85;
@@ -792,7 +620,7 @@ main {
     display: inline-flex;
     align-items: center;
     gap: .55rem;
-    font-variation-settings: "wdth" 76, "wght" 700;
+    font-weight: 700;
     font-size: .7rem;
     letter-spacing: .14em;
     text-transform: uppercase;
@@ -846,7 +674,7 @@ main {
     margin: 0;
     max-width: 44ch;
     font-family: var(--titrage);
-    font-variation-settings: "wdth" 94, "wght" 600;
+    font-weight: 700;
     font-size: clamp(1.15rem, 2.2vw, 1.7rem);
     line-height: 1.22;
     letter-spacing: var(--titrage-espace);
@@ -854,7 +682,7 @@ main {
 }
 
 .fiche-attaque strong {
-    font-variation-settings: "wdth" 94, "wght" 800;
+    font-weight: 700;
     color: var(--encre);
     font-weight: normal;
 }
@@ -862,7 +690,7 @@ main {
 .fiche-corps h4 {
     margin: 0 0 .5rem;
     font-family: var(--titrage);
-    font-variation-settings: "wdth" 88, "wght" 800;
+    font-weight: 700;
     font-size: clamp(1rem, 1.8vw, 1.3rem);
     letter-spacing: var(--titrage-espace);
     text-transform: uppercase;
@@ -875,7 +703,7 @@ main {
 }
 
 .fiche-corps strong {
-    font-variation-settings: "wdth" 100, "wght" 700;
+    font-weight: 700;
     color: var(--encre);
     font-weight: normal;
 }
@@ -940,7 +768,7 @@ main {
 
 .lecture b {
     font-family: var(--titrage);
-    font-variation-settings: "wdth" 100, "wght" 800;
+    font-weight: 700;
     font-size: clamp(1.6rem, 3.2vw, 2.4rem);
     line-height: 1;
     color: var(--encre-faible);
@@ -955,7 +783,7 @@ main {
 }
 
 .lecture span {
-    font-variation-settings: "wdth" 74, "wght" 500;
+    font-weight: 400;
     font-size: .68rem;
     letter-spacing: .12em;
     text-transform: uppercase;
@@ -987,7 +815,7 @@ main {
 .fiche-corps caption {
     text-align: left;
     padding: .7rem 0;
-    font-variation-settings: "wdth" 76, "wght" 600;
+    font-weight: 700;
     font-size: .7rem;
     letter-spacing: .1em;
     text-transform: uppercase;
@@ -1005,7 +833,7 @@ main {
 }
 
 .fiche-corps thead th {
-    font-variation-settings: "wdth" 70, "wght" 700;
+    font-weight: 700;
     font-size: .64rem;
     letter-spacing: .12em;
     text-transform: uppercase;
@@ -1035,14 +863,14 @@ main {
 }
 
 td.decisive b {
-    font-variation-settings: "wdth" 100, "wght" 800;
+    font-weight: 700;
     color: var(--encre);
     font-size: 1rem;
 }
 
 .note {
     display: inline-block;
-    font-variation-settings: "wdth" 70, "wght" 500;
+    font-weight: 400;
     font-size: .64rem;
     letter-spacing: .08em;
     text-transform: uppercase;
@@ -1050,7 +878,7 @@ td.decisive b {
 }
 
 tr.choisi th[scope="row"] {
-    font-variation-settings: "wdth" 100, "wght" 700;
+    font-weight: 700;
     color: var(--encre);
 }
 
@@ -1058,7 +886,7 @@ tr.choisi th[scope="row"] {
     display: inline-block;
     margin-left: .45rem;
     padding: .08rem .35rem;
-    font-variation-settings: "wdth" 70, "wght" 700;
+    font-weight: 700;
     font-size: .58rem;
     letter-spacing: .14em;
     text-transform: uppercase;
@@ -1086,7 +914,7 @@ tr.choisi th[scope="row"] {
    première ligne. Ce n'est pas un titre de section posé au-dessus. */
 .bloc h2.lettre-tete {
     margin: 0;
-    font-variation-settings: "wdth" 70, "wght" 800;
+    font-weight: 700;
     font-size: .74rem;
     letter-spacing: .18em;
     text-transform: uppercase;
@@ -1110,7 +938,7 @@ tr.choisi th[scope="row"] {
 }
 
 .lettre-corps strong {
-    font-variation-settings: "wdth" 100, "wght" 700;
+    font-weight: 700;
     color: var(--encre);
     font-weight: normal;
 }
@@ -1126,7 +954,9 @@ tr.choisi th[scope="row"] {
 
 .bloc h2.gouts-tete {
     margin: 0;
-    font-variation-settings: "wdth" 112, "wght" 900;
+    font-family: var(--titrage);
+    font-weight: 400;
+    text-transform: uppercase;
     font-size: clamp(2rem, 6vw, 4.5rem);
     line-height: .92;
     letter-spacing: var(--titrage-espace);
@@ -1135,7 +965,7 @@ tr.choisi th[scope="row"] {
 .gouts-regle {
     margin: .7rem 0 clamp(2.4rem, 7vh, 4.5rem);
     max-width: 46ch;
-    font-variation-settings: "wdth" 88, "wght" 500;
+    font-weight: 400;
     font-size: clamp(1rem, 1.8vw, 1.25rem);
     color: var(--encre-faible);
 }
@@ -1157,7 +987,7 @@ tr.choisi th[scope="row"] {
 }
 
 .paire dt {
-    font-variation-settings: "wdth" 86, "wght" 600;
+    font-weight: 700;
     font-size: clamp(.95rem, 1.5vw, 1.1rem);
     line-height: 1.3;
     color: var(--encre-faible);
@@ -1173,7 +1003,7 @@ tr.choisi th[scope="row"] {
 }
 
 .paire dd strong {
-    font-variation-settings: "wdth" 100, "wght" 800;
+    font-weight: 700;
     color: var(--encre);
     font-weight: normal;
 }
@@ -1188,7 +1018,7 @@ tr.choisi th[scope="row"] {
 .gouts-reste {
     margin: clamp(2rem, 6vh, 3.4rem) 0 0;
     max-width: 46ch;
-    font-variation-settings: "wdth" 76, "wght" 500;
+    font-weight: 400;
     font-size: .88rem;
     line-height: 1.5;
     color: var(--encre-faible);
@@ -1213,7 +1043,7 @@ tr.choisi th[scope="row"] {
 .bloc h2.contact-tete {
     margin: 0;
     max-width: 24ch;
-    font-variation-settings: "wdth" 104, "wght" 800;
+    font-weight: 700;
     font-size: clamp(1.6rem, 5vw, 3.4rem);
     line-height: 1.04;
     letter-spacing: var(--titrage-espace);
@@ -1229,7 +1059,7 @@ tr.choisi th[scope="row"] {
        toucher les deux marges sans jamais les dépasser. 22 caractères à
        0,55 de chasse moyenne — mesuré sur Archivo, pas estimé. */
     font-size: clamp(1.3rem, 8.2vw, 6rem);
-    font-variation-settings: "wdth" 88, "wght" 700;
+    font-weight: 700;
     line-height: 1;
     letter-spacing: -.03em;
     text-decoration: none;
@@ -1252,7 +1082,7 @@ tr.choisi th[scope="row"] {
     display: flex;
     flex-wrap: wrap;
     gap: .4rem clamp(1.2rem, 4vw, 3rem);
-    font-variation-settings: "wdth" 80, "wght" 500;
+    font-weight: 400;
     font-size: .92rem;
     color: var(--encre-faible);
 }
@@ -1267,23 +1097,6 @@ tr.choisi th[scope="row"] {
    ═══════════════════════════════════════════════════════════════════════ */
 
 @media (max-width: 760px) {
-    /* L'alternance d'alignement tombe sous 760 px : un bloc poussé à droite
-       dans une colonne de 384 px n'est plus une alternance, c'est un bloc
-       mal placé. Le contraste de rythme passe alors par les tailles. */
-    .temps,
-    .loi,
-    .origine { max-width: 100%; }
-
-    .temps--tard { justify-self: start; }
-    .temps--tard .quand,
-    .temps--tard .piece { text-align: left; }
-    .temps--tard .mesure { justify-content: flex-start; }
-
-    .loi,
-    .greffe { justify-self: start; }
-
-    .ko { width: 7px; height: 7px; }
-
     /* Plus de taille de nom par point de rupture : le `min(vw, svh)`
        ci-dessus s'en charge sur tous les écrans d'un seul tenant. Il ne
        reste ici que ce qui relève vraiment de la mise en page étroite. */
@@ -1364,11 +1177,6 @@ tr.choisi th[scope="row"] {
     }
 
     .js .poincon { opacity: 1; }
-
-    /* Les cases arrivent quand même — elles portent l'information — mais
-       d'un seul tenant, sans égrenage. */
-    .ko { opacity: 1; }
-    .compte .ko { transition: none; }
 
     .js .eveil,
     .js .eveil.vu {

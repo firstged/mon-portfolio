@@ -38,13 +38,12 @@
     }
     </script>
 
-    <!-- Une seule famille, variable sur deux axes (chasse et graisse) : un
-         fichier au lieu de trois, et toutes les graisses du site dedans. La
-         bitmap n'est là que pour les lettres qui décrochent. -->
+    <!-- Anton au titrage, JetBrains Mono à la courante : la typographie du
+         départ. La bitmap n'est là que pour les lettres qui décrochent. -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Pixelify+Sans:wght@400..700&display=swap">
+        href="https://fonts.googleapis.com/css2?family=Anton&family=JetBrains+Mono:wght@400;700&family=Pixelify+Sans:wght@400..700&display=swap">
     <link rel="stylesheet" href="css/gfirst.css">
 
     <!-- Posée ici et pas en fin de page : la règle d'éveil ne doit exister
@@ -112,17 +111,6 @@
                 <span class="ligne" data-gresille>Mayagha</span>
             </h1>
 
-            <div class="signature">
-                <!-- Pas de data-gresille ici : c'est l'information qu'on
-                     vient lire. Ce qu'on lit ne bouge pas pour faire joli. -->
-                <p class="evidence" data-en="The most accurate model was missing one defaulter in two."
-                    data-ja="最も正確なモデルは、延滞者の二人に一人を見逃していました。">
-                    Le modèle le plus exact laissait passer un insolvable sur deux.
-                </p>
-                <p class="verdict" data-en="I kept the less accurate one." data-ja="私は精度の低いほうを選びました。">
-                    J'ai gardé le moins exact.
-                </p>
-            </div>
         </div>
 
         <p class="propos"
@@ -151,73 +139,6 @@
     </div>
 
     <main>
-
-        <!-- ═══════════════════════════════════════════════════════════════
-             JANVIER, PUIS OCTOBRE
-             Deuxième endroit du site, et c'est volontaire : mettre son
-             travail d'il y a dix mois juste après son nom, aucun portfolio
-             ne le fait. Ça prouve en dix secondes que la page n'est pas un
-             modèle rempli, et ça explique pourquoi tout le reste est bâti
-             comme il l'est.
-             Tous les chiffres sont mesurés le 11 novembre 2026, pas estimés.
-             ═══════════════════════════════════════════════════════════════ -->
-        <section class="regle" id="regle" aria-labelledby="t-regle">
-
-            <h2 class="bascule" id="t-regle" data-gresille data-en="January, then October"
-                data-ja="一月、そして十月">Janvier, puis octobre</h2>
-
-            <div class="temps">
-                <p class="quand" data-en="January 2026" data-ja="2026年1月">Janvier 2026</p>
-                <h3 class="piece">May&rsquo;s</h3>
-                <p class="dit"
-                    data-en="This one I would not build the same way again &mdash; which is exactly why it is here. Catering and pastry, live, answering in under a second. But to show itself it fetches &lt;b&gt;609&nbsp;KB from four third-party servers&lt;/b&gt;: Tailwind assembles the stylesheet inside the visitor&rsquo;s browser, 398&nbsp;KB on its own. My own code weighs 23."
-                    data-ja="これは今なら同じようには作りません。だからこそここに置いています。ケータリングと洋菓子のサイトで、一秒以内に応答します。ただし表示のために、&lt;b&gt;外部四社のサーバーから609 KBを取り寄せます&lt;/b&gt;。Tailwind は閲覧者のブラウザ内でスタイルシートを組み立て、それだけで 398 KB。私自身のコードは 23 KB です。">
-                    Celui-ci, je ne le referais plus pareil &mdash; c&rsquo;est exactement pour
-                    ça qu&rsquo;il est là. Traiteur et pâtisserie, en ligne, il répond en moins
-                    d&rsquo;une seconde. Mais pour s&rsquo;afficher il va chercher
-                    <b>609&nbsp;Ko sur quatre serveurs tiers</b> : Tailwind assemble la feuille
-                    de style dans le navigateur du visiteur, 398&nbsp;Ko à lui seul. Mon code,
-                    lui, en pèse 23.
-                </p>
-                <div class="mesure" data-mien="23" data-ailleurs="609" aria-hidden="true"></div>
-                <p class="unite"
-                    data-en="One square is one kilobyte. The large ones are my code; the small ones are what the page goes and fetches elsewhere."
-                    data-ja="一つのマスが 1 KB です。大きいマスは私のコード、小さいマスはページが外から取り寄せるものです。">
-                    Une case vaut un kilo-octet. Les grandes sont mon code, les petites ce que
-                    la page va chercher ailleurs.
-                </p>
-            </div>
-
-            <p class="origine" data-en="That project is what made me write down the rule I have applied ever since."
-                data-ja="この案件が、それ以来守っている規則を書き留めさせました。">
-                C&rsquo;est ce projet qui m&rsquo;a fait écrire la règle que je m&rsquo;applique
-                depuis.
-            </p>
-
-            <p class="loi" data-gresille
-                data-en="No dependencies on a showcase site. Not out of purism: my visitors are in Gabon, usually on a phone, on a connection that drops."
-                data-ja="紹介サイトに外部依存は置かない。主義のためではありません。私の訪問者はガボンにいて、多くは携帯電話から、途切れる回線で見ています。">Aucune
-                dépendance sur un site vitrine. Pas par purisme : mes visiteurs sont au Gabon,
-                souvent au téléphone, sur une connexion qui lâche.</p>
-
-            <div class="temps temps--tard">
-                <p class="quand" data-en="October 2026" data-ja="2026年10月">Octobre 2026</p>
-                <h3 class="piece">Nkunkuma</h3>
-                <p class="dit"
-                    data-en="Land-case tracking for a property professional in Libreville. Same kind of job, nine months later: &lt;b&gt;105&nbsp;KB all in, nothing from anyone else&lt;/b&gt;, and a case file opens with no network at all."
-                    data-ja="リーブルビルの土地専門家のための案件管理。九か月後、同種の依頼で、&lt;b&gt;合計 105 KB、外部からは何も取り寄せず&lt;/b&gt;、通信がなくても案件を開けます。">
-                    Suivi de dossiers fonciers, pour un professionnel du foncier à Libreville.
-                    Même genre de commande, neuf mois plus tard : <b>105&nbsp;Ko en tout, rien
-                        chez personne</b>, et un dossier s&rsquo;ouvre sans réseau.
-                </p>
-                <div class="mesure" data-mien="105" data-ailleurs="0" aria-hidden="true"></div>
-            </div>
-
-            <p class="greffe" data-en="Measured 11 November 2026." data-ja="2026年 11 月 11 日に計測。">
-                Mesuré le 11 novembre 2026.
-            </p>
-
-        </section>
 
         <!-- ═══════════════════════════════════════════════════════════════
              LES PROJETS
@@ -619,29 +540,6 @@
                     </dd>
                 </div>
 
-                <div class="paire">
-                    <dt data-en="Writing" data-ja="書くこと">Écrire</dt>
-                    <dd data-en="EXprime: the idea of a place where elders &mdash; doctors, craftspeople, keepers of traditions &mdash; leave what they know before it goes. Nothing is built yet. It is the only thing on this page that does not exist."
-                        data-ja="EXprime。医師、職人、伝統の担い手といった年長者が、失われる前に知を預ける場、という構想です。まだ何も作っていません。このページで唯一、存在しないものです。">
-                        <strong>EXprime</strong> : l'idée d'un endroit où des anciens
-                        &mdash; médecins, artisans, gardiens de traditions &mdash; déposent
-                        ce qu'ils savent avant que ça se perde. Rien n'est encore bâti.
-                        <em>C'est la seule chose de cette page qui n'existe pas.</em>
-                    </dd>
-                </div>
-
-                <div class="paire">
-                    <dt data-en="The arithmetic of insurance" data-ja="保険の計算">
-                        Les calculs de l'assurance
-                    </dt>
-                    <dd data-en="A retirement calculator for the Gabonese CNSS: a spreadsheet first, then a command-line program. The pension rules are public and intricate, and nobody had made them easy to try out."
-                        data-ja="ガボン CNSS の年金計算機。まず表計算で、次にコマンドラインの programme で。年金の規則は公開されていますが入り組んでいて、誰も試しやすくしていませんでした。">
-                        <strong>Un calculateur de retraite CNSS</strong> : un tableur
-                        d'abord, puis un programme en ligne de commande. Les règles de
-                        pension sont publiques et enchevêtrées, et personne ne les avait
-                        rendues faciles à essayer.
-                    </dd>
-                </div>
 
             </dl>
 
