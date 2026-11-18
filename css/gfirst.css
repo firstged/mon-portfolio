@@ -480,6 +480,254 @@ main {
 }
 
 
+/* ═══════════════════════════════════════════════════════════════════════
+   LE POSTE D'ESSAI — les pièces, zappables
+
+   L'idée vient de la console en référence. Le DESSIN de cette console ne
+   peut pas servir : c'est BMO, une propriété Cartoon Network, et un
+   portfolio qui revendique sa propre marque ne peut pas s'habiller du
+   personnage d'un autre. L'idée, elle, n'appartient à personne : un
+   appareil avec un écran qu'on zappe.
+
+   Donc le volume est celui du labo — six faces CSS en `preserve-3d`, la
+   seule forme qu'on obtient exactement sans une ligne de mathématiques —
+   mais sans visage et sans yeux. Ce n'est pas une mascotte, c'est un
+   instrument posé sur l'établi : un écran, une plaque, un cadran.
+
+   Il ne remplace pas la grille, il la surmonte. Un écran montre une pièce
+   à la fois : avec dix pièces, zapper en cache neuf. La grille reste donc
+   dessous, entière, et c'est elle le contenu — le poste est bâti par le
+   script À PARTIR d'elle. Sans JavaScript, il n'existe pas et rien ne
+   manque.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.poste-hote { display: none; }
+
+.js .poste-hote {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.1rem;
+    margin-bottom: clamp(2.6rem, 8vh, 5rem);
+    /* La perspective est sur l'hôte et non sur le corps : posée sur
+       l'élément qui tourne, elle tournerait avec lui et le volume
+       s'écraserait. */
+    perspective: 1100px;
+}
+
+.poste-corps {
+    /* Dimensionné sur la fenêtre : à 320 px fixes l'appareil paraissait
+       perdu au milieu d'une grille de quatre colonnes. */
+    --w: clamp(272px, 27vw, 396px);
+    --h: calc(var(--w) * .66);
+    --d: 38px;
+    position: relative;
+    width: var(--w);
+    height: var(--h);
+    transform-style: preserve-3d;
+    /* Jamais d'opacity sur ce nœud : une opacité posée sur un parent en
+       preserve-3d aplatit la scène et le dos de l'appareil cesse
+       d'exister. */
+    will-change: transform;
+    transform: rotateX(var(--rx, 6deg)) rotateY(var(--ry, -14deg));
+}
+
+.pf {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    background: var(--fond-creux);
+    border: var(--trait-ep) solid var(--encre);
+}
+
+.pf-avant {
+    width: var(--w);
+    height: var(--h);
+    transform: translate(-50%, -50%) translateZ(calc(var(--d) / 2));
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 11px;
+}
+
+.pf-arriere {
+    width: var(--w);
+    height: var(--h);
+    transform: translate(-50%, -50%) rotateY(180deg) translateZ(calc(var(--d) / 2));
+}
+
+.pf-droite {
+    width: var(--d);
+    height: var(--h);
+    transform: translate(-50%, -50%) rotateY(90deg) translateZ(calc(var(--w) / 2));
+}
+
+.pf-gauche {
+    width: var(--d);
+    height: var(--h);
+    transform: translate(-50%, -50%) rotateY(-90deg) translateZ(calc(var(--w) / 2));
+}
+
+.pf-haut {
+    width: var(--w);
+    height: var(--d);
+    transform: translate(-50%, -50%) rotateX(90deg) translateZ(calc(var(--h) / 2));
+}
+
+.pf-bas {
+    width: var(--w);
+    height: var(--d);
+    transform: translate(-50%, -50%) rotateX(-90deg) translateZ(calc(var(--h) / 2));
+}
+
+/* ═══ L'ÉCRAN ═══ */
+
+.pf-ecran {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+    background: #000;
+    border: var(--trait-ep) solid var(--encre);
+    overflow: hidden;
+}
+
+:root[data-peau="cool"] .pf-ecran { background: #14160f; }
+
+.pf-ecran img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* L'écran est un écran : la trame des captures doit rester une trame,
+       pas devenir du gris lissé. */
+    image-rendering: pixelated;
+    filter: invert(1);
+}
+
+:root[data-peau="cool"] .pf-ecran img { filter: invert(1); }
+
+/* Les quatre pièces qu'on ouvre n'ont pas de capture : l'écran affiche
+   alors leur nom en grand, comme un appareil qui n'a rien à montrer mais
+   qui sait ce qu'il tient. */
+.pf-titre {
+    position: absolute;
+    inset: 0;
+    /* Voile sous le titre : le phosphore posé nu sur une capture tramée
+       devient illisible — le vert et le blanc de la trame ont presque la
+       même clarté. Mesuré à l'écran sur la capture du Pavillonneur. */
+    background: linear-gradient(to top,
+            rgba(0, 0, 0, .94) 0%,
+            rgba(0, 0, 0, .74) 34%,
+            rgba(0, 0, 0, 0) 72%);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: .15rem;
+    padding: .7rem .8rem;
+    color: rgb(var(--phosphore));
+}
+
+.pf-titre .pf-genre {
+    font-size: .54rem;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    opacity: .75;
+}
+
+.pf-titre .pf-nom {
+    font-family: var(--titrage);
+    font-size: 1.5rem;
+    line-height: .96;
+    text-transform: uppercase;
+    letter-spacing: var(--titrage-espace);
+}
+
+/* La neige de zapping. Une vraie toile et non un dégradé animé : un
+   changement de canal, c'est du signal perdu, et le signal perdu a du
+   grain. */
+.pf-neige {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* ═══ LA PLAQUE ═══ */
+
+.pf-plaque {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    height: 22px;
+    flex: none;
+    color: var(--encre-faible);
+    font-size: .56rem;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+}
+
+.pf-plaque .poincon-plaque {
+    width: 15px;
+    height: 15px;
+    flex: none;
+    color: var(--encre);
+}
+
+.pf-canal {
+    margin-left: auto;
+    font-variant-numeric: tabular-nums;
+    color: var(--encre);
+}
+
+/* ═══ LE CADRAN ═══ */
+
+.poste-commandes {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+}
+
+.poste-commandes button {
+    appearance: none;
+    background: none;
+    border: var(--trait-ep) solid var(--trait);
+    color: var(--encre-faible);
+    font: inherit;
+    font-size: .7rem;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    padding: .55rem .9rem;
+    min-height: 44px;
+    cursor: pointer;
+    transition: color .2s ease, border-color .2s ease;
+}
+
+.poste-commandes button:hover {
+    color: var(--encre);
+    border-color: var(--encre);
+}
+
+.poste-ouvrir {
+    font-size: .68rem !important;
+}
+
+@media (max-width: 760px) {
+    .poste-corps {
+        --w: 272px;
+        --h: 180px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    /* Le volume reste — il porte le contenu — mais il ne suit plus le
+       doigt et ne zappe plus tout seul. */
+    .poste-corps { transition: none; }
+    .pf-neige { display: none; }
+}
+
+
 /* ═══ LES VIGNETTES ════════════════════════════════════════════════════
    Ce qu'un visiteur voit en arrivant : le projet, pour qui, un lien. Le
    détail d'ingénierie se déplie pour qui le demande — on ne l'impose pas à
@@ -941,88 +1189,6 @@ tr.choisi th[scope="row"] {
     font-weight: 700;
     color: var(--encre);
     font-weight: normal;
-}
-
-
-/* ═══════════════════════════════════════════════════════════════════════
-   CE QUE J'AIME — la règle de sélection est la forme
-
-   À gauche le goût, à droite ce qu'il a fabriqué. La colonne de droite est
-   deux fois plus grosse que celle de gauche : ce qui compte n'est pas le
-   goût, c'est sa conséquence.
-   ═══════════════════════════════════════════════════════════════════════ */
-
-.bloc h2.gouts-tete {
-    margin: 0;
-    font-family: var(--titrage);
-    font-weight: 400;
-    text-transform: uppercase;
-    font-size: clamp(2rem, 6vw, 4.5rem);
-    line-height: .92;
-    letter-spacing: var(--titrage-espace);
-}
-
-.gouts-regle {
-    margin: .7rem 0 clamp(2.4rem, 7vh, 4.5rem);
-    max-width: 46ch;
-    font-weight: 400;
-    font-size: clamp(1rem, 1.8vw, 1.25rem);
-    color: var(--encre-faible);
-}
-
-.paires {
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: clamp(2rem, 6vh, 3.4rem);
-}
-
-.paire {
-    display: grid;
-    grid-template-columns: minmax(0, 26ch) minmax(0, 54ch);
-    gap: clamp(.6rem, 3vw, 3rem);
-    align-items: baseline;
-    padding-top: 1.1rem;
-    border-top: var(--trait-ep) solid var(--trait);
-}
-
-.paire dt {
-    font-weight: 700;
-    font-size: clamp(.95rem, 1.5vw, 1.1rem);
-    line-height: 1.3;
-    color: var(--encre-faible);
-    text-wrap: pretty;
-}
-
-.paire dd {
-    margin: 0;
-    font-size: clamp(1rem, 1.6vw, 1.18rem);
-    line-height: 1.52;
-    color: var(--encre-faible);
-    text-wrap: pretty;
-}
-
-.paire dd strong {
-    font-weight: 700;
-    color: var(--encre);
-    font-weight: normal;
-}
-
-/* La seule chose en italique de toute la page, et elle sert à l'aveu : ce
-   projet-là n'existe pas encore. */
-.paire dd em {
-    font-style: italic;
-    color: var(--encre);
-}
-
-.gouts-reste {
-    margin: clamp(2rem, 6vh, 3.4rem) 0 0;
-    max-width: 46ch;
-    font-weight: 400;
-    font-size: .88rem;
-    line-height: 1.5;
-    color: var(--encre-faible);
-    opacity: .85;
 }
 
 
