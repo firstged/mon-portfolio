@@ -29,7 +29,13 @@
        clairs que ceux d'ici, ce qui est une des raisons pour lesquelles la
        page paraissait « simplement noire ».
        Même logique, teintée vers le phosphore plutôt que vers le bleu. */
-    --nuit: #080c09;
+    /* Les deux fonds sont déclarés ici une fois pour toutes, parce que le
+       voile de bascule a besoin de la couleur de la peau VERS laquelle on
+       va, pas de celle où l'on est. Deux jetons, une seule vérité. */
+    --peau-brut-fond: #080c09;
+    --peau-cool-fond: #e9e6dc;
+
+    --nuit: var(--peau-brut-fond);
     --craie: #e4e6e2;
     --cendre: #8b918a;
     --phosphore: 155 255 60;
@@ -42,6 +48,10 @@
        peau sans second jeu de règles. */
     --fond: var(--nuit);
     --fond-creux: #0d120e;
+    /* Le mot fantôme n'est pas un gris : c'est le fond, éclairci juste
+       assez pour qu'une forme s'y devine. Au-delà il devient un bloc
+       gris derrière le titre, et le plan s'effondre. */
+    --fond-fantome: #161c13;
     --encre: var(--craie);
     --encre-faible: var(--cendre);
     --signal: rgb(var(--phosphore));
@@ -51,6 +61,10 @@
     --trait-franc: #e4e6e2;
 
     --titrage: "Anton", "Arial Narrow", sans-serif;
+    /* La prose a sa propre famille. Archivo partage son dessinateur avec
+       Anton — même atelier, mêmes proportions — donc les deux tiennent
+       ensemble sans qu'on ait à les accorder. */
+    --lecture: "Archivo", system-ui, sans-serif;
     --courante: "JetBrains Mono", ui-monospace, monospace;
     --titrage-espace: .01em;
 
@@ -65,9 +79,12 @@
    disparaît sur un fond clair.                                          */
 
 :root[data-peau="cool"] {
-    --nuit: #e9e6dc;
+    --nuit: var(--peau-cool-fond);
     --craie: #14160f;
-    --cendre: #767162;
+    /* Mesuré : #767162 sur ce fond crème donne 3,7:1, sous le seuil
+       lisible pour du texte courant. En peau BRUT le même jeton tient à
+       5,9:1 — c'est le fond clair qui écrase l'écart, pas la teinte. */
+    --cendre: #696453;
     --phosphore: 44 92 18;
     --braise: 12 28 6;
     /* Mesuré, et c'est pour ça que COOL est moins intense que BRUT : sur le
@@ -78,6 +95,7 @@
     --intensite: .45;
 
     --fond-creux: #ded9cc;
+    --fond-fantome: #ddd9c8;
     --trait: rgba(20, 22, 15, .22);
     --trait-franc: #14160f;
 
@@ -113,7 +131,14 @@ body {
     line-height: 1.65;
     -webkit-font-smoothing: antialiased;
     overflow-x: clip;
-    transition: background .32s var(--ease-out), color .32s var(--ease-out);
+}
+
+/* Sans le balayage, il faut bien que le passage se voie : la transition de
+   fond ne sert plus qu'au repli en mouvement réduit et au sans-JavaScript. */
+@media (prefers-reduced-motion: reduce) {
+    body {
+        transition: background .32s var(--ease-out), color .32s var(--ease-out);
+    }
 }
 
 a {
@@ -166,16 +191,35 @@ main {
 
 
 /* ═══════════════════════════════════════════════════════════════════════
-   L'ARRIVÉE
+   L'ARRIVÉE — transposée du gabarit de référence
+
+   Les six mécanismes relevés image par image sur sa vidéo, et ce qu'ils
+   deviennent ici :
+
+   1. étiquette de section au feutre + signe tracé à la main ;
+   2. titre géant en capitales étroites ;
+   3. DANS la même phrase, un mot traité dans un autre registre — là-bas
+      « VAULT » au feutre bleu par-dessus « SHOEBOX » en gris sourd ;
+   4. un mot fantôme énorme derrière, à peine plus clair que le fond ;
+   5. des coulures de peinture sous le bouton d'appel ;
+   6. un bouton plein clair, texte sombre, flèche à droite.
+
+   Ce qui change par rapport à la référence, et volontairement : l'accent
+   est son vert, pas le bleu du gabarit, et le mot au feutre est sa marque
+   — pas un mot de décor.
    ═══════════════════════════════════════════════════════════════════════ */
 
 .scene {
     position: relative;
     z-index: 1;
+    /* Le mot fantôme est en z-index négatif : sans contexte d'empilement
+       propre à la scène il passerait DERRIÈRE le fond de la page et ne se
+       verrait jamais. */
+    isolation: isolate;
     min-height: 100svh;
     display: grid;
-    grid-template-rows: auto 1fr auto;
-    gap: clamp(1.4rem, 3.5vh, 2.6rem);
+    grid-template-rows: auto 1fr auto auto;
+    gap: clamp(1rem, 2.6vh, 2rem);
     padding: clamp(1.1rem, 3.2vw, 2.4rem);
     /* Le nom déborde par la droite : il est trop grand pour le mur. C'est
        le seul endroit où la page sort de ses marges. */
@@ -183,15 +227,20 @@ main {
 }
 
 
-/* ═══ L'ENSEIGNE — la marque tient le coin, c'est sa place ═════════════ */
+/* ═══ L'ENSEIGNE ET L'ÉTIQUETTE ════════════════════════════════════════ */
 
 .enseigne {
     display: flex;
+    align-items: center;
+    gap: clamp(.9rem, 2.4vw, 1.6rem);
 }
 
+/* Le poinçon rétrécit maintenant qu'il n'est plus seul sur sa ligne :
+   à 58 px il écrasait l'étiquette posée à côté de lui. */
 .poincon {
-    width: clamp(42px, 4.6vw, 58px);
+    width: clamp(38px, 3.6vw, 48px);
     height: auto;
+    flex: none;
     color: var(--craie);
     transform: rotate(-3deg);
 }
@@ -241,16 +290,75 @@ main {
 }
 
 
-/* ═══ LE NOM ═══════════════════════════════════════════════════════════ */
+/* L'étiquette au feutre. C'est le registre graffiti demandé le 8 novembre
+   et jamais fait : un script tracé à la main, légèrement de travers, dans
+   la couleur d'accent — exactement l'usage qu'en fait la référence pour
+   ses libellés de section. */
+.etiquette {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    font-family: "Permanent Marker", var(--courante), cursive;
+    font-size: clamp(1rem, 1.9vw, 1.4rem);
+    line-height: 1;
+    letter-spacing: .01em;
+    color: var(--signal);
+    transform: rotate(-1.4deg);
+}
 
+/* Dans la référence c'est une couronne tracée à la main. Ici un tournevis,
+   parce que le lieu du site est l'établi — le signe doit nommer le lieu,
+   pas décorer l'étiquette. */
+.signe {
+    width: clamp(26px, 2.4vw, 34px);
+    height: auto;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transform: rotate(-8deg);
+}
+
+
+/* ═══ LE TITRE, LE FANTÔME ET LA MARQUE PEINTE ═════════════════════════ */
+
+/* Plus de `gap` : le propos est descendu dans le pied avec le bouton, il
+   ne reste ici que les trois couches du titre, qui se superposent au lieu
+   de s'empiler. */
 .corps {
+    position: relative;
     align-self: center;
+    justify-self: start;
     display: flex;
     flex-direction: column;
-    gap: clamp(1.4rem, 4vh, 2.8rem);
+}
+
+/* LE MOT FANTÔME. Dans la référence il est à peine plus clair que le fond
+   et déborde largement du cadre : c'est lui qui donne la profondeur que la
+   page n'avait pas — un plan derrière le titre, pas un fond plat. */
+.fantome {
+    position: absolute;
+    left: -.22em;
+    top: 50%;
+    transform: translateY(-44%);
+    z-index: -1;
+    font-family: var(--titrage);
+    /* Il doit SORTIR du cadre : un mot fantôme qui tient dans la largeur
+       se lit comme un bloc gris derrière le titre. Dans la référence il
+       est coupé des deux côtés, et c'est ce qui en fait un plan. */
+    font-size: clamp(8rem, 34vw, 30rem);
+    line-height: .78;
+    letter-spacing: -.03em;
+    color: var(--fond-fantome);
+    white-space: nowrap;
+    pointer-events: none;
+    user-select: none;
 }
 
 .nom {
+    position: relative;
     margin: 0;
     font-family: var(--titrage);
     font-weight: 400;
@@ -261,9 +369,9 @@ main {
        dévore un écran de portable en hauteur (520 px sur 768). `min()`
        laisse l'axe le plus contraint décider : vw gagne sur téléphone, svh
        gagne sur écran large et bas. */
-    font-size: clamp(1.9rem, min(12vw, 16svh), 10rem);
-    line-height: .84;
-    letter-spacing: -.022em;
+    font-size: clamp(1.9rem, min(11.5vw, 15svh), 9.5rem);
+    line-height: .86;
+    letter-spacing: .01em;
     /* line-height sous 1 rogne les diacritiques, et la boîte de ligne se
        cale sur la hauteur de capitale : l'accent du É de GÉDÉON — l'état de
        règne — passe au-dessus et se fait couper. La marge le rattrape. */
@@ -282,23 +390,160 @@ main {
     will-change: transform;
 }
 
-/* ═══ LE PROPOS ════════════════════════════════════════════════════════ */
+
+/* LA MARQUE AU FEUTRE. Le mécanisme central de la référence : un mot de la
+   phrase traité dans un autre registre, et qui MORD sur le mot d'à côté au
+   lieu de se ranger à sa suite. Ici il dit quelque chose — le nom civil et
+   le nom de règne occupent la même place. */
+.marque-peinte {
+    position: absolute;
+    left: 66%;
+    bottom: -.2em;
+    z-index: 2;
+    font-family: "Permanent Marker", var(--courante), cursive;
+    font-size: clamp(2rem, 8.4vw, 7rem);
+    line-height: .8;
+    color: var(--signal);
+    transform: rotate(-4deg);
+    pointer-events: none;
+    user-select: none;
+    /* La référence floute légèrement son mot peint sur les bords, comme
+       une bombe qui bave. Une ombre de la même teinte suffit : un filtre
+       de flou coûterait une couche de composition sur tout le bloc. */
+    text-shadow:
+        0 0 18px rgb(var(--phosphore) / .34),
+        0 0 46px rgb(var(--phosphore) / .18);
+}
+
+/* Le nom zappe en trois états, et le troisième EST « Gfirst ». Sans cette
+   règle le mot s'afficherait deux fois à l'écran — une fois en Anton dans
+   le titre, une fois au feutre par-dessus. Il s'efface donc quand le titre
+   le prend : la marque n'est pas dupliquée, elle est absorbée.
+
+   `transition: none` n'est pas une précaution, c'est le correctif : la
+   séquence d'entrée pose 0,48 s de délai puis 0,3 s de fondu sur cette
+   même propriété, et le mot mettait donc près d'une seconde à s'effacer —
+   assez pour qu'on lise « Gfirst » deux fois pendant la bascule. Mesuré à
+   l'écran. Un signal qui décroche saute, il ne glisse pas. */
+.nom[data-etat="2"] ~ .marque-peinte {
+    opacity: 0;
+    transition: none;
+}
+
+/* ═══ LE PIED : LE PROPOS ET LE BOUTON ═════════════════════════════════ */
+
+/* Le propos et l'appel partagent la dernière ligne, aux deux extrémités.
+   C'est ce qui casse la colonne unique alignée à gauche que la charte
+   interdit — sans avoir à pousser le texte à droite artificiellement. */
+.pied {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: clamp(1.2rem, 3vw, 2.6rem);
+}
 
 .propos {
-    margin: 0 0 0 auto;
-    /* Décalé vers la droite : la page n'est pas une colonne unique alignée
-       à gauche, ce qui est le gabarit que la charte interdit. */
-    max-width: 54ch;
-    font-size: clamp(1rem, 1.5vw, 1.15rem);
-    line-height: 1.52;
-    color: var(--cendre);
+    margin: 0;
+    max-width: 52ch;
+    font-size: clamp(.92rem, 1.3vw, 1.05rem);
+    line-height: 1.6;
+    color: var(--encre-faible);
     text-wrap: pretty;
 }
 
 .propos b {
-    font-weight: 700;
     color: var(--craie);
-    font-weight: normal;
+    font-weight: 700;
+}
+
+/* LE BOUTON PLEIN. Clair sur fond sombre, texte sombre, flèche à droite —
+   c'est le seul aplat clair de l'écran, donc c'est lui qu'on voit. */
+/* L'angle est cassé de 4 px, pas arrondi : un bouton d'établi a une arête
+   limée, pas un coin de pastille. Et il se soulève au survol, ce qui fait
+   couler la peinture un peu plus bas. */
+.bouton {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: .7rem;
+    flex: none;
+    border-radius: 4px;
+    padding: .95rem 1.5rem;
+    background: var(--craie);
+    color: var(--fond);
+    text-decoration: none;
+    font-size: .76rem;
+    font-weight: 700;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    transition: background .22s var(--ease-out), color .22s var(--ease-out),
+        transform .22s var(--ease-out);
+}
+
+.bouton:hover,
+.bouton:focus-visible {
+    background: var(--signal);
+    color: var(--fond);
+    transform: translateY(-2px);
+}
+
+/* Appuyé, il redescend sous sa position de repos : c'est une touche qu'on
+   enfonce, pas une carte qui flotte. */
+.bouton:active { transform: translateY(1px); }
+
+.bouton:hover .coulures,
+.bouton:focus-visible .coulures { height: clamp(18px, 2.2vw, 34px); }
+
+.bouton .fleche {
+    width: 1.5rem;
+    height: auto;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* LES COULURES. Dans la référence la peinture dégouline du bouton d'appel.
+   Elles sont en SVG et non en pseudo-éléments : il en faut quatre de
+   longueurs différentes, sinon le motif se lit comme une frange régulière
+   et l'effet meurt. */
+.coulures {
+    position: absolute;
+    left: 0;
+    top: 100%;
+    width: 100%;
+    height: clamp(14px, 1.6vw, 26px);
+    fill: var(--signal);
+    pointer-events: none;
+    transition: height .26s var(--ease-out);
+}
+
+
+/* ═══ REPLIS DE L'ARRIVÉE ══════════════════════════════════════════════
+   En dessous de 860 px le nom ne fait plus qu'une colonne étroite : la
+   marque peinte, calée à 56 % de sa largeur, sortirait de l'écran. Elle
+   passe donc à droite et mord sur la dernière ligne au lieu de la
+   deuxième — le mécanisme est préservé, le débordement non.            */
+
+@media (max-width: 860px) {
+    /* Mesuré à 384 px : à 15vw le mot peint faisait 57 px pour un nom à
+       44 px — la marque devenait plus grosse que le nom qu'elle commente,
+       et « MAYAGHA » disparaissait dessous. Le nom suit `11.5vw` ; le mot
+       peint reste sous lui, et il descend pour ne mordre que le bas des
+       lettres au lieu de les couvrir. */
+    .marque-peinte {
+        left: auto;
+        right: -.04em;
+        bottom: -.34em;
+        font-size: clamp(1.8rem, 10.5vw, 4rem);
+    }
+
+    .pied {
+        flex-direction: column;
+        align-items: flex-start;
+    }
 }
 
 
@@ -410,7 +655,9 @@ main {
 
 .js .propos,
 .js .pupitre,
-.js .signature {
+.js .etiquette,
+.js .bouton,
+.js .marque-peinte {
     opacity: 0;
 }
 
@@ -419,18 +666,42 @@ main {
     transform: translateX(-.14em);
 }
 
-/* Rien n'entre en même temps : 70 ms séparent chaque bloc. L'enseigne est
-   absente de cette liste — le poinçon a sa propre frappe. */
+/* Rien n'entre en même temps. Le poinçon est absent de cette liste — il a
+   sa propre frappe — mais l'étiquette qui l'accompagne le suit de près,
+   et la marque peinte n'arrive qu'après le nom : elle le recouvre, donc
+   elle ne peut pas le précéder. */
 .pret .propos,
 .pret .pupitre,
-.pret .signature {
+.pret .etiquette,
+.pret .bouton,
+.pret .marque-peinte {
     opacity: 1;
-    transition: opacity .28s var(--ease-out);
+    transition: opacity .3s var(--ease-out);
 }
 
-.pret .signature { transition-delay: .69s; }
-.pret .propos    { transition-delay: .76s; }
-.pret .pupitre   { transition-delay: .83s; }
+.pret .etiquette     { transition-delay: .05s; }
+.pret .marque-peinte { transition-delay: .48s; }
+
+/* Même motif que `.pose .nom .ligne` plus bas : les délais ci-dessus
+   orchestrent l'ENTRÉE de la page. Une fois le nom posé, le mot peint
+   réapparaît après chaque zapping, et il traînait alors 0,78 s pendant que
+   tout le reste sautait. Le délai meurt avec l'entrée. */
+.pose .marque-peinte { transition-delay: 0s; }
+
+/* `.pret .bouton` ci-dessus ne déclare que l'opacité, et l'emporte par
+   spécificité sur `.bouton`. Mesuré après coup : une fois la page entrée,
+   le bouton n'avait plus AUCUNE transition de survol — ni fond, ni encre,
+   ni déplacement. Elles sont rendues ici, à spécificité égale et plus bas
+   dans la feuille. */
+.pret .bouton {
+    transition: opacity .3s var(--ease-out),
+        background .22s var(--ease-out),
+        color .22s var(--ease-out),
+        transform .22s var(--ease-out);
+}
+.pret .propos        { transition-delay: .72s; }
+.pret .bouton        { transition-delay: .79s; }
+.pret .pupitre       { transition-delay: .86s; }
 
 .pret .nom .ligne {
     opacity: 1;
@@ -724,6 +995,7 @@ main {
     appearance: none;
     background: none;
     border: var(--trait-ep) solid var(--trait);
+    border-radius: 4px;
     color: var(--encre-faible);
     font: inherit;
     font-size: .7rem;
@@ -732,12 +1004,27 @@ main {
     padding: .55rem .9rem;
     min-height: 44px;
     cursor: pointer;
-    transition: color .2s ease, border-color .2s ease;
+    transition: color .2s var(--ease-out), border-color .2s var(--ease-out),
+        transform .2s var(--ease-out);
 }
 
 .poste-commandes button:hover {
     color: var(--encre);
     border-color: var(--encre);
+    transform: translateY(-2px);
+}
+
+.poste-commandes button:active { transform: translateY(1px); }
+
+.ico-nav {
+    display: block;
+    width: .85rem;
+    height: .85rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
 }
 
 .poste-ouvrir {
@@ -1273,180 +1560,523 @@ tr.choisi th[scope="row"] {
    ═══════════════════════════════════════════════════════════════════════ */
 
 .lettre {
-    display: grid;
-    grid-template-columns: minmax(0, 14ch) minmax(0, 62ch);
-    gap: clamp(1rem, 4vw, 4rem);
-    justify-content: start;
+    position: relative;
+    /* Pas d'`isolation: isolate` ici, et c'est vérifié à l'écran : elle
+       enfermait la fusion `screen` de la machine dans la section, le noir
+       de l'image cessait d'être retiré et un rectangle sombre se posait
+       sur le mur de signes. Le mot fantôme reste visible sans elle. */
+    overflow: clip;
 }
 
-/* En-tête de lettre : la mention tient dans la marge, à hauteur de la
-   première ligne. Ce n'est pas un titre de section posé au-dessus. */
-.bloc h2.lettre-tete {
-    margin: 0;
-    font-weight: 700;
-    font-size: .74rem;
-    letter-spacing: .18em;
-    text-transform: uppercase;
-    color: var(--encre-faible);
-    text-align: right;
-    padding-top: .55em;
+/* L'étiquette au feutre, comme à l'arrivée — mais l'outil tracé change.
+   C'est la même main et le même marqueur sur un autre établi, pas un
+   motif recopié. */
+.bloc h2.lettre-tete,
+.bloc h2.choix-tete {
+    display: flex;
+    align-items: center;
+    gap: .55rem;
+    margin: 0 0 clamp(1.6rem, 4.5vh, 3rem);
+    font-family: "Permanent Marker", var(--courante), cursive;
+    font-weight: 400;
+    font-size: clamp(1rem, 1.9vw, 1.4rem);
+    line-height: 1;
+    letter-spacing: .01em;
+    text-transform: none;
+    text-align: left;
+    color: var(--signal);
+    transform: rotate(-1.4deg);
 }
+
+/* Le mot de la section, énorme et presque de la couleur du fond. Il dit ce
+   que fait le texte — réparer — et il occupe la moitié droite, qui restait
+   vide pendant que la prose tenait sur une colonne étroite. */
+/* Calé pour que la colonne de prose le recouvre en partie : dans le hero
+   le mot fantôme marche parce que le nom géant passe devant lui. Posé seul
+   dans le vide à droite, il cessait d'être un plan de fond et devenait
+   l'élément le plus voyant de la section. */
+.lettre-fantome {
+    position: absolute;
+    /* Il démarre SOUS la colonne de prose et sort par la droite : c'est le
+       chevauchement qui en fait un plan. Posé en dessous du texte il
+       flottait détaché, posé à côté il devenait un second bloc.
+       La taille est calée sur une mesure et non sur une estimation : en
+       Anton, un mot occupe 0,426 fois son corps par lettre. COMPRENDRE
+       en fait dix, donc 18vw là où RÉPARER tenait 26vw. Un mot fantôme
+       doit rester un mot : à taille égale on n'aurait lu que COMPR. */
+    left: 26%;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: -1;
+    font-family: var(--titrage);
+    font-size: max(3.5rem, 18vw);
+    line-height: .8;
+    letter-spacing: -.03em;
+    color: var(--fond-fantome);
+    white-space: nowrap;
+    pointer-events: none;
+    user-select: none;
+}
+
+/* ═══ LA MACHINE OUVERTE ═══════════════════════════════════════════════
+   Deux vues du même éclaté, superposées au pixel. Le rendu plein donne la
+   matière, le tracé donne la lecture : ensemble ils font ce qu'aucune des
+   deux ne fait seule, une machine qu'on voit ET qu'on comprend.
+
+   Les deux portent un vrai canal alpha, et c'est un retour en arrière
+   assumé : `mix-blend-mode: screen` coûtait zéro octet mais ne marchait
+   pas ici, parce que ce conteneur crée son propre contexte d'empilement
+   (z-index négatif plus transform) et que la fusion n'atteignait donc
+   jamais le fond de page. Un rectangle noir se posait sur le mur de
+   signes. Vu à l'écran, pas déduit.
+
+   L'alpha est BINAIRE : le fond des deux images est un noir pur, un seuil
+   suffit à le découper, et un alpha dégradé doublait le poids du fichier
+   sans rien ajouter de visible. 82 Ko pour les deux, chargées en différé
+   puisqu'elles sont sous le pli.                                        */
+
+.machine {
+    position: absolute;
+    right: -6%;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: -1;
+    width: min(62%, 46rem);
+    aspect-ratio: 1100 / 619;
+    pointer-events: none;
+}
+
+.machine img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* Le rendu plein reste discret : c'est la matière sous le dessin, pas le
+   sujet. Au-delà, il concurrence le texte au lieu de le porter. */
+.machine-pleine {
+    opacity: .52;
+}
+
+/* Le tracé est l'image qui porte le propos de la section — ouvrir, voir
+   dedans. Il passe donc devant, et plus net. */
+.machine-trait {
+    opacity: .4;
+    /* Le décrochage du signal le décale, comme une couche d'impression mal
+       calée. Posé par le JS, qui pilote déjà les décrochages du nom. */
+    transform: translateX(var(--machine-decroche, 0px));
+}
+
+/* En COOL le signal est reconstitué : plus de superposition, plus de
+   décrochage. Il ne reste que le tracé, en négatif sur le papier. */
+:root[data-peau="cool"] .machine-pleine { display: none; }
+
+/* `invert` ne touche pas au canal alpha : le tracé blanc devient noir et
+   le fond reste transparent. C'est ce qu'il faut sur le papier crème. */
+:root[data-peau="cool"] .machine-trait {
+    opacity: .34;
+    filter: invert(1);
+    transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .machine-trait { transform: none; }
+}
+
 
 .lettre-corps {
     display: flex;
     flex-direction: column;
-    gap: 1.3em;
+    gap: 1.25em;
+    /* 62 caractères : au-delà l'œil perd la ligne en revenant à la marge,
+       en deçà la colonne paraît posée dans un coin. */
+    max-width: 62ch;
 }
 
 .lettre-corps p {
     margin: 0;
-    font-size: clamp(1.02rem, 1.7vw, 1.26rem);
-    line-height: 1.62;
+    font-family: var(--lecture);
+    font-size: clamp(1.02rem, 1.5vw, 1.2rem);
+    line-height: 1.68;
     color: var(--encre-faible);
     text-wrap: pretty;
 }
 
-.lettre-corps strong {
-    font-weight: 700;
+/* Le premier paragraphe porte le corps au-dessus des autres : c'est lui
+   qui donne le ton, et le lecteur entre par lui. Un pavé de trois blocs
+   rigoureusement identiques n'a aucun ordre de lecture. */
+.lettre-corps p:first-child {
+    font-size: clamp(1.14rem, 1.75vw, 1.42rem);
+    line-height: 1.5;
     color: var(--encre);
-    font-weight: normal;
+}
+
+/* LE TRAIT DE MARQUEUR. Le feutre qui écrit la marque à l'arrivée souligne
+   ici ce qui compte : même outil, autre geste. Un soulignement et non un
+   surlignage — sur fond sombre, une bande pleine sous un texte clair tombe
+   sous le seuil de lisibilité, le trait non. */
+/* Vu à l'écran : en fond d'élément, le trait disparaissait dès que le
+   passage courait sur deux lignes — le fond d'un inline est peint par
+   fragment, et un seul fragment le recevait. `text-decoration` suit le
+   texte ligne par ligne, c'est son travail. `skip-ink: none` empêche le
+   trait de s'interrompre sous les jambages : un marqueur passe dessus. */
+.lettre-corps strong {
+    font-weight: 500;
+    color: var(--encre);
+    text-decoration: underline;
+    text-decoration-color: rgb(var(--phosphore) / .9);
+    text-decoration-thickness: .13em;
+    text-underline-offset: .22em;
+    text-decoration-skip-ink: none;
 }
 
 
 /* ═══════════════════════════════════════════════════════════════════════
-   SÉLECTIONS — les événements
+   SÉLECTIONS — une pile de dossiers qui s'allonge
 
-   C'est la seule section de la page qui montre de vraies photographies en
-   couleur. Tout le reste est tramé en deux valeurs : la couleur y devient
-   donc un événement, pas un décor. C'est aussi ce qui répondait le plus
-   directement au reproche « c'est trop noir » — un bloc d'image réelle
-   casse une page de texte sur fond sombre comme aucun réglage de jeton ne
-   le fera.
+   Une grille de cartes aurait été fausse pour deux raisons : elle impose un
+   nombre pair pour rester droite, alors que les sélections s'ajoutent une
+   par une ; et elle traite une photo d'équipe et un certificat comme deux
+   objets de même nature, ce qu'ils ne sont pas.
+
+   Ce que cette section emprunte au hero, ce n'est pas le mot fantôme —
+   « Qui je suis » l'a déjà pris — c'est le bouton plein et ses coulures, qui
+   deviennent ici la poignée du dossier. Même langue, autre mot.
    ═══════════════════════════════════════════════════════════════════════ */
 
-.planches {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: clamp(1.6rem, 4vw, 3rem);
-    align-items: start;
-}
-
-.planche {
+.dossiers {
+    list-style: none;
     margin: 0;
+    padding: 0;
     display: flex;
     flex-direction: column;
-    gap: .9rem;
+    gap: clamp(2rem, 6vh, 4rem);
 }
 
-/* La photo d'équipe porte la section : elle prend deux colonnes quand il y
-   a la place. Une grille où tout pèse pareil ne hiérarchise rien. */
-.planche--large { grid-column: span 2; }
-
-.planche img {
-    display: block;
-    width: 100%;
-    height: auto;
-    border: var(--trait-ep) solid var(--trait);
+/* Le filet n'est pas un cadre de carte : il tient à gauche seulement, comme
+   l'onglet d'un dossier rangé dans un tiroir. Un contour fermé aurait fait
+   la carte que cette section évite. */
+/* La borne de lecture appartient au paragraphe, pas au dossier : posée
+   ici, elle ramenait aussi les pièces ouvertes à 635 px, et les deux
+   images s'empilaient au lieu de se ranger côte à côte. */
+.dossier {
+    padding-left: clamp(1rem, 3vw, 2.2rem);
+    border-left: 3px solid rgb(var(--phosphore) / .5);
+    max-width: 62rem;
 }
 
-.planche figcaption {
+.dossier-tete {
     display: flex;
     flex-direction: column;
-    gap: .35rem;
+    gap: .3rem;
+    margin-bottom: 1.1rem;
 }
 
-.planche-quand {
-    font-size: .64rem;
-    letter-spacing: .18em;
+.dossier-quand,
+.dossier-ou {
+    font-family: var(--courante);
+    font-size: .68rem;
+    font-weight: 700;
+    letter-spacing: .16em;
     text-transform: uppercase;
     color: var(--signal);
 }
 
-.planche-dit {
-    max-width: 54ch;
-    font-size: .92rem;
-    line-height: 1.55;
+.dossier-ou {
+    font-weight: 400;
+    letter-spacing: .1em;
     color: var(--encre-faible);
 }
 
-.planche-dit strong {
+.dossier-nom {
+    margin: 0;
+    max-width: 26ch;
+    font-family: var(--titrage);
+    font-weight: 400;
+    font-size: clamp(1.6rem, 4.2vw, 3.1rem);
+    line-height: .98;
+    letter-spacing: var(--titrage-espace);
     color: var(--encre);
-    font-weight: 700;
+    text-wrap: balance;
 }
 
-.planche-dit em {
+.dossier-dit {
+    margin: 0 0 1.6rem;
+    max-width: 68ch;
+    font-family: var(--lecture);
+    font-size: clamp(1rem, 1.4vw, 1.12rem);
+    line-height: 1.66;
+    color: var(--encre-faible);
+    text-wrap: pretty;
+}
+
+/* LA POIGNÉE. C'est le bouton plein de l'arrivée, repris tel quel, avec ses
+   coulures dessinées en pseudo-élément : quatre longueurs inégales, sinon le
+   motif se lit comme une frange régulière. */
+.dossier-piece > summary {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: .7rem;
+    border-radius: 4px;
+    padding: .85rem 1.4rem;
+    background: var(--craie);
+    color: var(--fond);
+    font-family: var(--courante);
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    cursor: pointer;
+    list-style: none;
+    transition: background .22s var(--ease-out), color .22s var(--ease-out),
+        transform .22s var(--ease-out);
+}
+
+.dossier-piece > summary::-webkit-details-marker { display: none; }
+
+.dossier-piece > summary:hover,
+.dossier-piece > summary:focus-visible {
+    background: var(--signal);
+    color: var(--fond);
+    transform: translateY(-2px);
+}
+
+.dossier-piece > summary:active { transform: translateY(1px); }
+
+.dossier-piece > summary:hover::after,
+.dossier-piece > summary:focus-visible::after { height: clamp(16px, 1.8vw, 26px); }
+
+/* La coulure, en dégradés répétés plutôt qu'en SVG : ici elle est purement
+   décorative et n'a pas à exister dans le document. */
+.dossier-piece > summary::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 100%;
+    width: 100%;
+    height: clamp(10px, 1.2vw, 18px);
+    background:
+        linear-gradient(var(--signal), var(--signal)) 14% 0 / 11px 100% no-repeat,
+        linear-gradient(var(--signal), var(--signal)) 41% 0 / 13px 58% no-repeat,
+        linear-gradient(var(--signal), var(--signal)) 66% 0 / 9px 84% no-repeat,
+        linear-gradient(var(--signal), var(--signal)) 88% 0 / 12px 40% no-repeat;
+    pointer-events: none;
+    transition: height .26s var(--ease-out);
+}
+
+/* Le chevron tracé, qui bascule quand le dossier s'ouvre. */
+.dossier-piece > summary span.fleche-bas {
+    display: inline-block;
+    width: .55em;
+    height: .55em;
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transform: translateY(-.14em) rotate(45deg);
+    transition: transform .22s var(--ease-out);
+}
+
+.dossier-piece[open] > summary span.fleche-bas {
+    transform: translateY(.1em) rotate(225deg);
+}
+
+.dossier-contenu {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr));
+    gap: clamp(1.2rem, 3vw, 2.2rem);
+    align-items: start;
+    margin-top: clamp(1.8rem, 4vh, 2.8rem);
+}
+
+/* Les pièces du dossier. Encadrées et bornées en hauteur : posées en pleine
+   largeur sans contrainte, une photo d'équipe et une capture de certificat
+   écrasaient tout le reste de la page. */
+.piece {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: .7rem;
+}
+
+.piece img {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 22rem;
+    object-fit: cover;
+    object-position: center top;
+    border: var(--trait-ep) solid var(--trait);
+}
+
+.piece figcaption {
+    font-family: var(--lecture);
+    font-size: .86rem;
+    line-height: 1.5;
+    color: var(--encre-faible);
+}
+
+.piece figcaption em {
     font-style: italic;
     color: var(--encre);
 }
 
-@media (max-width: 760px) {
-    .planche--large { grid-column: span 1; }
+/* Le défi lui-même passe sous les deux pièces, sur toute la largeur : c'est
+   le texte qui les relie, pas une troisième carte. */
+.dossier-quoi {
+    grid-column: 1 / -1;
+    margin: 0;
+    font-family: var(--lecture);
+    font-size: .95rem;
+    line-height: 1.6;
+    color: var(--encre-faible);
+}
+
+.dossier-quoi strong {
+    font-weight: 500;
+    color: var(--encre);
+    text-decoration: underline;
+    text-decoration-color: rgb(var(--phosphore) / .9);
+    text-decoration-thickness: .12em;
+    text-underline-offset: .2em;
+    text-decoration-skip-ink: none;
 }
 
 
 /* ═══════════════════════════════════════════════════════════════════════
    LE CONTACT — le seul but du site
 
-   Tout ce qui précède est en colonnes ; ici la page redevient une ligne.
-   L'adresse est le plus gros caractère de la page après le nom lui-même :
-   c'est l'action qu'on attend du visiteur.
+   Mesuré à l'écran avant d'y toucher : l'adresse était rendue en chasse
+   fixe à 70 px, parce qu'aucune règle ne lui donnait de famille et qu'elle
+   héritait donc de la courante. Un terminal, pas une identité.
+
+   Ce que cette section emprunte au hero, c'est le feutre, et sous sa
+   troisième forme : il écrit la marque à l'arrivée, il souligne la prose
+   dans la biographie, il signe ici. Même outil, trois gestes.
    ═══════════════════════════════════════════════════════════════════════ */
 
 .contact {
+    position: relative;
     display: grid;
-    gap: clamp(1.6rem, 5vh, 3rem);
-    padding-bottom: clamp(5rem, 16vh, 11rem);
+    justify-items: start;
+    gap: clamp(1.1rem, 3vh, 2rem);
+    /* Le fond de page tombait ensuite sur 300 px de vide. Il en reste de
+       quoi laisser respirer la signature, pas un écran entier. */
+    padding-bottom: clamp(3rem, 9vh, 6rem);
 }
 
-.bloc h2.contact-tete {
+.bloc h2.contact-etiq {
+    margin-bottom: clamp(.6rem, 2vh, 1.2rem);
+}
+
+.contact-dit {
     margin: 0;
-    max-width: 24ch;
-    font-weight: 700;
-    font-size: clamp(1.6rem, 5vw, 3.4rem);
-    line-height: 1.04;
-    letter-spacing: var(--titrage-espace);
-    text-wrap: balance;
+    max-width: 46ch;
+    font-family: var(--lecture);
+    font-size: clamp(1.1rem, 2.1vw, 1.65rem);
+    line-height: 1.38;
+    color: var(--encre);
+    text-wrap: pretty;
 }
 
 .contact-adresse {
-    margin: 0;
+    margin: .4rem 0 0;
 }
 
+/* L'adresse est l'action attendue, donc le plus gros caractère de la page
+   après le nom. En Archivo et non en chasse fixe : une adresse en mono se
+   lit comme une sortie de console, pas comme une invitation.
+   Le trait dessous est le marqueur, pas une bordure : c'est le même geste
+   que sur les passages clés de la biographie, à l'échelle du titre. */
 .contact-adresse a {
-    /* Dimensionnée sur la largeur du texte lui-même : l'adresse doit
-       toucher les deux marges sans jamais les dépasser. 22 caractères à
-       0,55 de chasse moyenne — mesuré sur Archivo, pas estimé. */
-    font-size: clamp(1.3rem, 8.2vw, 6rem);
-    font-weight: 700;
-    line-height: 1;
-    letter-spacing: -.03em;
-    text-decoration: none;
-    border-bottom: 2px solid var(--trait);
     display: inline-block;
-    padding-bottom: .06em;
-    transition: border-color .25s ease, color .25s ease;
+    font-family: var(--lecture);
+    font-size: clamp(1.4rem, 5.6vw, 4.2rem);
+    font-weight: 600;
+    line-height: 1.08;
+    letter-spacing: -.025em;
+    color: var(--encre);
+    text-decoration: underline;
+    text-decoration-color: rgb(var(--phosphore) / .9);
+    text-decoration-thickness: .085em;
+    text-underline-offset: .14em;
+    text-decoration-skip-ink: none;
     word-break: break-word;
+    transition: color .22s ease, text-decoration-color .22s ease;
 }
 
 .contact-adresse a:hover,
 .contact-adresse a:focus-visible {
-    border-bottom-color: currentColor;
+    color: var(--signal);
+    text-decoration-color: var(--encre);
 }
 
 .contact-liste {
     list-style: none;
-    margin: 0;
+    margin: .6rem 0 0;
     padding: 0;
     display: flex;
     flex-wrap: wrap;
     gap: .4rem clamp(1.2rem, 4vw, 3rem);
-    font-weight: 400;
-    font-size: .92rem;
+    font-family: var(--courante);
+    font-size: .8rem;
     color: var(--encre-faible);
 }
 
-.contact-note {
-    opacity: .7;
+/* Les icônes de la ligne de contact. Deux familles volontairement
+   distinctes : les marques tierces sont des silhouettes pleines, parce
+   qu'un logo ne se reconnaît qu'à sa masse ; tout ce qui appartient au
+   site reste au trait, comme les outils des étiquettes. */
+.contact-liste li {
+    display: inline-flex;
+    align-items: center;
+    gap: .42rem;
+}
+
+.contact-liste a {
+    display: inline-flex;
+    align-items: center;
+    gap: .42rem;
+}
+
+.ico {
+    width: 1.05em;
+    height: 1.05em;
+    flex: none;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    /* Le texte des listes est en capitales d'imprimerie à chasse fixe :
+       sans ce décalage, l'icône flotte au-dessus de la ligne de base. */
+    transform: translateY(-.04em);
+}
+
+.ico--plein {
+    fill: currentColor;
+    stroke: none;
+}
+
+.contact-note { opacity: .7; }
+
+/* LA SIGNATURE. Posée à droite et de travers, comme on signe au bas d'une
+   page. Elle ne reprend pas la taille de la marque de l'arrivée : une
+   signature est plus petite que le titre qu'elle ferme. */
+.contact-signature {
+    justify-self: end;
+    margin-top: clamp(1.4rem, 4vh, 2.8rem);
+    font-family: "Permanent Marker", var(--courante), cursive;
+    font-size: clamp(1.8rem, 5vw, 3.6rem);
+    line-height: .9;
+    color: var(--signal);
+    transform: rotate(-4deg);
+    pointer-events: none;
+    user-select: none;
+    text-shadow:
+        0 0 14px rgb(var(--phosphore) / .3),
+        0 0 36px rgb(var(--phosphore) / .16);
 }
 
 
@@ -1458,15 +2088,24 @@ tr.choisi th[scope="row"] {
     /* Plus de taille de nom par point de rupture : le `min(vw, svh)`
        ci-dessus s'en charge sur tous les écrans d'un seul tenant. Il ne
        reste ici que ce qui relève vraiment de la mise en page étroite. */
-    .propos {
-        margin-left: 0;
-        max-width: 100%;
-    }
-
     .scene { gap: 1.2rem; }
-    .poincon { width: 44px; }
+    .poincon { width: 38px; }
 
     .vignette.vedette { grid-column: span 1; }
+
+    /* Le mot fantôme et la machine existent pour occuper le vide à droite
+       de la colonne de prose. Sur un écran étroit ce vide n'existe pas :
+       tous deux tombaient en plein milieu du texte et le rendaient
+       illisible. Ils répondent à un problème de grand écran, ils restent
+       au grand écran.
+       — La règle avait disparu dans une réécriture de section ; remise, et
+       étendue à la machine qui a le même défaut.                        */
+    .lettre-fantome,
+    .machine { display: none; }
+
+    /* La grille des deux vues du dossier tombe en une colonne, et les
+       pièces se lisent l'une sous l'autre. */
+    .dossier { max-width: 100%; }
 
     /* Les deux colonnes tombent : une marge de 14ch dans un écran de 384 px
        laisse 20 caractères au texte, ce qui n'est plus une colonne mais une
@@ -1493,6 +2132,35 @@ tr.choisi th[scope="row"] {
 @media (max-height: 820px) {
     .scene { gap: clamp(.8rem, 2vh, 1.5rem); }
 }
+
+
+/* ═══ LA BASCULE DE PEAU ═══════════════════════════════════════════════
+   Le voile qui traverse l'écran pendant que la peau change. Il porte le
+   quadrillage de la trame plutôt qu'un aplat : ce qu'on bascule n'est pas
+   une couleur de fond, c'est une profondeur de bits, et le motif le dit.
+
+   La couleur vient des deux jetons de peau déclarés en tête de feuille, et
+   non de `--nuit` : au moment où le voile couvre, la peau courante est
+   encore l'ancienne. Le voile doit déjà porter la nouvelle.            */
+
+.balayage {
+    position: fixed;
+    inset: 0;
+    /* Au-dessus de tout, pupitre compris, mais sous rien d'interactif :
+       il ne vit que 560 ms et ne doit jamais retenir un clic. */
+    z-index: 60;
+    pointer-events: none;
+    clip-path: inset(0 100% 0 0);
+    /* Vu à l'écran : à 13 px et 17 % d'opacité le quadrillage faisait du
+       papier millimétré. La maille passe à 22 px et le trait à 8 % : on doit
+       deviner une trame qui passe, pas lire une grille. */
+    background-image:
+        repeating-linear-gradient(90deg, rgba(128, 128, 128, .08) 0 1px, transparent 1px 22px),
+        repeating-linear-gradient(0deg, rgba(128, 128, 128, .08) 0 1px, transparent 1px 22px);
+}
+
+.balayage[data-vers="brut"] { background-color: var(--peau-brut-fond); }
+.balayage[data-vers="cool"] { background-color: var(--peau-cool-fond); }
 
 
 /* ═══ ÉVEIL AU DÉFILEMENT ══════════════════════════════════════════════

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Gédéon Mouloundi Mayagha — IA et données, Libreville</title>
+    <title>Gédéon Mouloundi Mayagha : IA et données à Libreville</title>
     <meta name="description"
         content="Je construis des outils de données qui tiennent sur une connexion fragile et qui servent vraiment quelqu'un. Souveraineté numérique du Gabon, IA et Big Data. Libreville.">
     <meta name="theme-color" content="#000000">
@@ -16,7 +16,7 @@
     <meta property="og:locale" content="fr_FR">
     <meta property="og:url" content="https://firstged.github.io/mon-portfolio/">
     <meta property="og:site_name" content="Gfirst">
-    <meta property="og:title" content="Gédéon Mouloundi Mayagha — IA et données, Libreville">
+    <meta property="og:title" content="Gédéon Mouloundi Mayagha : IA et données à Libreville">
     <meta property="og:description"
         content="Je construis des outils de données qui tiennent sur une connexion fragile et qui servent vraiment quelqu'un.">
     <meta name="twitter:card" content="summary_large_image">
@@ -34,7 +34,7 @@
       "address": { "@type": "PostalAddress", "addressLocality": "Libreville", "addressCountry": "GA" },
       "knowsLanguage": ["fr", "en", "ja"],
       "knowsAbout": ["Machine learning", "Big Data", "Python", "Traitement intelligent de documents", "Souveraineté numérique"],
-      "sameAs": ["https://github.com/firstged"]
+      "sameAs": ["https://github.com/firstged", "https://www.linkedin.com/in/gedeon-mouloundi"]
     }
     </script>
 
@@ -43,8 +43,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Anton&family=JetBrains+Mono:wght@400;700&family=Pixelify+Sans:wght@400..700&display=swap">
-    <link rel="stylesheet" href="css/gfirst.css">
+        href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;500;600&family=JetBrains+Mono:wght@400;700&family=Permanent+Marker&family=Pixelify+Sans:wght@400..700&display=swap">
+    <link rel="stylesheet" href="css/gfirst.css?v=31d0abe8">
 
     <!-- Posée ici et pas en fin de page : la règle d'éveil ne doit exister
          qu'avec JavaScript, et l'ajouter plus tard ferait clignoter les blocs. -->
@@ -61,9 +61,15 @@
 
     <!-- ═══════════════════════════════════════════════════════════════════
          L'ARRIVÉE
-         Le nom, la marque frappée, et ce qu'il fait. Pas de titre de poste :
-         « Métier · Ville — disponible » est la ligne de tous les portfolios
-         du monde.
+         Transposée du gabarit de référence, mécanisme par mécanisme :
+         · une étiquette au feutre, précédée d'un signe tracé à la main ;
+         · un titre géant en capitales étroites, et DANS la même phrase un
+           mot traité autrement — ici la marque, au feutre, qui chevauche
+           le nom civil ;
+         · un mot fantôme énorme derrière, presque de la couleur du fond ;
+         · des coulures sous le bouton.
+         Toujours pas de titre de poste : « Métier · Ville — disponible »
+         est la ligne de tous les portfolios du monde.
          ═══════════════════════════════════════════════════════════════════ -->
     <div class="scene" id="arrivee">
 
@@ -98,9 +104,26 @@
                 <rect class="sceau" x="5" y="5" width="90" height="90" rx="7" fill="currentColor"
                     mask="url(#gf-creux)" />
             </svg>
+
+            <!-- L'étiquette au feutre, et le signe tracé à la main qui la
+                 précède : dans la référence c'est une couronne, ici c'est
+                 l'établi — un tournevis, parce que c'est le lieu du site. -->
+            <p class="etiquette">
+                <svg class="signe" viewBox="0 0 34 24" aria-hidden="true">
+                    <path d="M3 20 L16 7" />
+                    <path d="M14 5 L20 11 L25 6 A6 6 0 0 0 19 1 Z" />
+                    <path d="M2 21 L5 18" />
+                </svg>
+                <span data-en="the workbench" data-ja="作業台">l'établi</span>
+            </p>
         </header>
 
         <div class="corps">
+            <!-- Le mot fantôme : énorme, à peine plus clair que le fond. Dans
+                 la référence il reprend le mot de l'étiquette ; ici il
+                 reprend la marque, qui est le sujet du titre. -->
+            <span class="fantome" aria-hidden="true">GFIRST</span>
+
             <!-- data-source porte la notation du découpeur : {er} devient un
                  <sup> insécable. Le HTML visible, lui, reste lisible sans
                  JavaScript. -->
@@ -110,16 +133,40 @@
                 <span class="ligne" data-gresille>Mayagha</span>
             </h1>
 
+            <!-- La marque au feutre, qui mord sur le nom. C'est le mécanisme
+                 exact de la référence — un mot de la phrase traité dans un
+                 autre registre — et ici il dit quelque chose : le nom civil
+                 et le nom de règne occupent la même place. Elle s'efface
+                 quand le titre zappe lui-même en « Gfirst » (règle CSS) :
+                 sans quoi le mot s'afficherait deux fois. -->
+            <span class="marque-peinte" aria-hidden="true">Gfirst</span>
         </div>
 
-        <p class="propos"
-            data-en="&lt;b&gt;I build data tools that hold up on a fragile connection and actually serve someone.&lt;/b&gt; What I'm after: that Gabon keeps control of its own data, and takes part in what gets invented elsewhere."
-            data-ja="&lt;b&gt;不安定な回線でも動き、誰かの役に立つデータの道具をつくっています。&lt;/b&gt;目指すのは、ガボンが自国のデータを自ら握り、世界の技術の歩みに加わることです。">
-            <b>Je construis des outils de données qui tiennent sur une connexion
-                fragile et qui servent vraiment quelqu'un.</b>
-            Ce que je vise : que le Gabon garde la main sur ses données, et prenne part
-            à ce qui s'invente ailleurs.
-        </p>
+        <div class="pied">
+            <p class="propos"
+                data-en="&lt;b&gt;I build data tools that hold up on a fragile connection and actually serve someone.&lt;/b&gt; What I'm after: that Gabon keeps control of its own data, and takes part in what gets invented elsewhere."
+                data-ja="&lt;b&gt;不安定な回線でも動き、誰かの役に立つデータの道具をつくっています。&lt;/b&gt;目指すのは、ガボンが自国のデータを自ら握り、世界の技術の歩みに加わることです。">
+                <b>Je construis des outils de données qui tiennent sur une connexion
+                    fragile et qui servent vraiment quelqu'un.</b>
+                Ce que je vise : que le Gabon garde la main sur ses données, et prenne
+                part à ce qui s'invente ailleurs.
+            </p>
+
+            <!-- Le bouton plein, et les coulures sous lui : dans la référence
+                 la peinture dégouline du bouton d'appel. -->
+            <a class="bouton" href="#projets">
+                <span data-en="See the work" data-ja="仕事を見る">Voir les pièces</span>
+                <svg class="fleche" viewBox="0 0 24 12" aria-hidden="true">
+                    <path d="M0 6 H21 M16 1 L22 6 L16 11" />
+                </svg>
+                <svg class="coulures" viewBox="0 0 120 26" aria-hidden="true" preserveAspectRatio="none">
+                    <path d="M14 0 v12 a3 3 0 0 0 6 0 V0 Z" />
+                    <path d="M44 0 v19 a3.4 3.4 0 0 0 6.8 0 V0 Z" />
+                    <path d="M76 0 v8 a2.6 2.6 0 0 0 5.2 0 V0 Z" />
+                    <path d="M98 0 v23 a3 3 0 0 0 6 0 V0 Z" />
+                </svg>
+            </a>
+        </div>
 
         <div class="pupitre">
             <div class="reglage" role="group" aria-label="Peau">
@@ -150,39 +197,79 @@
              ═══════════════════════════════════════════════════════════════ -->
         <section class="bloc lettre" id="moi" aria-labelledby="t-moi">
 
-            <h2 class="lettre-tete" id="t-moi" data-en="Who I am" data-ja="私について">Qui je suis</h2>
+            <!-- Le mot de la section, derrière le texte. Ce n'est pas un mot
+                 de décor : c'est le fil des cinq paragraphes. Ouvrir une
+                 machine, apprendre un métier d'assurance, élaguer un modèle,
+                 c'est le même geste à trois échelles. -->
+            <span class="lettre-fantome" aria-hidden="true">COMPRENDRE</span>
+
+            <!-- La machine ouverte, en fond de section. Deux couches du MEME
+                 cadrage : le rendu plein dessous, le tracé au-dessus. En peau
+                 BRUT les deux se superposent et le traçage décroche quand le
+                 signal lâche ; en COOL il ne reste que le tracé, inversé.
+                 `loading=lazy` : elles sont sous le pli, le premier écran ne
+                 les paie pas. -->
+            <div class="machine" aria-hidden="true">
+                <img class="machine-pleine" src="images/machine-pleine.webp"
+                    width="760" height="428" loading="lazy" decoding="async" alt="">
+                <img class="machine-trait" src="images/machine-trait.png"
+                    width="1100" height="619" loading="lazy" decoding="async" alt="">
+            </div>
+
+            <h2 class="lettre-tete" id="t-moi">
+                <!-- Une clé plate. À l'arrivée c'est un tournevis : même
+                     établi, outil différent — le motif ne se recopie pas. -->
+                <svg class="signe" viewBox="0 0 34 24" aria-hidden="true">
+                    <path d="M9 10 A5.5 5.5 0 1 0 9 14 L28 14 A2 2 0 0 0 28 10 Z" />
+                </svg>
+                <span data-en="who I am" data-ja="私について">qui je suis</span>
+            </h2>
 
             <div class="lettre-corps">
-                <p data-en="I am finishing a bachelor&rsquo;s degree in artificial intelligence and big data at the IUT &amp; SN, in Libreville. Before that I learned to repair computers, and I still do: students on campus bring me their machines, I open them up and look for the part that gave out. That same habit decides how I write code &mdash; a site you can open, read and repair, rather than a bundle you replace whole."
-                    data-ja="リーブルビルの IUT &amp; SN で、人工知能とビッグデータの学士課程を修了しようとしています。その前にパソコンの修理を覚え、今も続けています。学内の学生が機械を持ち込み、私はそれを開けて、壊れた部品を探します。その習慣が私のコードの書き方を決めています。丸ごと取り替える塊ではなく、開けて、読んで、直せるサイトを。">
-                    Je finis une licence professionnelle en intelligence artificielle et
-                    big data à l'IUT &amp; SN, à Libreville. Avant ça j'ai appris à réparer
-                    des ordinateurs, et je le fais toujours : les étudiants du campus
-                    m'apportent leurs machines, je les ouvre, je cherche la pièce qui a
-                    lâché. C'est cette habitude-là qui décide de ma façon de coder &mdash;
-                    un site qu'on peut ouvrir, lire et réparer, plutôt qu'un paquet qu'on
-                    remplace en entier.
+                <p data-en="Graduated in artificial intelligence and big data at the IUT &amp; SN, in Libreville. What I really love is opening machines. Finding the heart of a device, following the path of the current, locating the part that gave out. Students on campus bring me their computers, and I do not remember ever turning one down."
+                    data-ja="リーブルビルの IUT &amp; SN で人工知能とビッグデータを修めました。本当に好きなのは、機械を開けることです。装置の心臓を見つけ、電流の道をたどり、壊れた部品を突き止める。学内の学生がパソコンを持ち込み、断ったことは一度もありません。">
+                    Diplômé en intelligence artificielle et big data à l'IUT &amp; SN, à
+                    Libreville. Ce que j'aime vraiment, c'est ouvrir les machines.
+                    Découvrir le cœur d'un appareil, suivre le chemin du courant, trouver
+                    la pièce qui a lâché. Les étudiants du campus m'apportent leurs
+                    ordinateurs, et je ne me souviens pas d'en avoir refusé un.
                 </p>
 
-                <p data-en="In 2026 I spent two months at SUNU Assurances, in a cohort of sixty students recruited nationally. I built an internal tool there that I cannot show; the report was defended and marked 16/20. I also run Devs-Solutions, a student team that delivers sites and tools to Gabonese clients."
-                    data-ja="二〇二六年、全国から選ばれた六十人の学生とともに、SUNU 保険で二か月を過ごしました。そこで社内向けの道具を作りましたが、お見せできません。報告書は口頭試問を経て 20 点中 16 点でした。学生チーム Devs-Solutions も率いており、ガボンの顧客にサイトと道具を届けています。">
-                    En 2026 j'ai passé deux mois chez SUNU Assurances, dans une promotion de
-                    soixante étudiants recrutés au niveau national. J'y ai construit un outil
-                    interne que je ne peux pas montrer ; le rapport a été soutenu et noté
-                    <strong>16/20</strong>. Je dirige aussi <strong>Devs-Solutions</strong>,
-                    une équipe d'étudiants qui livre des sites et des outils à des clients
-                    gabonais.
+                <p data-en="&lt;strong&gt;That curiosity decides how I write code.&lt;/strong&gt; I do not install a library without knowing what is inside it, and I do not write a line I could not repair six months later. A site you can open, read and repair is worth more than a bundle you replace whole."
+                    data-ja="&lt;strong&gt;その好奇心が私のコードの書き方を決めています。&lt;/strong&gt;中身を知らないライブラリは入れませんし、半年後の自分が直せない行は書きません。丸ごと取り替える塊より、開けて、読んで、直せるサイトのほうがいい。">
+                    <strong>Cette curiosité décide de ma façon de coder.</strong> Je
+                    n'installe pas une bibliothèque sans savoir ce qu'elle contient, et je
+                    n'écris pas une ligne que je ne saurais pas réparer six mois plus tard.
+                    Un site qu'on peut ouvrir, lire et réparer vaut mieux qu'un paquet
+                    qu'on remplace en entier.
+                </p>
+
+                <p data-en="In 2026, SUNU Assurances selected me among sixty students recruited across the country. I built an internal tool there, useful and strategic, and the report was defended with the highest grade. Two months spent understanding a trade I did not know, before writing the first line."
+                    data-ja="二〇二六年、SUNU 保険は全国から選ばれた六十人の学生の一人として私を迎えました。そこで社内向けの、実用的で戦略的な道具を作りました。報告書は最優秀の評価で口頭試問を通りました。最初の一行を書く前に、知らない業界を理解することに二か月を使いました。">
+                    En 2026, SUNU Assurances m'a retenu parmi soixante étudiants recrutés
+                    dans tout le pays. J'y ai construit un outil interne, utile et
+                    stratégique, et le rapport a été soutenu avec mention Très Bien. Deux mois à
+                    comprendre un métier que je ne connaissais pas, avant d'écrire la
+                    première ligne.
+                </p>
+
+                <p data-en="I run Devs-Solutions, a Gabonese team that &lt;strong&gt;does not separate software from hardware&lt;/strong&gt;: we write the application, we lay the network, and when the machine fails we are the ones who come back. Our clients run a school, a pharmacy, a transport company."
+                    data-ja="私は Devs-Solutions を率いています。&lt;strong&gt;ソフトウェアとハードウェアを切り離さない&lt;/strong&gt;ガボンのチームです。アプリケーションを書き、ネットワークを敷き、機械が壊れれば戻って直すのも私たちです。顧客は学校を、薬局を、運送会社を動かしています。">
+                    Je dirige Devs-Solutions, une équipe gabonaise qui <strong>ne sépare
+                        pas le logiciel du matériel</strong> : on écrit l'application, on
+                    pose le réseau, et quand la machine tombe c'est nous qui revenons.
+                    Nos clients gèrent une école, une pharmacie, une compagnie de
+                    transport.
                 </p>
 
                 <!-- Le fil du site dit en clair, et c'est le seul endroit où il
                      est dit : le reste de la page le démontre. -->
-                <p data-en="What occupies me now: running machine learning on less. Compressing models, quantizing them, pruning them. It is the same gesture as the grid behind this page &mdash; reduce the number of possible values and spread the error over the neighbours."
-                    data-ja="今取り組んでいるのは、より少ない資源で機械学習を動かすことです。モデルを圧縮し、量子化し、枝刈りする。それはこのページの背後にある網目と同じ操作です。取りうる値の数を減らし、誤差を隣へ配る。">
+                <p data-en="What occupies me now: &lt;strong&gt;running machine learning on less&lt;/strong&gt;. Compressing models, quantizing them, pruning them. Always the same question: what is actually necessary here?"
+                    data-ja="今取り組んでいるのは、&lt;strong&gt;より少ない資源で機械学習を動かすこと&lt;/strong&gt;です。モデルを圧縮し、量子化し、枝刈りする。いつも問いは同じです。ここで本当に必要なものは何か。">
                     Ce qui m'occupe maintenant : <strong>faire tourner l'apprentissage
                         automatique avec moins</strong>. Compresser les modèles, les
-                    quantifier, les élaguer. C'est le même geste que la trame derrière cette
-                    page &mdash; réduire le nombre de valeurs possibles, et répartir l'erreur
-                    sur les voisins.
+                    quantifier, les élaguer. Toujours la même question : qu'est-ce qui est
+                    vraiment nécessaire ici ?
                 </p>
             </div>
 
@@ -231,10 +318,10 @@
                                 technique</span></summary>
                         <div class="fiche-corps">
                             <p class="fiche-attaque"
-                                data-en="I compared four vision models on the same certificate. The gain did not come from the model — it came from a crop."
+                                data-en="I compared four vision models on the same certificate. The gain did not come from the model, it came from a crop."
                                 data-ja="四つの視覚モデルを比べました。差を生んだのはモデルではなく、トリミングでした。">
                                 J'ai comparé quatre modèles de vision sur le même acte.
-                                <strong>Le gain n'est pas venu du modèle — il est venu d'un
+                                <strong>Le gain n'est pas venu du modèle, il est venu d'un
                                     recadrage.</strong>
                             </p>
 
@@ -292,7 +379,7 @@
                             <h4 data-en="The deciding figure is not accuracy"
                                 data-ja="決め手は正確さではありません">Le chiffre qui décide n'est pas
                                 l'exactitude</h4>
-                            <p data-en="It is the number of fields that are wrong and announced as certain — they pass without review and enter the town's archives as they are."
+                            <p data-en="It is the number of fields that are wrong and announced as certain : they pass without review and enter the town's archives as they are."
                                 data-ja="誤っているのに「確か」と示される項目の数です。">
                                 C'est le nombre de champs <strong>faux et annoncés comme sûrs</strong> :
                                 ils passent sans relecture et entrent tels quels dans les archives de
@@ -302,7 +389,7 @@
 
                             <div class="cadre-table">
                                 <table>
-                                    <caption>Même acte, même vérité terrain, trois essais — 2 novembre 2026</caption>
+                                    <caption>Même acte, même vérité terrain, trois essais, 2 novembre 2026</caption>
                                     <thead>
                                         <tr>
                                             <th scope="col">Modèle</th>
@@ -349,9 +436,9 @@
                             <h4 data-en="I did not measure on real registers, and that was deliberate"
                                 data-ja="本物の台帳では測っていません。意図的です。">Je n'ai pas mesuré sur de vrais
                                 registres, et c'est volontaire</h4>
-                            <p data-en="A real certificate carries a person's civil status — you do not send that to an online model, least of all a free tier that trains on it. So I wrote a generator of fictional certificates to be filled in by hand, whose ground truth is generated before it is written."
+                            <p data-en="A real certificate carries a person's civil status : you do not send that to an online model, least of all a free tier that trains on it. So I wrote a generator of fictional certificates to be filled in by hand, whose ground truth is generated before it is written."
                                 data-ja="本物の証書には実在の人の身分が載ります。だから手書き用の架空の証書を生成する道具を書きました。">
-                                Un acte réel porte l'état civil d'une personne — on ne l'envoie pas à
+                                Un acte réel porte l'état civil d'une personne : on ne l'envoie pas à
                                 un modèle en ligne, encore moins sur un palier gratuit qui s'en sert
                                 pour entraîner. J'ai donc écrit un générateur d'actes fictifs à
                                 remplir à la main, dont la vérité terrain est
@@ -369,10 +456,10 @@
                          nom de l'entreprise rendrait la vignette illisible. -->
                     <h3>SUNU Assurances</h3>
                     <p class="resume"
-                        data-en="Selected from a nationally recruited cohort of 60 students. Two months, report defended with honours — 16/20. I built a conversational tool there; it stayed with them."
+                        data-en="Selected from a nationally recruited cohort of 60 students. Two months, report defended with the highest grade. I built a conversational tool there; it stayed with them."
                         data-ja="全国から選ばれた六十人の一人。二か月、報告書は16/20。">
                         Sélectionné dans une cohorte de 60 étudiants recrutés au niveau national.
-                        Deux mois, rapport soutenu mention Très Bien — <strong>16/20</strong>.
+                        Deux mois, rapport soutenu avec mention Très Bien.
                         J'y ai construit un ⬛⬛⬛⬛⬛⬛ conversationnel. L'outil est resté chez eux :
                         il avait une valeur concurrentielle, et ce n'est pas à moi d'en faire une
                         vitrine.
@@ -386,12 +473,12 @@
                         hors ligne</p>
                     <h3>Nkunkuma</h3>
                     <p class="resume"
-                        data-en="Land files for a surveyor in Libreville: owners, plots, procedure documents, PDF scans. Installs like an app, works with no connection, and no personal data ever leaves the machine — that is Gabonese law 025/2023, and it decided the architecture."
+                        data-en="Land files for a surveyor in Libreville: owners, plots, procedure documents, PDF scans. Installs like an app, works with no connection, and no personal data ever leaves the machine : that is Gabonese law 025/2023, and it decided the architecture."
                         data-ja="リーブルビルの土地家屋調査士のための台帳。完全オフラインで動きます。">
                         Dossiers fonciers pour un professionnel à Libreville : propriétaires,
                         parcelles, pièces de procédure, scans PDF. S'installe comme une
                         application, fonctionne sans connexion, et aucune donnée nominative ne
-                        quitte sa machine — <strong>la loi gabonaise n°025/2023 a décidé de
+                        quitte sa machine : <strong>la loi gabonaise n°025/2023 a décidé de
                             l'architecture avant la première ligne de code.</strong>
                     </p>
                     <p class="outils">Trois fichiers écrits à la main · IndexedDB · aucune dépendance</p>
@@ -428,7 +515,7 @@
                         novembre. Un itinéraire de marche sur le mont Sharp, tracé sur l&rsquo;imagerie
                         HiRISE et un modèle d&rsquo;élévation au mètre : <strong>1,57 km, +88 m,
                             pente maximale 19,8&deg;, 0,024 mSv de dose sur la sortie</strong>. Le
-                        terrain est trié en trois couleurs &mdash; sous 10&deg; on marche, de 10 à
+                        terrain est trié en trois couleurs : sous 10&deg; on marche, de 10 à
                         20&deg; prudence, au-delà c&rsquo;est interdit.
                     </p>
                     <p class="outils">Three.js servi en local · modèle 3D NASA · HiRISE, RAD, REMS</p>
@@ -503,11 +590,11 @@
                     <p class="genre" data-en="Collective" data-ja="チーム">Collectif</p>
                     <h3>Devs-Solutions</h3>
                     <p class="resume"
-                        data-en="An initiative I lead: students building digital tools for clients in Libreville. What I learned there is not taught in class — a brief is won by listening to someone describe their trade."
+                        data-en="An initiative I lead: students building digital tools for clients in Libreville. What I learned there is not taught in class : a brief is won by listening to someone describe their trade."
                         data-ja="私が率いる取り組み。リーブルビルの顧客のために道具をつくります。">
                         Une initiative que je dirige : des étudiants qui construisent des solutions
                         numériques pour des clients à Libreville. Ce que j'y ai appris ne s'apprend
-                        pas en cours — un cahier des charges se gagne en écoutant quelqu'un décrire
+                        pas en cours : un cahier des charges se gagne en écoutant quelqu'un décrire
                         son métier.
                     </p>
                     <p class="liens"><a href="https://devs-solutions.tech/" rel="noopener">Voir le site</a></p>
@@ -522,10 +609,10 @@
                     <p class="genre" data-en="Before the rule" data-ja="ルール以前">Avant la règle</p>
                     <h3>May's</h3>
                     <p class="resume"
-                        data-en="Catering and pastry, Libreville. Menu, gallery, orders on WhatsApp. January 2026 — &lt;strong&gt;my sister&rsquo;s business, and my first delivered site&lt;/strong&gt;."
+                        data-en="Catering and pastry, Libreville. Menu, gallery, orders on WhatsApp. January 2026, &lt;strong&gt;my sister&rsquo;s business, and my first delivered site&lt;/strong&gt;."
                         data-ja="リーブルビルのケータリングと洋菓子。献立、写真、注文は WhatsApp で。二〇二六年一月、&lt;strong&gt;姉の店であり、私が最初に納めたサイト&lt;/strong&gt;です。">
                         Traiteur et pâtisserie, à Libreville. Les plats, les photos, la commande
-                        sur WhatsApp. Janvier 2026 — <strong>l&rsquo;affaire de ma sœur, et mon
+                        sur WhatsApp. Janvier 2026, <strong>l&rsquo;affaire de ma sœur, et mon
                             premier site livré</strong>.
                     </p>
                     <p class="liens"><a href="https://firstged.github.io/nel-services/" rel="noopener">Voir le
@@ -545,52 +632,81 @@
              ═══════════════════════════════════════════════════════════════ -->
         <section class="bloc choix" id="selections" aria-labelledby="t-selections">
 
-            <header class="bloc-tete">
-                <h2 id="t-selections" data-en="Selections" data-ja="参加した場">Sélections</h2>
-                <p class="bloc-chapo"
-                    data-en="Where I was picked, and what I came back with."
-                    data-ja="選ばれて出向いた場と、そこから持ち帰ったもの。">
-                    Là où j'ai été retenu, et ce que j'en ai rapporté.
-                </p>
-            </header>
+            <h2 class="choix-tete" id="t-selections">
+                <!-- Une coche tracée à la main. Le tournevis ouvre l'arrivée,
+                     la clé plate ouvre la biographie : chaque étiquette porte
+                     le signe de ce qu'elle annonce, jamais le même. -->
+                <svg class="signe" viewBox="0 0 34 24" aria-hidden="true">
+                    <path d="M4 13 L13 21 L30 3" />
+                </svg>
+                <span data-en="selections" data-ja="参加した場">sélections</span>
+            </h2>
 
-            <div class="planches">
+            <!-- Une pile de dossiers, et non une grille de cartes : les
+                 sélections s'ajoutent avec le temps, et une grille impose un
+                 nombre pair pour rester droite. Pour en ajouter une, copier un
+                 <li class="dossier"> entier. -->
+            <ol class="dossiers">
 
-                <figure class="planche planche--large">
-                    <img src="images/spaceapps-equipe.webp" width="1100" height="733"
-                        loading="lazy" decoding="async"
-                        alt="Deux participants en t-shirt bleu « NASA Space Apps Participant », badges au cou, dans le hall du site de Libreville.">
-                    <figcaption>
-                        <span class="planche-quand" data-en="14–15 November 2026 · Libreville"
-                            data-ja="2026年11月14〜15日・リーブルビル">14–15 novembre 2026 · Libreville</span>
-                        <span class="planche-dit"
-                            data-en="NASA Space Apps Challenge, Grand Libreville edition. Forty-eight hours with team DevSec on &lt;strong&gt;Martian Map&lt;/strong&gt;. I am on the left."
-                            data-ja="NASA スペースアップス・チャレンジ、グラン・リーブルビル会場。チーム DevSec と四十八時間、&lt;strong&gt;Martian Map&lt;/strong&gt; を作りました。左が私です。">
-                            NASA Space Apps Challenge, édition du Grand Libreville. Quarante-huit
-                            heures avec l'équipe DevSec sur <strong>Martian Map</strong>.
-                            Je suis celui de gauche.
-                        </span>
-                    </figcaption>
-                </figure>
+                <li class="dossier">
+                    <header class="dossier-tete">
+                        <span class="dossier-quand" data-en="14–15 November 2026"
+                            data-ja="2026年11月14〜15日">14–15 novembre 2026</span>
+                        <h3 class="dossier-nom">NASA Space Apps Challenge</h3>
+                        <span class="dossier-ou" data-en="Grand Libreville edition · team DevSec"
+                            data-ja="グラン・リーブルビル会場・チーム DevSec">Édition du Grand Libreville · équipe DevSec</span>
+                    </header>
 
-                <figure class="planche">
-                    <img src="images/spaceapps-certificat.webp" width="900" height="695"
-                        loading="lazy" decoding="async"
-                        alt="Certificat NASA Space Apps Challenge 2026 « Galactic Problem Solver » au nom de Gédéon Mouloundi Mayagha.">
-                    <figcaption>
-                        <span class="planche-quand" data-en="Galactic Problem Solver"
-                            data-ja="ギャラクティック・プロブレム・ソルバー">Galactic Problem Solver</span>
-                        <span class="planche-dit"
-                            data-en="The certificate names the work, not a ranking: &lt;em&gt;for outstanding participation and efforts&lt;/em&gt;. Signed by Marc Kuchner, Program Scientist."
-                            data-ja="この証書は順位ではなく働きを記します。&lt;em&gt;卓越した参加と努力に対して&lt;/em&gt;。NASA スペースアップス・チャレンジ主任研究員 Marc Kuchner 署名。">
-                            Le certificat nomme le travail, pas un classement :
-                            <em>for outstanding participation and efforts</em>. Signé Marc
-                            Kuchner, Program Scientist.
-                        </span>
-                    </figcaption>
-                </figure>
+                    <p class="dossier-dit"
+                        data-en="Forty-eight hours on real NASA data, and the scale changes. These are no longer practice sets: the readings come from a satellite orbiting Mars, and something has to stand up by Sunday night. What I keep from it is not a ranking. It is having measured what I can do against teams from this country and from the rest of the world, and having seen that from Libreville the distance is shorter than it is said to be."
+                        data-ja="本物の NASA のデータに四十八時間。そこで尺度が変わります。もう練習用のデータではありません。観測値は火星を回る衛星から届き、日曜の夜までに形にしなければならない。持ち帰ったのは順位ではありません。自分の力を、この国と世界のチームに当てて測れたこと。そしてリーブルビルからの距離が、言われているほど遠くないと分かったことです。">
+                        Quarante-huit heures sur de vraies données de la NASA, et l'échelle
+                        change. Ce ne sont plus des jeux d'exercice : les relevés viennent
+                        d'un satellite en orbite autour de Mars, et il faut en tirer quelque
+                        chose qui tienne debout avant dimanche soir. Ce que j'en garde n'est
+                        pas un classement. C'est d'avoir mesuré ce que je sais faire contre
+                        des équipes du pays et du monde entier, et d'avoir vu que depuis
+                        Libreville la distance est plus courte qu'on ne le dit.
+                    </p>
 
-            </div>
+                    <details class="dossier-piece">
+                        <summary><span data-en="Open the file" data-ja="資料を開く">Ouvrir le dossier</span><span class="fleche-bas" aria-hidden="true"></span></summary>
+
+                        <div class="dossier-contenu">
+                            <figure class="piece">
+                                <img src="images/spaceapps-equipe.webp" width="1100" height="733"
+                                    loading="lazy" decoding="async"
+                                    alt="Deux participants en t-shirt bleu « NASA Space Apps Participant », badges au cou, dans le hall du site de Libreville.">
+                                <figcaption data-en="Team DevSec, Libreville venue. I am on the left."
+                                    data-ja="チーム DevSec、リーブルビル会場。左が私です。">
+                                    L'équipe DevSec sur le site de Libreville. Je suis celui de gauche.
+                                </figcaption>
+                            </figure>
+
+                            <figure class="piece">
+                                <img src="images/spaceapps-certificat.webp" width="900" height="695"
+                                    loading="lazy" decoding="async"
+                                    alt="Certificat NASA Space Apps Challenge 2026 « Galactic Problem Solver » au nom de Gédéon Mouloundi Mayagha.">
+                                <figcaption
+                                    data-en="Signed by Marc Kuchner, Program Scientist: &lt;em&gt;for outstanding participation and efforts&lt;/em&gt;."
+                                    data-ja="主任研究員 Marc Kuchner 署名。&lt;em&gt;卓越した参加と努力に対して&lt;/em&gt;。">
+                                    Signé Marc Kuchner, Program Scientist :
+                                    <em>for outstanding participation and efforts</em>.
+                                </figcaption>
+                            </figure>
+
+                            <p class="dossier-quoi"
+                                data-en="The challenge taken on: &lt;strong&gt;Interplanetary Survival Guide, Martian Map&lt;/strong&gt;. A walking route on Mount Sharp, laid out on HiRISE imagery from the Mars Reconnaissance Orbiter."
+                                data-ja="取り組んだ課題は &lt;strong&gt;Interplanetary Survival Guide : Martian Map&lt;/strong&gt;。マーズ・リコネサンス・オービターの HiRISE 画像の上に、シャープ山の徒歩ルートを引きました。">
+                                Le défi pris : <strong>Interplanetary Survival Guide, Martian
+                                    Map</strong>. Un itinéraire de marche sur le mont Sharp, tracé sur
+                                les images HiRISE de la sonde Mars Reconnaissance Orbiter.
+                            </p>
+                        </div>
+                    </details>
+                </li>
+
+            </ol>
 
         </section>
 
@@ -603,30 +719,82 @@
              ═══════════════════════════════════════════════════════════════ -->
         <section class="bloc contact" id="contact" aria-labelledby="t-contact">
 
-            <h2 class="contact-tete" id="t-contact"
-                data-en="I am looking for a first position in data and artificial intelligence."
-                data-ja="データと人工知能の分野で、最初の職を探しています。">
-                Je cherche un premier poste en données et en intelligence artificielle.
+            <h2 class="choix-tete contact-etiq" id="t-contact">
+                <!-- Une enveloppe tracée. Tournevis, clé plate, coche : chaque
+                     section porte l'outil de ce qu'elle fait. Ici on écrit. -->
+                <svg class="signe" viewBox="0 0 34 24" aria-hidden="true">
+                    <path d="M3 4 H31 V20 H3 Z" />
+                    <path d="M3 5 L17 14 L31 5" />
+                </svg>
+                <span data-en="write to me" data-ja="連絡する">m'écrire</span>
             </h2>
+
+            <p class="contact-dit"
+                data-en="I am looking for opportunities in development, data and artificial intelligence. The quickest way to reach me is the address below. I answer in French, English, and I am working on the third."
+                data-ja="開発、データ、人工知能の分野で機会を探しています。いちばん早いのは下のアドレスです。フランス語と英語で返信します。三つめは学習中です。">
+                Je cherche des opportunités en développement, en données et en intelligence
+                artificielle.
+                Le plus rapide est l'adresse ci-dessous. Je réponds en français, en
+                anglais, et je travaille la troisième.
+            </p>
 
             <p class="contact-adresse">
                 <a href="mailto:mayaghagedeon@gmail.com">mayaghagedeon@gmail.com</a>
             </p>
 
+            <!-- Les icônes ne décorent pas la liste, elles la trient : deux
+                 entrées sont des liens, deux sont des renseignements, et rien
+                 ne les distinguait. Les deux marques sont tracées en plein
+                 parce qu'un logo ne se reconnaît qu'à sa silhouette ; le
+                 repère de lieu est au trait, comme les outils des étiquettes. -->
             <ul class="contact-liste">
-                <li><a href="https://github.com/firstged" rel="noopener">github.com/firstged</a></li>
-                <li data-en="Libreville, Gabon" data-ja="ガボン、リーブルビル">Libreville, Gabon</li>
+                <li><a href="https://github.com/firstged" rel="noopener">
+                    <svg class="ico ico--plein" viewBox="0 0 16 16" aria-hidden="true">
+                        <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38
+                            0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13
+                            -.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66
+                            .07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15
+                            -.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27
+                            .68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12
+                            .51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48
+                            0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z" />
+                    </svg>github.com/firstged</a></li>
+
+                <li><a href="https://www.linkedin.com/in/gedeon-mouloundi" rel="noopener">
+                    <svg class="ico ico--plein" viewBox="0 0 16 16" aria-hidden="true">
+                        <path d="M13.6 0H2.4A2.4 2.4 0 0 0 0 2.4v11.2A2.4 2.4 0 0 0 2.4 16h11.2a2.4
+                            2.4 0 0 0 2.4-2.4V2.4A2.4 2.4 0 0 0 13.6 0zM5 13.4H2.7V6.1H5v7.3zM3.85
+                            5.1a1.34 1.34 0 1 1 0-2.68 1.34 1.34 0 0 1 0 2.68zM13.4 13.4h-2.3V9.85c0-.85
+                            -.02-1.94-1.18-1.94-1.19 0-1.37.92-1.37 1.88v3.61H6.25V6.1h2.2v1h.03c.31-.58
+                            1.06-1.2 2.18-1.2 2.33 0 2.76 1.54 2.76 3.53v3.97z" />
+                    </svg>linkedin.com/in/gedeon-mouloundi</a></li>
+
+                <!-- Le libellé traduit vit dans un span : posé sur le <li>, il
+                     aurait emporté l'icône, puisque la traduction remplace tout
+                     le contenu de l'élément qui la porte. -->
+                <li>
+                    <svg class="ico" viewBox="0 0 16 16" aria-hidden="true">
+                        <path d="M8 14.5s5-4.6 5-8a5 5 0 0 0-10 0c0 3.4 5 8 5 8Z" />
+                        <circle cx="8" cy="6.4" r="1.8" />
+                    </svg><span data-en="Libreville, Gabon"
+                        data-ja="ガボン、リーブルビル">Libreville, Gabon</span></li>
+
                 <li lang="fr">Français &middot; <span lang="en">English</span> &middot;
                     <span lang="ja">日本語</span> <span class="contact-note"
                         data-en="(learning)" data-ja="（学習中）">(en cours)</span>
                 </li>
             </ul>
 
+            <!-- La signature. Le feutre qui peint la marque à l'arrivée revient
+                 ici pour signer : c'est le geste qui ferme une lettre, et c'est
+                 le dernier objet de la page. -->
+            <span class="contact-signature" aria-hidden="true">Gfirst</span>
+
         </section>
 
     </main>
 
-    <script src="js/gfirst.js"></script>
+    <script src="js/gfirst.js?v=0f02a8d5"></script>
 </body>
 
 </html>

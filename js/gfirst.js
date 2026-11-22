@@ -22,25 +22,112 @@
 
     /* ═══════════════════════════════════════════════════════════════════
        LA TRAME DE PHOSPHORE
-       Mécanique de distorsion de daveholloway.uk détournée vers la
-       lumière : chaque cellule stocke la VITESSE du passage, pas sa
-       position. C'est ce qui donne la traînée — la charge persiste et
-       décroît, elle n'est jamais rafraîchie. Canvas 2D et non WebGL : la
-       grille est si grossière qu'un shader serait 703 Ko payés pour rien.
+       Les carrés de phosphore qui s'allumaient au passage du curseur
+       sont retirés : il les a refusés deux fois, et ce qu'il demandait
+       depuis le 8 novembre est ici. Les signes sont gravés dans le
+       fond en permanence, et c'est leur TRACÉ qui s'éclaire quand le
+       curseur approche, signe par signe.
+       Canvas 2D et non WebGL : on dessine une quinzaine de chemins par
+       image, un shader serait 703 Ko payés pour rien.
        ═══════════════════════════════════════════════════════════════════ */
 
-    var COTE = 19;            // côté d'une cellule, en px CSS
-    var DECROISSANCE = 0.93;  // ce qui reste d'une charge à l'image suivante
-    var PORTEE = 132;         // rayon d'influence du doigt, en px
-    var GAIN = 0.055;
-    var SEUIL = 0.012;        // sous ce niveau la cellule n'est plus dessinée
+    var PAS = 58;             // écart du semis, en px écran
+    var TAILLE = 38;          // côté d'un signe, en px écran
+    var GRAVURE = 0.085;      // ce qu'on voit d'un signe sans lumière
+    var LUEUR_R = 200;        // au-delà, un signe reste éteint
+    var BANDE = 26;           // hauteur d'une bande de décrochage, en px
 
     var cv = $(".trame");
     var ctx = cv.getContext("2d", { alpha: false });
-    var cols = 0, lignes = 0, charge = null, decal = null;
+
+    /* La gravure est dessinée UNE fois dans une toile hors écran. À chaque
+       image on la recopie d'un seul `drawImage`, puis on ne redessine que
+       les quelques signes qui tombent sous la lumière. Le coût par image ne
+       dépend donc pas de la densité du semis. */
+    var graveCv = document.createElement("canvas");
+    var graveCtx = graveCv.getContext("2d");
+
+    var semis = [];           // les signes posés : où, quelle taille, quel tour
+    var decal = null;         // le décrochage, par bande
     var dpr = 1, L = 0, H = 0;
-    var vivant = true;   // une trame éteinte n'a pas besoin d'être repeinte
-    var calme = false;   // peau COOL : le signal est reconstitué, plus de parasites
+    var vivant = true;        // un mur immobile n'a pas besoin d'être repeint
+    var calme = false;        // peau COOL : le signal est reconstitué, plus de parasites
+
+    /* Les motifs. Ce ne sont pas des glyphes inventés : ce sont des figures
+       relevées sur l'art kota et sur les scarifications d'ici. Losanges
+       simples et redoublés, mabinda à neuf losanges, chevrons de tempe,
+       damiers, peignes. Un fond décoratif aurait pu venir de n'importe où ;
+       celui-ci ne pouvait venir que de ce pays.
+
+       Tracés au trait dans un carré unitaire, donc semés, tournés et mis à
+       l'échelle sans coûter un octet d'image. La démonstration qu'il avait
+       apportée chargeait 1,8 Mo pour obtenir le même genre de fond. */
+    var SIGNES = [
+        /* losange nu — kota */
+        "M .5 .06 L .94 .5 L .5 .94 L .06 .5 Z",
+        /* losange redoublé */
+        "M .5 .02 L .98 .5 L .5 .98 L .02 .5 Z M .5 .24 L .76 .5 L .5 .76 L .24 .5 Z",
+        /* mabinda — les neuf losanges, grille 3x3 tournée de 45° */
+        "M .5 0 L 1 .5 L .5 1 L 0 .5 Z M .333 .167 L .833 .667 M .167 .333 L .667 .833 " +
+            "M .333 .833 L .833 .333 M .167 .667 L .667 .167",
+        /* losange croisé */
+        "M .5 .08 L .92 .5 L .5 .92 L .08 .5 Z M .5 .08 L .5 .92 M .08 .5 L .92 .5",
+        /* chevrons empilés — tempes */
+        "M .08 .34 L .5 .1 L .92 .34 M .08 .6 L .5 .36 L .92 .6 M .08 .86 L .5 .62 L .92 .86",
+        /* chevrons inversés */
+        "M .08 .14 L .5 .38 L .92 .14 M .08 .4 L .5 .64 L .92 .4 M .08 .66 L .5 .9 L .92 .66",
+        /* damier plein 3x3 */
+        "F .06 .06 .29 .29 F .64 .06 .29 .29 F .35 .35 .29 .29 F .06 .64 .29 .29 F .64 .64 .29 .29",
+        /* damier évidé */
+        "M .06 .06 L .94 .06 L .94 .94 L .06 .94 Z M .06 .35 L .94 .35 M .06 .65 L .94 .65 " +
+            "M .35 .06 L .35 .94 M .65 .06 L .65 .94",
+        /* peigne — les traits répétés de la scarification */
+        "M .14 .12 L .14 .88 M .32 .12 L .32 .88 M .5 .12 L .5 .88 M .68 .12 L .68 .88 M .86 .12 L .86 .88",
+        /* peigne couché, barré */
+        "M .06 .5 L .94 .5 M .18 .22 L .18 .78 M .42 .22 L .42 .78 M .66 .22 L .66 .78 M .9 .22 L .9 .78",
+        /* croissant — coiffure kota */
+        "M .1 .72 L .5 .14 L .9 .72 M .22 .72 L .5 .34 L .78 .72",
+        /* losange sur socle */
+        "M .5 .06 L .86 .44 L .5 .82 L .14 .44 Z M .22 .94 L .78 .94",
+        /* œil de losange */
+        "M .5 .1 L .9 .5 L .5 .9 L .1 .5 Z C .5 .5 .17",
+        /* bande en zigzag */
+        "M .04 .68 L .28 .32 L .52 .68 L .76 .32 L .96 .62 M .04 .9 L .96 .9"
+    ];
+
+    function tracerSigne(c, def, taille) {
+        var j = def.split(" ");
+        var i = 0, n = j.length, op, a, b, r;
+        c.beginPath();
+        while (i < n) {
+            op = j[i++];
+            if (op === "M") { c.moveTo(+j[i++] * taille, +j[i++] * taille); }
+            else if (op === "L") { c.lineTo(+j[i++] * taille, +j[i++] * taille); }
+            else if (op === "Z") { c.closePath(); }
+            else if (op === "C") {
+                a = +j[i++] * taille; b = +j[i++] * taille; r = +j[i++] * taille;
+                c.moveTo(a + r, b);
+                c.arc(a, b, r, 0, Math.PI * 2);
+            } else if (op === "F") {
+                a = +j[i++] * taille; b = +j[i++] * taille;
+                c.rect(a, b, +j[i++] * taille, +j[i++] * taille);
+            }
+        }
+        c.stroke();
+    }
+
+    /* Un bruit déterministe plutôt que Math.random : le semis doit rester
+       identique après un redimensionnement, sinon tout le mur se rejoue à
+       chaque poignée de pixels gagnés sur la fenêtre. */
+    function brouiller(n) {
+        var x = Math.sin(n * 12.9898) * 43758.5453;
+        return x - Math.floor(x);
+    }
+
+    /* La couleur vient du CSS : la peau décide, pas le script. Mise en cache
+       parce que getComputedStyle force un recalcul de style — l'appeler à
+       chaque image coûterait plus cher que tout le rendu. */
+    var teinteA = [155, 255, 60], teinteB = [216, 255, 176], intensite = 1, fond = "#000";
 
     function dimensionner() {
         dpr = Math.min(devicePixelRatio || 1, 2);
@@ -51,38 +138,61 @@
         cv.style.width = L + "px";
         cv.style.height = H + "px";
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-        cols = Math.ceil(L / COTE) + 1;
-        lignes = Math.ceil(H / COTE) + 1;
-        charge = new Float32Array(cols * lignes);
-        decal = new Int8Array(lignes);
+
+        graveCv.width = cv.width;
+        graveCv.height = cv.height;
+        graveCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+        decal = new Int8Array(Math.ceil(H / BANDE) + 1);
+        batirLeMur();
     }
 
-    function deposer(x, y, v) {
-        if (!charge) { return; }
-        var r = PORTEE / COTE;
-        var cx = x / COTE, cy = y / COTE;
-        var x0 = Math.max(0, Math.floor(cx - r)), x1 = Math.min(cols - 1, Math.ceil(cx + r));
-        var y0 = Math.max(0, Math.floor(cy - r)), y1 = Math.min(lignes - 1, Math.ceil(cy + r));
-        var i, j, dx, dy, d;
-        for (j = y0; j <= y1; j++) {
-            for (i = x0; i <= x1; i++) {
-                dx = (i + .5) - cx;
-                dy = (j + .5) - cy;
-                d = Math.sqrt(dx * dx + dy * dy);
-                if (d >= r) { continue; }
-                /* Atténuation linéaire, pas gaussienne : le bord de la
-                   trace doit rester franc, sinon la trame se lit comme un
-                   flou. */
-                charge[i + cols * j] += (1 - d / r) * v * GAIN;
+    function batirLeMur() {
+        semis.length = 0;
+        var cm = Math.ceil(L / PAS) + 1, lm = Math.ceil(H / PAS) + 1;
+        var a, b, g;
+
+        for (b = 0; b < lm; b++) {
+            for (a = 0; a < cm; a++) {
+                g = brouiller(a * 7919 + b * 104729);
+                /* Un emplacement sur huit reste vide : un semis parfaitement
+                   plein ferait un papier peint régulier, et ces signes
+                   doivent se deviner, pas se compter. */
+                if (g > 0.88) { continue; }
+                semis.push({
+                    x: a * PAS + (brouiller(a * 31 + b * 17) - 0.5) * PAS * 0.34,
+                    y: b * PAS + (brouiller(a * 13 + b * 57) - 0.5) * PAS * 0.34,
+                    t: TAILLE * (0.72 + brouiller(a * 101 + b * 211) * 0.56),
+                    r: Math.floor(brouiller(a * 53 + b * 97) * 4) * (Math.PI / 2),
+                    d: SIGNES[Math.floor(g * 15.9) % SIGNES.length]
+                });
             }
         }
-        vivant = true;
+        graverLeMur();
     }
 
-    /* La couleur vient du CSS : la peau décide, pas le script. Mise en cache
-       parce que getComputedStyle force un recalcul de style — l'appeler à
-       chaque image coûterait plus cher que tout le rendu. */
-    var teinteA = [155, 255, 60], teinteB = [216, 255, 176], intensite = 1, fond = "#000";
+    function poserSigne(c, sg) {
+        c.save();
+        c.translate(sg.x + TAILLE * 0.5, sg.y + TAILLE * 0.5);
+        c.rotate(sg.r);
+        c.translate(-sg.t * 0.5, -sg.t * 0.5);
+        tracerSigne(c, sg.d, sg.t);
+        c.restore();
+    }
+
+    /* L'état de repos : les signes sont INSCRITS, visibles en permanence, à
+       peine détachés du fond. C'est une gravure, pas une apparition. */
+    function graverLeMur() {
+        if (!semis.length) { return; }
+        graveCtx.clearRect(0, 0, L, H);
+        graveCtx.lineWidth = 1;
+        graveCtx.lineCap = "square";
+        graveCtx.lineJoin = "miter";
+        graveCtx.strokeStyle = "rgba(" + teinteB[0] + "," + teinteB[1] + "," + teinteB[2]
+            + "," + (GRAVURE * intensite).toFixed(3) + ")";
+        var i;
+        for (i = 0; i < semis.length; i++) { poserSigne(graveCtx, semis[i]); }
+    }
 
     function relireLaPeau() {
         var s = getComputedStyle(racine);
@@ -94,31 +204,67 @@
         teinteB = lire("--braise", [216, 255, 176]);
         intensite = parseFloat(s.getPropertyValue("--intensite")) || 1;
         fond = s.getPropertyValue("--nuit").trim() || "#000";
+        graverLeMur();   // la gravure porte la couleur de la peau
+        vivant = true;
     }
 
+    /* ─── LE RENDU ──────────────────────────────────────────────────────
+       Ce n'est pas une lampe posée sur le mur. Une lampe dessine un disque,
+       et son bord se voit. Ici chaque signe décide lui-même de son éclat
+       selon sa distance au curseur : ce sont les COURBES qui s'allument, et
+       la limite de la zone éclairée épouse les signes au lieu d'être ronde.
+
+       Deux conséquences qu'un masque circulaire ne donne pas : un signe
+       s'allume entier ou pas du tout, jamais coupé en deux par un cercle ;
+       et son trait épaissit en s'éclairant, comme un filament qui chauffe. */
     function peindre() {
         ctx.fillStyle = fond;
         ctx.fillRect(0, 0, L, H);
-        var i, j, c, a, t, dx;
-        for (j = 0; j < lignes; j++) {
-            dx = decal[j] * COTE;
-            for (i = 0; i < cols; i++) {
-                c = charge[i + cols * j];
-                if (c < SEUIL) { continue; }
-                a = clamp(c, 0, 1);
-                /* Le phosphore n'a pas UNE couleur, il a une température :
-                   frappé fort, il vire au blanc-vert. C'est ce qui l'empêche
-                   d'être l'accent unique et mort des pages générées. */
-                t = clamp((a - .35) / .5, 0, 1);
-                ctx.fillStyle = "rgba("
-                    + Math.round(teinteA[0] + (teinteB[0] - teinteA[0]) * t) + ","
-                    + Math.round(teinteA[1] + (teinteB[1] - teinteA[1]) * t) + ","
-                    + Math.round(teinteA[2] + (teinteB[2] - teinteA[2]) * t) + ","
-                    + (a * intensite).toFixed(3) + ")";
-                /* Coordonnées entières : un fillRect à virgule serait lissé
-                   par le navigateur et la trame perdrait son bord net. */
-                ctx.fillRect(Math.round(i * COTE + dx), Math.round(j * COTE), COTE - 1, COTE - 1);
+        if (!semis.length) { return; }
+
+        /* La gravure, recopiée bande par bande : c'est ce découpage qui
+           permet au décrochage de faire glisser une tranche du mur. Hors
+           décrochage, une seule recopie suffit. */
+        var zappe = false, j;
+        for (j = 0; j < decal.length; j++) { if (decal[j]) { zappe = true; break; } }
+
+        if (!zappe) {
+            ctx.drawImage(graveCv, 0, 0, L, H);
+        } else {
+            for (j = 0; j < decal.length; j++) {
+                ctx.drawImage(graveCv,
+                    0, j * BANDE * dpr, graveCv.width, BANDE * dpr,
+                    decal[j] * 7, j * BANDE, L, BANDE);
             }
+        }
+
+        /* Les signes sous la lumière. Rien à faire tant que le pointeur
+           n'est pas entré dans la page : sur téléphone le mur reste gravé,
+           ce qui est son état normal et non une version dégradée. */
+        if (px < 0) { return; }
+
+        var i, sg, dx, dy, d, k;
+        ctx.lineCap = "square";
+        ctx.lineJoin = "miter";
+        for (i = 0; i < semis.length; i++) {
+            sg = semis[i];
+            dx = (sg.x + TAILLE * 0.5) - px;
+            dy = (sg.y + TAILLE * 0.5) - py;
+            d = Math.sqrt(dx * dx + dy * dy);
+            if (d >= LUEUR_R) { continue; }
+
+            /* Puissance 1,6 et non linéaire : l'éclat doit tomber vite,
+               sinon tous les signes du voisinage s'allument à peu près
+               pareil et on retrouve le disque qu'on voulait éviter. */
+            k = Math.pow(1 - d / LUEUR_R, 1.6);
+
+            ctx.lineWidth = 1 + k * 1.1;
+            ctx.strokeStyle = "rgba("
+                + Math.round(teinteA[0] + (teinteB[0] - teinteA[0]) * k) + ","
+                + Math.round(teinteA[1] + (teinteB[1] - teinteA[1]) * k) + ","
+                + Math.round(teinteA[2] + (teinteB[2] - teinteA[2]) * k) + ","
+                + (k * 0.92 * intensite).toFixed(3) + ")";
+            poserSigne(ctx, sg);
         }
     }
 
@@ -240,6 +386,8 @@
        ═══════════════════════════════════════════════════════════════════ */
 
     var lignesNom = $$(".nom .ligne");
+    var machineTrait = $(".machine-trait");
+    var titreNom = $(".nom");
     /* Pas de décrochage pendant la séquence d'arrivée : le premier serait
        pris pour un défaut de chargement. */
     var prochainZap = 3000;
@@ -248,20 +396,33 @@
         if (t < prochainZap) { return; }
         prochainZap = t + rand(2600, 6200);
 
-        var haut = Math.floor(rand(0, Math.max(1, lignes - 4)));
+        /* Les bandes sont celles du mur, pas celles de l'ancienne grille :
+           `lignes` n'existe plus, et s'y référer plantait la boucle à chaque
+           image — donc plus un seul repeint, donc plus de lumière. */
+        var nb = decal.length;
+        var haut = Math.floor(rand(0, Math.max(1, nb - 4)));
         var epaisseur = Math.floor(rand(1, 4));
         var saut = (Math.random() < .5 ? -1 : 1) * Math.floor(rand(1, 4));
         var j;
-        for (j = haut; j < Math.min(lignes, haut + epaisseur); j++) { decal[j] = saut; }
+        for (j = haut; j < Math.min(nb, haut + epaisseur); j++) { decal[j] = saut; }
         vivant = true;
 
         var victime = pioche(lignesNom);
         if (victime) { victime.style.setProperty("--decroche", (saut * 7) + "px"); }
 
+        /* Le tracé de la machine décroche avec le reste : c'est le même
+           signal qui lâche, au fond comme à la surface. Une propriété
+           custom plutôt qu'une classe, pour que le CSS garde la main sur
+           ce qu'il en fait selon la peau. */
+        if (machineTrait) {
+            machineTrait.style.setProperty("--machine-decroche", (saut * 3.5) + "px");
+        }
+
         setTimeout(function () {
             decal.fill(0);
             vivant = true;
             if (victime) { victime.style.setProperty("--decroche", "0px"); }
+            if (machineTrait) { machineTrait.style.setProperty("--machine-decroche", "0px"); }
         }, rand(70, 150));
     }
 
@@ -286,6 +447,11 @@
         NOMS[k].forEach(function (mot, i) {
             if (lignesNom[i]) { lignesNom[i].dataset.source = mot; }
         });
+        /* L'état est publié sur le titre parce que la marque peinte doit
+           s'effacer quand le nom devient « Gfirst » lui-même — sans ça le
+           mot s'affiche deux fois. C'est le CSS qui s'en charge, le JS ne
+           fait que dire où on en est. */
+        if (titreNom) { titreNom.dataset.etat = k; }
         decouper();
         figerLesLargeurs();
     }
@@ -340,25 +506,21 @@
 
     var px = -1, py = -1;
 
+    /* Le pointeur n'alimente plus rien : il dit seulement où regarder. La
+       lumière ne laisse aucune traînée, elle n'est que la position
+       courante, donc il suffit de la retenir et de demander une image. */
     addEventListener("pointermove", function (e) {
-        if (px >= 0) {
-            /* Plafond : un saut de curseur d'un bord à l'autre ne doit pas
-               saturer toute la grille d'un coup. */
-            deposer(e.clientX, e.clientY, Math.min(Math.hypot(e.clientX - px, e.clientY - py), 90));
-        }
         px = e.clientX;
         py = e.clientY;
+        vivant = true;
     }, { passive: true });
 
-    /* Sur téléphone il n'y a pas de survol : c'est le défilement qui fait
-       vivre la trame. Sans ça le fond serait mort sur le cas d'usage
-       principal — exactement le défaut de daveholloway.uk, qui ne pose
-       aucun écouteur en tactile. */
-    var yPrec = scrollY;
-    addEventListener("scroll", function () {
-        var dv = Math.abs(scrollY - yPrec);
-        yPrec = scrollY;
-        if (dv >= 1) { deposer(L * .5, H * .62, Math.min(dv * 1.4, 70)); }
+    /* Le mur quitte l'écran avec le curseur, sinon la dernière zone
+       éclairée resterait allumée après que la souris est sortie. */
+    addEventListener("pointerleave", function () {
+        px = -1;
+        py = -1;
+        vivant = true;
     }, { passive: true });
 
     var minuteurTaille = 0;
@@ -373,6 +535,9 @@
 
     /* ═══ LA BOUCLE ═════════════════════════════════════════════════════ */
 
+    /* Plus de champ qui décroît à entretenir : le mur ne change que si le
+       curseur bouge, si une bande décroche ou si la peau change. On repeint
+       donc sur demande, pas soixante fois par seconde. */
     function battre(t) {
         if (!calme) {
             zapper(t);
@@ -380,14 +545,9 @@
             muterNom(t);
             zapperLaMarque(t);
         }
-        var reste = 0, k;
-        for (k = 0; k < charge.length; k++) {
-            charge[k] *= DECROISSANCE;
-            if (charge[k] > SEUIL) { reste++; }
-        }
-        if (reste || vivant) {
+        if (vivant) {
             peindre();
-            vivant = reste > 0;
+            vivant = false;
         }
         requestAnimationFrame(battre);
     }
@@ -405,14 +565,13 @@
         .then(figerLesLargeurs);
 
     if (doux) {
-        /* Mouvement réduit : la trame existe, elle ne bouge pas. Aucun
-           grésillement, aucun décrochage, pas de rAF. */
-        deposer(L * .72, H * .3, 55);
+        /* Mouvement réduit : le mur est gravé et le reste. Aucune lumière
+           au curseur, aucun grésillement, aucun décrochage, pas de rAF. */
         peindre();
     } else {
-        /* Impulsion d'arrivée : la grille s'allume une fois, puis s'éteint.
-           C'est la seule animation que la visiteuse n'a pas déclenchée. */
-        deposer(L * .74, H * .34, 190);
+        /* La gravure est là dès la première image : elle n'a pas à être
+           révélée, c'est l'état de repos du fond. */
+        peindre();
         requestAnimationFrame(battre);
     }
 
@@ -618,9 +777,20 @@
                 '</div>' +
               '</div>' +
               '<div class="poste-commandes">' +
-                '<button type="button" class="poste-prec" aria-label="Pièce précédente">◀</button>' +
+                /* Un chevron tracé et non ◀ : ni Anton ni JetBrains Mono ne portent
+                   U+25C0, le navigateur irait le chercher dans une fonte de
+                   secours et certains systèmes le rendent en emoji couleur. */
+                '<button type="button" class="poste-prec" aria-label="Pièce précédente">' +
+                  '<svg class="ico-nav" viewBox="0 0 12 12" aria-hidden="true">' +
+                    '<path d="M8 1.5 L3.5 6 L8 10.5" />' +
+                  '</svg>' +
+                '</button>' +
                 '<div class="poste-bandeau" role="group" aria-label="Choisir la pièce">' + bandeau + '</div>' +
-                '<button type="button" class="poste-suiv" aria-label="Pièce suivante">▶</button>' +
+                '<button type="button" class="poste-suiv" aria-label="Pièce suivante">' +
+                  '<svg class="ico-nav" viewBox="0 0 12 12" aria-hidden="true">' +
+                    '<path d="M4 1.5 L8.5 6 L4 10.5" />' +
+                  '</svg>' +
+                '</button>' +
               '</div>' +
             '</div>' +
             '<div class="poste-fiche" aria-live="polite"></div>';
@@ -776,8 +946,61 @@
        LES PUPITRES
        ═══════════════════════════════════════════════════════════════════ */
 
+    /* ═══ LA BASCULE DE PEAU ═══════════════════════════════════════════
+       Le bouton n'est pas un mode sombre : c'est une commande de profondeur
+       de bits. La bascule doit donc se lire comme un signal qui se
+       recompose, et non comme un fondu de couleur de fond.
+
+       Un voile quadrillé traverse l'écran, la peau change pendant qu'il le
+       couvre, puis il sort par l'autre bord. Le voile porte la couleur de
+       la peau VERS laquelle on va, sinon la page clignote au milieu.
+       Animé par l'API Web Animations, native : aucune bibliothèque, et un
+       repli immédiat là où elle manque.                                  */
+
+    var voilePeau = null;
+
+    function voileDeBascule() {
+        if (!voilePeau) {
+            voilePeau = document.createElement("div");
+            voilePeau.className = "balayage";
+            voilePeau.setAttribute("aria-hidden", "true");
+            document.body.appendChild(voilePeau);
+        }
+        return voilePeau;
+    }
+
+    function balayerVers(vers, poser) {
+        /* Sans mouvement, sans API d'animation, ou si la page n'est pas
+           visible : on pose la peau sans cérémonie. Une animation dans un
+           onglet masqué ne se joue pas, et son `onfinish` n'arriverait
+           jamais — la peau resterait bloquée derrière le voile. */
+        if (doux || !document.body.animate || document.hidden) { poser(); return; }
+
+        var v = voileDeBascule();
+        v.dataset.vers = vers;
+
+        var entree = v.animate(
+            [{ clipPath: "inset(0 100% 0 0)" }, { clipPath: "inset(0 0 0 0)" }],
+            { duration: 240, easing: "cubic-bezier(.77,0,.175,1)", fill: "forwards" }
+        );
+
+        entree.onfinish = function () {
+            poser();
+            v.animate(
+                [{ clipPath: "inset(0 0 0 0)" }, { clipPath: "inset(0 0 0 100%)" }],
+                { duration: 320, easing: "cubic-bezier(.23,1,.32,1)", fill: "forwards" }
+            );
+        };
+    }
+
     $$("[data-peau]").forEach(function (b) {
         b.addEventListener("click", function () {
+            if (racine.getAttribute("data-peau") === b.dataset.peau) { return; }
+            balayerVers(b.dataset.peau, function () { poserLaPeau(b); });
+        });
+    });
+
+    function poserLaPeau(b) {
             $$("[data-peau]").forEach(function (o) { o.setAttribute("aria-pressed", String(o === b)); });
             racine.setAttribute("data-peau", b.dataset.peau);
             relireLaPeau();
@@ -809,8 +1032,7 @@
                 prochainGres = t + 400;
             }
             if (doux) { peindre(); }
-        });
-    });
+    }
 
     /* Le français d'origine est relevé une fois, avant toute substitution :
        le reconstruire depuis le DOM après un passage en japonais rendrait
