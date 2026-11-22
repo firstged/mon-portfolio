@@ -48,6 +48,7 @@
     var graveCtx = graveCv.getContext("2d");
 
     var semis = [];           // les signes posés : où, quelle taille, quel tour
+    var Lref = 0, Href = 0;   // l'étendue sur laquelle la gravure a été faite
     var decal = null;         // le décrochage, par bande
     var dpr = 1, L = 0, H = 0;
     var vivant = true;        // un mur immobile n'a pas besoin d'être repeint
@@ -139,17 +140,33 @@
         cv.style.height = H + "px";
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-        graveCv.width = cv.width;
-        graveCv.height = cv.height;
-        graveCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
         decal = new Int8Array(Math.ceil(H / BANDE) + 1);
-        batirLeMur();
+
+        /* La gravure n'est refaite que si elle ne couvre plus l'écran. Sur
+           téléphone, la barre d'adresse qui se rétracte déclenche un resize
+           à chaque défilement : rebâtir le semis à chaque fois ferait sauter
+           le motif sous les doigts et coûterait cher pour rien. La réserve
+           de 240 px absorbe l'oscillation. */
+        if (L !== Lref || H > Href) {
+            Lref = L;
+            Href = H + 240;
+            graveCv.width = Math.round(L * dpr);
+            graveCv.height = Math.round(Href * dpr);
+            graveCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            batirLeMur();
+        }
+
+        /* Une toile opaque fraîchement redimensionnée est NOIRE, pas vide.
+           Sans ce repeint immédiat, la peau COOL virait au noir à chaque
+           défilement sur téléphone, le temps qu'un autre événement réveille
+           la boucle. C'est le défaut qu'il a vu sur son appareil. */
+        vivant = true;
+        peindre();
     }
 
     function batirLeMur() {
         semis.length = 0;
-        var cm = Math.ceil(L / PAS) + 1, lm = Math.ceil(H / PAS) + 1;
+        var cm = Math.ceil(L / PAS) + 1, lm = Math.ceil(Href / PAS) + 1;
         var a, b, g;
 
         for (b = 0; b < lm; b++) {
@@ -184,7 +201,7 @@
        peine détachés du fond. C'est une gravure, pas une apparition. */
     function graverLeMur() {
         if (!semis.length) { return; }
-        graveCtx.clearRect(0, 0, L, H);
+        graveCtx.clearRect(0, 0, L, Href);
         graveCtx.lineWidth = 1;
         graveCtx.lineCap = "square";
         graveCtx.lineJoin = "miter";
@@ -206,6 +223,11 @@
         fond = s.getPropertyValue("--nuit").trim() || "#000";
         graverLeMur();   // la gravure porte la couleur de la peau
         vivant = true;
+        /* Peint tout de suite, sans attendre la boucle : quand le navigateur
+           met `requestAnimationFrame` en veille (fenêtre sans le focus), la
+           toile gardait la couleur de l'ancienne peau. En COOL, ça donnait
+           un fond noir sous un texte sombre. */
+        peindre();
     }
 
     /* ─── LE RENDU ──────────────────────────────────────────────────────
@@ -228,8 +250,11 @@
         var zappe = false, j;
         for (j = 0; j < decal.length; j++) { if (decal[j]) { zappe = true; break; } }
 
+        /* La gravure est plus haute que l'écran : on n'en recopie que la
+           tranche visible, sinon elle serait comprimée à la hauteur de la
+           fenêtre et le motif changerait de taille au défilement. */
         if (!zappe) {
-            ctx.drawImage(graveCv, 0, 0, L, H);
+            ctx.drawImage(graveCv, 0, 0, graveCv.width, H * dpr, 0, 0, L, H);
         } else {
             for (j = 0; j < decal.length; j++) {
                 ctx.drawImage(graveCv,
@@ -555,8 +580,11 @@
 
     /* ═══ MISE EN ROUTE ═════════════════════════════════════════════════ */
 
-    dimensionner();
+    /* La peau d'abord : `dimensionner` peint dès qu'il a fini, et sans les
+       couleurs lues il peindrait avec le noir de repli. Une image de fond
+       noir au chargement, invisible en BRUT, mais pas en COOL. */
     relireLaPeau();
+    dimensionner();
     decouper();
 
     /* Les largeurs ne valent rien tant qu'Archivo n'est pas là : mesurées
@@ -564,16 +592,10 @@
     (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve())
         .then(figerLesLargeurs);
 
-    if (doux) {
-        /* Mouvement réduit : le mur est gravé et le reste. Aucune lumière
-           au curseur, aucun grésillement, aucun décrochage, pas de rAF. */
-        peindre();
-    } else {
-        /* La gravure est là dès la première image : elle n'a pas à être
-           révélée, c'est l'état de repos du fond. */
-        peindre();
-        requestAnimationFrame(battre);
-    }
+    /* `dimensionner` a déjà peint la première image : la gravure est là dès
+       le départ, elle n'a pas à être révélée, c'est l'état de repos du
+       fond. En mouvement réduit on s'arrête là : pas de boucle du tout. */
+    if (!doux) { requestAnimationFrame(battre); }
 
     requestAnimationFrame(function () {
         racine.classList.add("pret");
@@ -979,18 +1001,31 @@
         var v = voileDeBascule();
         v.dataset.vers = vers;
 
-        var entree = v.animate(
+        /* Les animations précédentes sont annulées avant d'en lancer une.
+           Mesuré à l'écran : elles s'empilaient à chaque bascule, quatre
+           après quatre clics, et une `fill: forwards` oubliée tenait le
+           voile en place par-dessus la nouvelle. */
+        v.getAnimations().forEach(function (a) { a.cancel(); });
+
+        v.animate(
             [{ clipPath: "inset(0 100% 0 0)" }, { clipPath: "inset(0 0 0 0)" }],
             { duration: 240, easing: "cubic-bezier(.77,0,.175,1)", fill: "forwards" }
         );
 
-        entree.onfinish = function () {
+        /* La peau est posée par minuterie et non par `onfinish`. Quand le
+           navigateur met les animations en veille — fenêtre sans le focus,
+           onglet en arrière-plan — l'animation ne tourne pas et `onfinish`
+           ne vient jamais : la page restait alors sur l'ancienne peau,
+           derrière un voile de la nouvelle. Une minuterie finit toujours
+           par se déclencher, même ralentie. */
+        setTimeout(function () {
             poser();
+            v.getAnimations().forEach(function (a) { a.cancel(); });
             v.animate(
                 [{ clipPath: "inset(0 0 0 0)" }, { clipPath: "inset(0 0 0 100%)" }],
                 { duration: 320, easing: "cubic-bezier(.23,1,.32,1)", fill: "forwards" }
             );
-        };
+        }, 240);
     }
 
     $$("[data-peau]").forEach(function (b) {
