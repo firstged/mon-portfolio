@@ -509,6 +509,34 @@
     }
 
 
+    /* ═══ LA SIGNATURE QUI ZAPPE ════════════════════════════════════════
+       Le dernier objet de la page alterne entre le mot peint et le poinçon.
+       C'est le seul endroit du site où la marque se montre sous ses deux
+       formes au même endroit : ce qu'on voit en dernier est ce qu'on
+       emporte.
+
+       Quatre secondes de mot, deux de poinçon. Plus court, la page
+       clignoterait ; plus long, on quitterait l'onglet sans avoir vu la
+       seconde forme.                                                      */
+
+    var signature = $(".contact-signature");
+    var prochaineSignature = 4000;
+
+    function zapperLaSignature(t) {
+        if (!signature || t < prochaineSignature) { return; }
+
+        var versPoincon = signature.dataset.etat !== "poincon";
+        /* L'état intermédiaire dure 90 ms : c'est le temps d'une image de
+           signal perdu, pas celui d'une transition. */
+        signature.dataset.etat = "entre";
+        setTimeout(function () {
+            signature.dataset.etat = versPoincon ? "poincon" : "mot";
+        }, 90);
+
+        prochaineSignature = t + (versPoincon ? 2000 : 4000);
+    }
+
+
     /* ═══ LA MARQUE QUI DÉCROCHE ════════════════════════════════════════ */
 
     var ETATS_MARQUE = ["sceau", "nu", "sceau"];  // le sceau plus souvent : c'est son favori
@@ -569,6 +597,7 @@
             gresiller(t);
             muterNom(t);
             zapperLaMarque(t);
+            zapperLaSignature(t);
         }
         if (vivant) {
             peindre();

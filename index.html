@@ -44,7 +44,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;500;600&family=JetBrains+Mono:wght@400;700&family=Permanent+Marker&family=Pixelify+Sans:wght@400..700&display=swap">
-    <link rel="stylesheet" href="css/gfirst.css?v=15eace26">
+    <link rel="stylesheet" href="css/gfirst.css?v=f306998f">
 
     <!-- Posée ici et pas en fin de page : la règle d'éveil ne doit exister
          qu'avec JavaScript, et l'ajouter plus tard ferait clignoter les blocs. -->
@@ -783,14 +783,30 @@
 
             <!-- La signature. Le feutre qui peint la marque à l'arrivée revient
                  ici pour signer : c'est le geste qui ferme une lettre, et c'est
-                 le dernier objet de la page. -->
-            <span class="contact-signature" aria-hidden="true">Gfirst</span>
+                 le dernier objet de la page.
+
+                 Elle zappe entre le mot et le poinçon, comme le nom zappe à
+                 l'arrivée. Le dernier objet de la page est donc la marque
+                 elle-même, montrée deux fois sous ses deux formes : c'est ce
+                 qu'on emporte en fermant l'onglet.
+
+                 Les tracés viennent des <defs> du poinçon de l'arrivée, par
+                 <use> : même géométrie, pas un octet de plus. -->
+            <span class="contact-signature" data-etat="mot" aria-hidden="true">
+                <span class="signature-mot">Gfirst</span>
+                <svg class="signature-poincon" viewBox="0 0 100 100">
+                    <circle class="enceinte" cx="50" cy="50" r="45" />
+                    <g class="lettres" transform="translate(9 9) scale(0.82)">
+                        <use href="#gf-lettres" />
+                    </g>
+                </svg>
+            </span>
 
         </section>
 
     </main>
 
-    <script src="js/gfirst.js?v=6c835916"></script>
+    <script src="js/gfirst.js?v=bf168793"></script>
 </body>
 
 </html>

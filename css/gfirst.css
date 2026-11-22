@@ -2055,20 +2055,76 @@ tr.choisi th[scope="row"] {
 
 /* LA SIGNATURE. Posée à droite et de travers, comme on signe au bas d'une
    page. Elle ne reprend pas la taille de la marque de l'arrivée : une
-   signature est plus petite que le titre qu'elle ferme. */
+   signature est plus petite que le titre qu'elle ferme.
+
+   Elle porte ses deux formes au même endroit, en grille superposée plutôt
+   qu'en position absolue : la case prend les dimensions du plus grand des
+   deux, donc rien ne bouge autour quand l'un remplace l'autre. */
 .contact-signature {
     justify-self: end;
+    display: grid;
     margin-top: clamp(1.4rem, 4vh, 2.8rem);
+    transform: rotate(-4deg);
+    pointer-events: none;
+    user-select: none;
+}
+
+.contact-signature > * {
+    grid-area: 1 / 1;
+    place-self: center;
+    transition: opacity .12s steps(2, end);
+}
+
+.signature-mot {
     font-family: "Permanent Marker", var(--courante), cursive;
     font-size: clamp(1.8rem, 5vw, 3.6rem);
     line-height: .9;
     color: var(--signal);
-    transform: rotate(-4deg);
-    pointer-events: none;
-    user-select: none;
     text-shadow:
         0 0 14px rgb(var(--phosphore) / .3),
         0 0 36px rgb(var(--phosphore) / .16);
+}
+
+/* Le poinçon est calé sur la hauteur du mot, pas sur une cote à lui :
+   deux objets qui se remplacent doivent peser pareil. */
+.signature-poincon {
+    width: clamp(2.4rem, 6.4vw, 4.6rem);
+    height: auto;
+    color: var(--signal);
+    filter:
+        drop-shadow(0 0 12px rgb(var(--phosphore) / .3))
+        drop-shadow(0 0 30px rgb(var(--phosphore) / .16));
+}
+
+.signature-poincon .enceinte {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.94;
+}
+
+.signature-poincon .lettres {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 7;
+    stroke-linecap: square;
+    stroke-linejoin: round;
+}
+
+/* Un seul des deux à la fois. `steps(2, end)` et non un fondu : la marque
+   ne se dissout pas dans l'autre, elle est remplacée — c'est un zapping,
+   le même geste que le nom à l'arrivée. */
+.contact-signature[data-etat="mot"] .signature-poincon,
+.contact-signature[data-etat="poincon"] .signature-mot { opacity: 0; }
+
+/* Le temps d'un souffle, les deux coexistent à demi : c'est l'instant où
+   le signal hésite entre les deux formes. */
+.contact-signature[data-etat="entre"] .signature-mot,
+.contact-signature[data-etat="entre"] .signature-poincon { opacity: .45; }
+
+@media (prefers-reduced-motion: reduce) {
+    .contact-signature > * { transition: none; }
+    .contact-signature .signature-poincon { opacity: 0 !important; }
+    .contact-signature .signature-mot { opacity: 1 !important; }
 }
 
 
