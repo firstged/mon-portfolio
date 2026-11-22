@@ -201,7 +201,8 @@ main {
    3. DANS la même phrase, un mot traité dans un autre registre — là-bas
       « VAULT » au feutre bleu par-dessus « SHOEBOX » en gris sourd ;
    4. un mot fantôme énorme derrière, à peine plus clair que le fond ;
-   5. des coulures de peinture sous le bouton d'appel ;
+   5. des coulures de peinture sous le bouton d'appel, devenues ici une
+      ombre portée dure — même registre, un seul effet par objet ;
    6. un bouton plein clair, texte sombre, flèche à droite.
 
    Ce qui change par rapport à la référence, et volontairement : l'accent
@@ -459,9 +460,18 @@ main {
 
 /* LE BOUTON PLEIN. Clair sur fond sombre, texte sombre, flèche à droite —
    c'est le seul aplat clair de l'écran, donc c'est lui qu'on voit. */
-/* L'angle est cassé de 4 px, pas arrondi : un bouton d'établi a une arête
-   limée, pas un coin de pastille. Et il se soulève au survol, ce qui fait
-   couler la peinture un peu plus bas. */
+/* L'OMBRE PORTÉE DURE. Pas de flou, pas de dégradé : un bloc de vert
+   décalé derrière le bouton, qui est la signature du brutalisme. Elle
+   remplace les coulures, qui disaient la même chose en plus bavard.
+
+   L'arête reste cassée de 4 px. Le brutalisme est pointu par principe,
+   mais il avait dit que les coins vifs lui déplaisaient : l'ombre dure
+   porte le registre, l'arête limée garde sa remarque.
+
+   Le jeu des trois états est tout le mécanisme : au repos l'ombre est à
+   6 px ; au survol le bouton recule de 2 px et l'ombre s'allonge à 9, donc
+   il décolle ; au clic il part de 5 px DANS l'ombre, qui tombe à 1, donc
+   il s'écrase. C'est une touche qu'on enfonce, pas une carte qui flotte. */
 .bouton {
     position: relative;
     display: inline-flex;
@@ -472,28 +482,30 @@ main {
     padding: .95rem 1.5rem;
     background: var(--craie);
     color: var(--fond);
+    box-shadow: 6px 6px 0 var(--signal);
     text-decoration: none;
     font-size: .76rem;
     font-weight: 700;
     letter-spacing: .14em;
     text-transform: uppercase;
     transition: background .22s var(--ease-out), color .22s var(--ease-out),
-        transform .22s var(--ease-out);
+        transform .18s var(--ease-out), box-shadow .18s var(--ease-out);
 }
 
 .bouton:hover,
 .bouton:focus-visible {
-    background: var(--signal);
-    color: var(--fond);
-    transform: translateY(-2px);
+    /* Ni le fond ni l'encre ne changent, et c'est mesuré : le phosphore et
+       la craie ont la MÊME luminance (ratio 1,0), donc un texte vert sur ce
+       bouton clair disparaît. L'ombre et le déplacement suffisent à dire
+       l'état, et c'est d'ailleurs tout ce dont le brutalisme se sert. */
+    transform: translate(-2px, -2px);
+    box-shadow: 9px 9px 0 var(--signal);
 }
 
-/* Appuyé, il redescend sous sa position de repos : c'est une touche qu'on
-   enfonce, pas une carte qui flotte. */
-.bouton:active { transform: translateY(1px); }
-
-.bouton:hover .coulures,
-.bouton:focus-visible .coulures { height: clamp(18px, 2.2vw, 34px); }
+.bouton:active {
+    transform: translate(5px, 5px);
+    box-shadow: 1px 1px 0 var(--signal);
+}
 
 .bouton .fleche {
     width: 1.5rem;
@@ -505,20 +517,9 @@ main {
     stroke-linejoin: round;
 }
 
-/* LES COULURES. Dans la référence la peinture dégouline du bouton d'appel.
-   Elles sont en SVG et non en pseudo-éléments : il en faut quatre de
-   longueurs différentes, sinon le motif se lit comme une frange régulière
-   et l'effet meurt. */
-.coulures {
-    position: absolute;
-    left: 0;
-    top: 100%;
-    width: 100%;
-    height: clamp(14px, 1.6vw, 26px);
-    fill: var(--signal);
-    pointer-events: none;
-    transition: height .26s var(--ease-out);
-}
+/* Les coulures sont parties avec le passage au brutalisme : la peinture
+   qui dégouline et l'ombre portée dure disent la même chose, et les deux
+   ensemble faisaient deux effets sur un objet de la taille d'un timbre. */
 
 
 /* ═══ REPLIS DE L'ARRIVÉE ══════════════════════════════════════════════
@@ -997,6 +998,7 @@ main {
     border: var(--trait-ep) solid var(--trait);
     border-radius: 4px;
     color: var(--encre-faible);
+    box-shadow: 3px 3px 0 rgb(var(--phosphore) / .4);
     font: inherit;
     font-size: .7rem;
     letter-spacing: .1em;
@@ -1005,16 +1007,22 @@ main {
     min-height: 44px;
     cursor: pointer;
     transition: color .2s var(--ease-out), border-color .2s var(--ease-out),
-        transform .2s var(--ease-out);
+        transform .16s var(--ease-out), box-shadow .16s var(--ease-out);
 }
 
+/* Trois pixels d'ombre et non six : ces touches font 44 px de côté, et une
+   ombre à l'échelle du grand bouton les ferait flotter. */
 .poste-commandes button:hover {
     color: var(--encre);
     border-color: var(--encre);
-    transform: translateY(-2px);
+    transform: translate(-1px, -1px);
+    box-shadow: 5px 5px 0 var(--signal);
 }
 
-.poste-commandes button:active { transform: translateY(1px); }
+.poste-commandes button:active {
+    transform: translate(3px, 3px);
+    box-shadow: 0 0 0 var(--signal);
+}
 
 .ico-nav {
     display: block;
@@ -1742,8 +1750,8 @@ tr.choisi th[scope="row"] {
    objets de même nature, ce qu'ils ne sont pas.
 
    Ce que cette section emprunte au hero, ce n'est pas le mot fantôme —
-   « Qui je suis » l'a déjà pris — c'est le bouton plein et ses coulures, qui
-   deviennent ici la poignée du dossier. Même langue, autre mot.
+   « Qui je suis » l'a déjà pris — c'est le bouton plein et son ombre dure,
+   qui deviennent ici la poignée du dossier. Même langue, autre mot.
    ═══════════════════════════════════════════════════════════════════════ */
 
 .dossiers {
@@ -1812,9 +1820,8 @@ tr.choisi th[scope="row"] {
     text-wrap: pretty;
 }
 
-/* LA POIGNÉE. C'est le bouton plein de l'arrivée, repris tel quel, avec ses
-   coulures dessinées en pseudo-élément : quatre longueurs inégales, sinon le
-   motif se lit comme une frange régulière. */
+/* LA POIGNÉE. C'est le bouton plein de l'arrivée, repris tel quel, ombre
+   dure comprise. Même objet, même mécanique, à deux endroits du site. */
 .dossier-piece > summary {
     position: relative;
     display: inline-flex;
@@ -1824,6 +1831,7 @@ tr.choisi th[scope="row"] {
     padding: .85rem 1.4rem;
     background: var(--craie);
     color: var(--fond);
+    box-shadow: 6px 6px 0 var(--signal);
     font-family: var(--courante);
     font-size: .72rem;
     font-weight: 700;
@@ -1832,40 +1840,24 @@ tr.choisi th[scope="row"] {
     cursor: pointer;
     list-style: none;
     transition: background .22s var(--ease-out), color .22s var(--ease-out),
-        transform .22s var(--ease-out);
+        transform .18s var(--ease-out), box-shadow .18s var(--ease-out);
 }
 
 .dossier-piece > summary::-webkit-details-marker { display: none; }
 
 .dossier-piece > summary:hover,
 .dossier-piece > summary:focus-visible {
-    background: var(--signal);
-    color: var(--fond);
-    transform: translateY(-2px);
+    transform: translate(-2px, -2px);
+    box-shadow: 9px 9px 0 var(--signal);
 }
 
-.dossier-piece > summary:active { transform: translateY(1px); }
-
-.dossier-piece > summary:hover::after,
-.dossier-piece > summary:focus-visible::after { height: clamp(16px, 1.8vw, 26px); }
-
-/* La coulure, en dégradés répétés plutôt qu'en SVG : ici elle est purement
-   décorative et n'a pas à exister dans le document. */
-.dossier-piece > summary::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 100%;
-    width: 100%;
-    height: clamp(10px, 1.2vw, 18px);
-    background:
-        linear-gradient(var(--signal), var(--signal)) 14% 0 / 11px 100% no-repeat,
-        linear-gradient(var(--signal), var(--signal)) 41% 0 / 13px 58% no-repeat,
-        linear-gradient(var(--signal), var(--signal)) 66% 0 / 9px 84% no-repeat,
-        linear-gradient(var(--signal), var(--signal)) 88% 0 / 12px 40% no-repeat;
-    pointer-events: none;
-    transition: height .26s var(--ease-out);
+.dossier-piece > summary:active {
+    transform: translate(5px, 5px);
+    box-shadow: 1px 1px 0 var(--signal);
 }
+
+/* La coulure de la poignée est partie avec celles du hero : c'est l'ombre
+   dure qui porte le registre, à un seul endroit par objet. */
 
 /* Le chevron tracé, qui bascule quand le dossier s'ouvre. */
 .dossier-piece > summary span.fleche-bas {
