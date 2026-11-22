@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="fr" data-peau="brut">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Page introuvable — Gfirst</title>
+    <meta name="robots" content="noindex">
+    <meta name="theme-color" content="#080c09">
+    <link rel="icon" href="marque/gfirst-favicon.svg" type="image/svg+xml">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;600&family=JetBrains+Mono:wght@400;700&display=swap">
+
+    <!-- Page autonome, et c'est voulu : charger les 20 Ko de la feuille du
+         site pour un écran qu'on ne verra qu'en se trompant d'adresse
+         coûterait plus cher que la page elle-même. Les quelques jetons
+         nécessaires sont redits ici, les deux familles sont celles du site
+         donc déjà dans le cache du visiteur qui vient d'en sortir. -->
+    <style>
+        :root {
+            --nuit: #080c09;
+            --craie: #e4e6e2;
+            --cendre: #8b918a;
+            --phosphore: 155 255 60;
+            --signal: rgb(var(--phosphore));
+            --trait: rgba(228, 230, 226, .22);
+        }
+
+        *, *::before, *::after { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100svh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: clamp(1.4rem, 4vh, 2.6rem);
+            padding: clamp(1.2rem, 4vw, 3rem);
+            background: var(--nuit);
+            color: var(--craie);
+            font-family: "Archivo", system-ui, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: clip;
+        }
+
+        .mot {
+            width: min(100%, 46rem);
+            display: flex;
+            flex-direction: column;
+            gap: .7rem;
+        }
+
+        .code {
+            margin: 0;
+            font-family: "JetBrains Mono", ui-monospace, monospace;
+            font-size: .72rem;
+            font-weight: 700;
+            letter-spacing: .24em;
+            color: var(--signal);
+        }
+
+        h1 {
+            margin: 0;
+            font-family: "Anton", "Arial Narrow", sans-serif;
+            font-weight: 400;
+            font-size: clamp(2.1rem, 7vw, 4.2rem);
+            /* Anton cale sa boîte sur la hauteur de capitale : sous 1, les
+               accents de la ligne du bas viennent toucher celle du dessus.
+               Vu à l'écran sur l'È de « MÈNE ». Même piège que sur le nom
+               de l'arrivée, même rattrapage. */
+            line-height: 1.02;
+            padding-top: .08em;
+            letter-spacing: .01em;
+            text-transform: uppercase;
+            text-wrap: balance;
+        }
+
+        .dit {
+            margin: 0;
+            max-width: 54ch;
+            font-size: clamp(.95rem, 1.4vw, 1.08rem);
+            line-height: 1.6;
+            color: var(--cendre);
+            text-wrap: pretty;
+        }
+
+        /* Le bouton du site, ombre portée dure comprise : même objet, même
+           mécanique, jusque sur la page d'erreur. */
+        .bouton {
+            align-self: flex-start;
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            gap: .7rem;
+            margin-top: .5rem;
+            border-radius: 4px;
+            padding: .9rem 1.4rem;
+            background: var(--craie);
+            color: var(--nuit);
+            box-shadow: 6px 6px 0 var(--signal);
+            text-decoration: none;
+            font-family: "JetBrains Mono", ui-monospace, monospace;
+            font-size: .74rem;
+            font-weight: 700;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+            transition: transform .18s cubic-bezier(.23, 1, .32, 1),
+                box-shadow .18s cubic-bezier(.23, 1, .32, 1);
+        }
+
+        .bouton:hover,
+        .bouton:focus-visible {
+            transform: translate(-2px, -2px);
+            box-shadow: 9px 9px 0 var(--signal);
+        }
+
+        .bouton:active {
+            transform: translate(5px, 5px);
+            box-shadow: 1px 1px 0 var(--signal);
+        }
+
+        :focus-visible { outline: 2px solid var(--craie); outline-offset: 3px; }
+
+        .plateau {
+            width: min(100%, 46rem);
+            display: flex;
+            flex-direction: column;
+            gap: .6rem;
+        }
+
+        #jeu {
+            display: block;
+            width: 100%;
+            height: auto;
+            aspect-ratio: 5 / 4;
+            border: 1px solid var(--trait);
+            border-radius: 4px;
+            /* Le doigt doit pouvoir glisser sans que la page défile sous
+               lui : c'est la raquette qu'on déplace, pas l'écran. */
+            touch-action: none;
+            cursor: none;
+        }
+
+        .consigne {
+            margin: 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: .4rem 1.4rem;
+            font-family: "JetBrains Mono", ui-monospace, monospace;
+            font-size: .68rem;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            color: var(--cendre);
+        }
+
+        .consigne b { color: var(--signal); font-weight: 700; }
+
+        /* Sans JavaScript, et en mouvement réduit, le plateau n'a pas lieu
+           d'être : le message et le lien portent toute la page. */
+        .sans-js .plateau { display: none; }
+    </style>
+</head>
+
+<body class="sans-js">
+
+    <div class="mot">
+        <p class="code">Erreur 404</p>
+        <h1>Cette adresse ne mène nulle part.</h1>
+        <p class="dit">
+            La page que vous cherchez n'existe pas, ou elle a changé de nom.
+            Le reste du site, lui, est à sa place.
+        </p>
+        <!-- Chemin absolu : GitHub Pages sert ce fichier pour n'importe
+             quelle adresse manquante du site, y compris à plusieurs
+             niveaux de profondeur, où un lien relatif tomberait à côté.
+             Le script plus bas le corrige si le site n'est pas servi
+             depuis /mon-portfolio/ — en local, ou le jour du domaine. -->
+        <a class="bouton" id="retour" href="/mon-portfolio/">Revenir à l'établi</a>
+    </div>
+
+    <div class="plateau">
+        <canvas id="jeu" aria-hidden="true"></canvas>
+        <p class="consigne">
+            <span>Les briques dessinent la marque. <b>Cassez-la.</b></span>
+            <span id="etat">Souris, doigt ou flèches</span>
+        </p>
+    </div>
+
+    <script>
+        (function () {
+            "use strict";
+
+            /* Le lien de retour pointe vers /mon-portfolio/, ce qui est juste
+               en ligne et faux partout ailleurs. On le ramène à la racine
+               réelle dès que l'adresse courante n'est pas sous ce chemin. */
+            var retour = document.getElementById("retour");
+            if (retour && location.pathname.indexOf("/mon-portfolio/") !== 0) {
+                retour.setAttribute("href", "/");
+            }
+
+            var doux = matchMedia("(prefers-reduced-motion: reduce)").matches;
+            if (doux) { return; }   // la classe sans-js reste, le plateau avec
+            document.body.classList.remove("sans-js");
+
+            var cv = document.getElementById("jeu");
+            var ctx = cv.getContext("2d");
+            var etat = document.getElementById("etat");
+
+            var COLS = 22, RANGS = 22;   // le sceau est carré
+            var L = 0, H = 0, dpr = 1;
+
+            /* ── LES BRIQUES VIENNENT DE LA MARQUE ──────────────────────
+               Le sceau est dessiné dans une toile de 22 × 22 pixels, puis
+               relu pixel par pixel : chaque pixel encré devient une brique.
+               C'est le sceau et non le cercle, parce qu'à cette résolution
+               un anneau de 2,94 unités disparaît, alors qu'un carré plein
+               avec les lettres en réserve reste lisible.
+
+               Le dessin n'est donc jamais recopié à la main : si la marque
+               change un jour, la grille change avec elle.              */
+            function grilleDeLaMarque() {
+                var c = document.createElement("canvas");
+                c.width = COLS; c.height = RANGS;
+                var x = c.getContext("2d");
+                var k = COLS / 100;   // le poinçon est coté sur 100
+
+                x.fillStyle = "#fff";
+                x.fillRect(5 * k, 5 * k, 90 * k, 90 * k);
+
+                /* Les lettres sont creusées, pas posées : c'est ce qui fait
+                   le sceau. */
+                x.globalCompositeOperation = "destination-out";
+                x.lineWidth = 7 * 0.82 * k;
+                x.lineCap = "square";
+                x.lineJoin = "round";
+                x.strokeStyle = "#000";
+                x.save();
+                x.translate(9 * k, 9 * k);
+                x.scale(0.82 * k, 0.82 * k);
+                x.lineWidth = 7;
+                x.beginPath();
+                x.arc(50, 50, 32, 0, -0.699, false);   // l'anneau du G, grand arc
+                x.stroke();
+                x.beginPath();
+                x.moveTo(78, 50); x.lineTo(50, 50);    // la barre
+                x.moveTo(50, 32); x.lineTo(50, 68);    // le fût du I
+                x.moveTo(42, 32); x.lineTo(58, 32);    // empattements
+                x.moveTo(42, 68); x.lineTo(58, 68);
+                x.stroke();
+                x.restore();
+
+                var d = x.getImageData(0, 0, COLS, RANGS).data;
+                var g = [];
+                for (var j = 0; j < RANGS; j++) {
+                    for (var i = 0; i < COLS; i++) {
+                        if (d[(i + j * COLS) * 4 + 3] > 110) { g.push({ i: i, j: j, vive: true }); }
+                    }
+                }
+                return g;
+            }
+
+            var briques = grilleDeLaMarque();
+            var bw = 0, bh = 0, bx0 = 0, by0 = 0;
+
+            var raq = { x: .5, l: .17, h: 0 };
+            var bal = { x: .5, y: .72, vx: 0, vy: 0, r: 0 };
+            var perdues = 0, gagne = false;
+
+            function dimensionner() {
+                dpr = Math.min(devicePixelRatio || 1, 2);
+                var r = cv.getBoundingClientRect();
+                L = r.width; H = r.height;
+                cv.width = Math.round(L * dpr);
+                cv.height = Math.round(H * dpr);
+                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+                /* La marque occupe les deux tiers hauts, centrée. Le reste
+                   est le terrain de jeu : il faut de la place sous elle pour
+                   que la balle revienne. */
+                var cote = Math.min(L * .74, H * .52);
+                bw = cote / COLS; bh = bw;
+                bx0 = (L - cote) / 2;
+                by0 = H * .07;
+
+                raq.h = Math.max(7, H * .022);
+                bal.r = Math.max(4, Math.min(L, H) * .013);
+            }
+
+            function lancer() {
+                bal.x = .5; bal.y = .74;
+                var a = (Math.random() * .7 - .35) - Math.PI / 2;
+                /* 0,8 % de la largeur par image. À 0,0125 la balle traversait
+                   l'écran en une seconde et devenait impossible à suivre. */
+                var v = .008;
+                bal.vx = Math.cos(a) * v;
+                bal.vy = Math.sin(a) * v;
+            }
+
+            function reste() {
+                var n = 0, i;
+                for (i = 0; i < briques.length; i++) { if (briques[i].vive) { n++; } }
+                return n;
+            }
+
+            /* ── LE RENDU ─────────────────────────────────────────────── */
+            function peindre() {
+                ctx.clearRect(0, 0, L, H);
+
+                var i, b, x, y;
+                for (i = 0; i < briques.length; i++) {
+                    b = briques[i];
+                    if (!b.vive) { continue; }
+                    x = bx0 + b.i * bw;
+                    y = by0 + b.j * bh;
+                    ctx.fillStyle = "rgba(155, 255, 60, .9)";
+                    ctx.fillRect(Math.round(x), Math.round(y),
+                                 Math.ceil(bw) - 1, Math.ceil(bh) - 1);
+                }
+
+                // la raquette
+                ctx.fillStyle = "#e4e6e2";
+                var rl = raq.l * L;
+                ctx.fillRect(Math.round(raq.x * L - rl / 2), Math.round(H - raq.h * 2),
+                             Math.round(rl), Math.round(raq.h));
+
+                // la balle, carrée : tout est en pixels sur ce site
+                ctx.fillRect(Math.round(bal.x * L - bal.r), Math.round(bal.y * H - bal.r),
+                             Math.round(bal.r * 2), Math.round(bal.r * 2));
+            }
+
+            function battre() {
+                if (gagne) { peindre(); return; }
+
+                bal.x += bal.vx;
+                bal.y += bal.vy * (L / H);
+
+                var rx = bal.r / L, ry = bal.r / H;
+
+                if (bal.x - rx < 0) { bal.x = rx; bal.vx = Math.abs(bal.vx); }
+                if (bal.x + rx > 1) { bal.x = 1 - rx; bal.vx = -Math.abs(bal.vx); }
+                if (bal.y - ry < 0) { bal.y = ry; bal.vy = Math.abs(bal.vy); }
+
+                // la raquette
+                var hr = (H - raq.h * 2) / H;
+                if (bal.vy > 0 && bal.y + ry >= hr && bal.y < hr + .05) {
+                    var demi = raq.l / 2;
+                    if (bal.x > raq.x - demi - rx && bal.x < raq.x + demi + rx) {
+                        bal.y = hr - ry;
+                        bal.vy = -Math.abs(bal.vy);
+                        /* L'angle de renvoi dépend de l'endroit frappé :
+                           sans ça, la balle se bloque dans un aller-retour
+                           vertical et la partie ne finit jamais. */
+                        bal.vx += ((bal.x - raq.x) / demi) * .006;
+                        var v = Math.hypot(bal.vx, bal.vy);
+                        var vmax = .013;
+                        if (v > vmax) { bal.vx *= vmax / v; bal.vy *= vmax / v; }
+                    }
+                }
+
+                if (bal.y - ry > 1) {
+                    perdues++;
+                    etat.textContent = "Balle perdue · " + perdues;
+                    lancer();
+                }
+
+                // les briques
+                var px = bal.x * L, py = bal.y * H, i, b, x, y;
+                for (i = 0; i < briques.length; i++) {
+                    b = briques[i];
+                    if (!b.vive) { continue; }
+                    x = bx0 + b.i * bw;
+                    y = by0 + b.j * bh;
+                    if (px + bal.r > x && px - bal.r < x + bw &&
+                        py + bal.r > y && py - bal.r < y + bh) {
+                        b.vive = false;
+                        /* On rebondit sur l'axe où le chevauchement est le
+                           plus faible : rebondir toujours verticalement
+                           fait traverser les colonnes par le côté. */
+                        var dx = Math.min(Math.abs(px - x), Math.abs(px - (x + bw)));
+                        var dy = Math.min(Math.abs(py - y), Math.abs(py - (y + bh)));
+                        if (dx < dy) {
+                            bal.vx = -bal.vx;
+                            /* La balle est RESSORTIE de la brique, pas
+                               seulement renvoyée. Sans ce dégagement elle
+                               restait dans la grille et mangeait une brique
+                               par image : mesuré, il n'en restait que 49 sur
+                               328 au bout d'une seconde et demie. */
+                            bal.x += (px < x + bw / 2 ? -1 : 1) * (bal.r * 1.2 / L);
+                        } else {
+                            bal.vy = -bal.vy;
+                            bal.y += (py < y + bh / 2 ? -1 : 1) * (bal.r * 1.2 / H);
+                        }
+                        var n = reste();
+                        if (n === 0) {
+                            gagne = true;
+                            etat.textContent = "Marque cassée. Elle revient toujours.";
+                        } else {
+                            etat.textContent = n + " brique" + (n > 1 ? "s" : "");
+                        }
+                        break;
+                    }
+                }
+
+                peindre();
+                requestAnimationFrame(battre);
+            }
+
+            /* ── LES COMMANDES ────────────────────────────────────────── */
+            function viser(clientX) {
+                var r = cv.getBoundingClientRect();
+                raq.x = Math.max(raq.l / 2, Math.min(1 - raq.l / 2, (clientX - r.left) / r.width));
+            }
+
+            cv.addEventListener("pointermove", function (e) { viser(e.clientX); }, { passive: true });
+            cv.addEventListener("pointerdown", function (e) { viser(e.clientX); }, { passive: true });
+
+            addEventListener("keydown", function (e) {
+                var p = .055;
+                if (e.key === "ArrowLeft") { raq.x = Math.max(raq.l / 2, raq.x - p); }
+                else if (e.key === "ArrowRight") { raq.x = Math.min(1 - raq.l / 2, raq.x + p); }
+                else { return; }
+                e.preventDefault();
+            });
+
+            addEventListener("resize", dimensionner);
+
+            dimensionner();
+            lancer();
+            requestAnimationFrame(battre);
+        }());
+    </script>
+</body>
+
+</html>
