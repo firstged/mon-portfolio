@@ -55,7 +55,75 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;500;600&family=JetBrains+Mono:wght@400;700&family=Permanent+Marker&family=Pixelify+Sans:wght@400..700&display=swap">
-    <link rel="stylesheet" href="css/gfirst.css?v=f306998f">
+    <link rel="stylesheet" href="css/gfirst.css?v=0fb40747">
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         LE VOILE DE CHARGEMENT — il ne se montre QUE s'il le faut
+
+         Le site s'ouvre en 56 Ko : sur une connexion correcte il est là
+         avant qu'un écran d'attente ait eu le temps d'exister, et en
+         afficher un contredirait l'argument de la page.
+
+         Il n'est donc pas affiché puis retiré : il est affiché SEULEMENT
+         si la page n'est pas prête au bout de 400 ms. Invisible sur une
+         bonne liaison, présent sur une mauvaise — c'est-à-dire là où le
+         site est vraiment lu.
+
+         Le poinçon est redessiné ici au lieu d'un <use> vers celui de
+         l'arrivée : le voile peut s'afficher avant que le reste du corps
+         soit analysé, et la référence serait alors vide.
+         ═══════════════════════════════════════════════════════════════ -->
+    <div id="chargement" class="voile" aria-hidden="true" hidden>
+        <svg class="voile-poincon" viewBox="0 0 100 100" data-etat="cercle">
+            <circle class="enceinte" cx="50" cy="50" r="45" />
+            <g class="lettres" transform="translate(9 9) scale(0.82)">
+                <path d="M82,50 A32,32 0 1 1 74.5,29.4" />
+                <path d="M78,50 L50,50" />
+                <path d="M50,32 L50,68" />
+                <path d="M42,32 L58,32" />
+                <path d="M42,68 L58,68" />
+            </g>
+        </svg>
+    </div>
+
+    <script>
+        (function () {
+            "use strict";
+            var voile = document.getElementById("chargement");
+            var doux = matchMedia("(prefers-reduced-motion: reduce)").matches;
+            var battement = 0;
+
+            /* 400 ms : en dessous, l'apparition du voile se lirait comme un
+               clignotement de plus, pas comme une attente. */
+            var minuteur = setTimeout(function () {
+                voile.hidden = false;
+                requestAnimationFrame(function () { voile.classList.add("vu"); });
+                if (doux) { return; }
+                /* Le poinçon décroche entre ses trois états : le même
+                   mécanisme que sur la page, pas un disque qui tourne. */
+                var etats = ["cercle", "sceau", "nu", "sceau"], k = 0;
+                var cible = voile.firstElementChild;
+                battement = setInterval(function () {
+                    k = (k + 1) % etats.length;
+                    cible.dataset.etat = etats[k];
+                }, 190);
+            }, 400);
+
+            function fini() {
+                clearTimeout(minuteur);
+                clearInterval(battement);
+                if (voile.hidden) { return; }        // il n'a jamais paru
+                voile.classList.remove("vu");
+                setTimeout(function () { voile.hidden = true; }, 260);
+            }
+
+            window.__pageEstPrete = fini;
+            /* Filet de sécurité : si quelque chose casse avant que la page
+               se déclare prête, le voile ne doit pas rester sur l'écran. */
+            setTimeout(fini, 8000);
+            addEventListener("pagehide", fini);
+        }());
+    </script>
 
     <!-- Posée ici et pas en fin de page : la règle d'éveil ne doit exister
          qu'avec JavaScript, et l'ajouter plus tard ferait clignoter les blocs. -->
@@ -155,12 +223,12 @@
 
         <div class="pied">
             <p class="propos"
-                data-en="&lt;b&gt;I build data tools that hold up on a fragile connection and actually serve someone.&lt;/b&gt; What I'm after: that Gabon keeps control of its own data, and takes part in what gets invented elsewhere."
-                data-ja="&lt;b&gt;不安定な回線でも動き、誰かの役に立つデータの道具をつくっています。&lt;/b&gt;目指すのは、ガボンが自国のデータを自ら握り、世界の技術の歩みに加わることです。">
-                <b>Je construis des outils de données qui tiennent sur une connexion
-                    fragile et qui servent vraiment quelqu'un.</b>
-                Ce que je vise : que le Gabon garde la main sur ses données, et prenne
-                part à ce qui s'invente ailleurs.
+                data-en="&lt;b&gt;AI and data engineer, fullstack developer, entrepreneur.&lt;/b&gt; I build tools that hold up on a fragile connection and actually serve someone. What I'm after: that Gabon keeps control of its own data, and takes part in what gets invented elsewhere."
+                data-ja="&lt;b&gt;AI・データエンジニア、フルスタック開発者、起業家。&lt;/b&gt;不安定な回線でも動き、誰かの役に立つ道具をつくっています。目指すのは、ガボンが自国のデータを自ら握り、世界の技術の歩みに加わることです。">
+                <b>Ingénieur IA et données, développeur fullstack, entrepreneur.</b>
+                Je construis des outils qui tiennent sur une connexion fragile et qui
+                servent vraiment quelqu'un. Ce que je vise : que le Gabon garde la main
+                sur ses données, et prenne part à ce qui s'invente ailleurs.
             </p>
 
             <!-- Le bouton plein et son ombre portée dure, en vert. Les
@@ -817,7 +885,7 @@
 
     </main>
 
-    <script src="js/gfirst.js?v=bf168793"></script>
+    <script src="js/gfirst.js?v=96e531eb"></script>
 </body>
 
 </html>

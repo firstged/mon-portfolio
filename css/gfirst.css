@@ -173,6 +173,53 @@ a:hover {
 }
 
 
+/* ═══ LE VOILE DE CHARGEMENT ═══════════════════════════════════════════
+   Il n'apparaît que si la page tarde. `hidden` tant qu'il n'a pas lieu
+   d'être, puis `.vu` pour le fondu — un voile qui existerait dès le départ
+   et qu'on effacerait ferait clignoter les pages rapides.              */
+
+.voile {
+    position: fixed;
+    inset: 0;
+    z-index: 80;
+    display: grid;
+    place-items: center;
+    background: var(--fond);
+    opacity: 0;
+    transition: opacity .26s var(--ease-out);
+}
+
+.voile[hidden] { display: none; }
+
+.voile.vu { opacity: 1; }
+
+.voile-poincon {
+    width: clamp(54px, 9vw, 86px);
+    height: auto;
+    color: var(--signal);
+}
+
+.voile-poincon .enceinte {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.94;
+}
+
+.voile-poincon .lettres {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 7;
+    stroke-linecap: square;
+    stroke-linejoin: round;
+}
+
+/* Les trois états du poinçon, comme sur la page. Le sceau est rendu par un
+   simple épaississement ici : refaire le masque demanderait de redéclarer
+   toute la géométrie en réserve pour un écran qui dure une seconde. */
+.voile-poincon[data-etat="nu"] .enceinte { opacity: 0; }
+.voile-poincon[data-etat="sceau"] .enceinte { stroke-width: 7; }
+
+
 /* ═══ LA TRAME ═════════════════════════════════════════════════════════ */
 
 .trame {

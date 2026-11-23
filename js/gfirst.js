@@ -626,6 +626,10 @@
        fond. En mouvement réduit on s'arrête là : pas de boucle du tout. */
     if (!doux) { requestAnimationFrame(battre); }
 
+    /* Le voile de chargement peut partir : tout ce qui devait être mesuré
+       l'a été, et la première image du fond est peinte. */
+    if (window.__pageEstPrete) { window.__pageEstPrete(); }
+
     requestAnimationFrame(function () {
         racine.classList.add("pret");
         /* Une fois la séquence d'arrivée finie, on coupe la transition de
