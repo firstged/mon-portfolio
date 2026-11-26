@@ -30,6 +30,14 @@ labo/
 # commercial.
 textile/
 
+# Le mode d'emploi du serveur. Il nomme l'utilisateur et l'adresse du VPS,
+# le chemin de la clé privée, l'endroit où dort le mot de passe sudo,
+# l'inventaire des services qui écoutent (MySQL, Redis, Ollama, phpMyAdmin)
+# et les faiblesses déjà présentes sur les autres sites de la machine.
+# Chaque ligne est vraie et utile — pour moi, et pour qui voudrait entrer.
+# Un serveur qui héberge six sites ne met pas son plan en vitrine.
+DEPLOIEMENT_PORTFOLIO.md
+
 # Divers
 .artifact/
 .DS_Store
